@@ -16,10 +16,11 @@ class Cli {
   def run(String... args) {
     def name = ':'
     def command = commands[name]
-    builder = new CliBuilder()
+
+    def builder = new CliBuilder(usage: 'temp')
     builder.with command.config
 
-    options = builder.parse(args)
+    def options = builder.parse(args)
     command.execute(options)
   }
 }
@@ -54,6 +55,7 @@ class CommandBuilder {
   }
 
   def execute(actions) {
+    current.execute = actions
     current
   }
 
@@ -61,12 +63,19 @@ class CommandBuilder {
     current.config = config
     current
   }
+
+  def quit(message, throwable = null) {
+    print message + '\n'
+    if (throwable) throw throwable
+    System.exit(0)
+  }
 }
 
 class Command {
   def name
   def path
   def config
+  def execute
 
   def Command(name) {
     this.name = name

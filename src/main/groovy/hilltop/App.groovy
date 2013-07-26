@@ -6,9 +6,9 @@ class App {
       description 'Anthill command-line utility'
       options {
         v longOpt: 'version', 'Provides the current hilltop version'
-      },
-      exec { params ->
-        if (params.v) terminate 'Version 0.1'
+      }
+      execute { params ->
+        if (params.v) quit('Hilltop Version: 0.1')
       }
 
 //      command 'project' {

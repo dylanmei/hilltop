@@ -1,3 +1,3 @@
-import hilltop.App
+import hilltop.*
 
 new App(args)
