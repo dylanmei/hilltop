@@ -6,7 +6,7 @@ import spock.lang.*
 class CliSpec extends Specification {
   def writer
 	def config = {
-    description 'test description'
+    describe 'test description'
     options {
       v longOpt: 'version', 'test version'
       e longOpt: 'echo', args: 1, argName: 'message', 'test echo'
@@ -16,6 +16,16 @@ class CliSpec extends Specification {
         writer << 'version 1'
       if (params.e)
         writer << params.e
+    }
+
+    command('sub-command') {
+      options {
+        x 'test sub-command x'
+      }
+      execute { params ->
+        if (params.x)
+          writer << 'executing sub-command x'
+      }
     }
   }
 
@@ -37,5 +47,15 @@ class CliSpec extends Specification {
       cli.run('-e', 'Hello World')
     then:
       writer.toString() == 'Hello World'
+  }
+
+  def 'sub command with simple option is executed'() {
+    def cli = new Cli('test', config)
+    writer = new StringWriter()
+
+    when:
+      cli.run('sub-command', '-x')
+    then:
+      writer.toString() == 'executing sub-command x'
   }
 }
