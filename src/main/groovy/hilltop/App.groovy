@@ -6,22 +6,21 @@ class App {
   def App(String... args) {
     config = new ConfigLoader().load()
 
-
     new Cli('hilltop', {
-      describe 'Anthill command-line utility'
+      describe 'an anthill command-line utility'
       options {
-        v longOpt: 'version', 'Provides the current hilltop version'
+        v longOpt: 'version', 'the current hilltop version'
       }
       execute { params ->
-        if (params.v) quit('Hilltop Version: 0.1')
+        if (params.v) quit('hilltop version: 0.1')
       }
 
       command('config') {
-        describe 'things to do with projects'
+        describe 'set and get configuration values'
         options {
+          _ longOpt: 'get', args: 1, argName: 'name', 'gets a configuration value'
           _ longOpt: 'set', args: 2, argName: 'name=value', valueSeparator: '=', 'sets a configuration value'
           _ longOpt: 'remove', args: 1, argName: 'name', 'removes a configuration value'
-          _ longOpt: 'get', args: 1, argName: 'name', 'gets a configuration value'
         }
         execute { params ->
           if (params.get) getConfigValue(params.get)
