@@ -6,7 +6,7 @@ which groovy > /dev/null || echo "Cannot find groovy"
 
 # Setup the environment
 [ -z $HILLTOP_HOME ] && HILLTOP_HOME="."
-CLASSPATH="$HILLTOP_HOME/src/main/groovy:$HILLTOP_HOME/build/hilltop-dependencies.jar:$CLASSPATH"
+CLASSPATH="$HILLTOP_HOME/src/main/groovy:$HILLTOP_HOME/build/libs/hilltop-dependencies.jar:$CLASSPATH"
 export HILLTOP_HOME CLASSPATH
 
 # Start hilltop

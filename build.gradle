@@ -4,8 +4,38 @@ repositories {
   mavenCentral()
 }
 
+configurations {
+  anthill {
+    extendsFrom compile
+    transitive = false
+  }
+}
+
+sourceSets {
+  main { compileClasspath += configurations.anthill }
+  test { compileClasspath += configurations.anthill }
+}
+
+task depends(type: Jar) {
+  archiveName = 'hilltop-dependencies.jar'
+  exclude 'hilltop/**/*'
+  from {
+    configurations.anthill.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  {
+      exclude 'META-INF/MANIFEST.MF'
+      exclude 'META-INF/*.SF'
+      exclude 'META-INF/*.DSA'
+      exclude 'META-INF/*.RSA'
+  }
+}
+
+assemble.dependsOn depends
+
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.1.5'
-  testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
   runtime 'commons-cli:commons-cli:1.2'
+  anthill fileTree(dir: 'depends/anthill3-dev-kit/remoting/lib', include: '*.jar')
+
+  testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 }
