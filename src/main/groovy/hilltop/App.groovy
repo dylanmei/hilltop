@@ -23,7 +23,6 @@ class App {
           _ longOpt: 'remove', args: 1, argName: 'name', 'removes a configuration value'
         }
         execute { params ->
-          println params.arguments()
           def handler = new ConfigCommands(config)
           if (params.get) handler.get(params.get)
           if (params.set) handler.set(params.set, params.sets[1])
@@ -31,13 +30,21 @@ class App {
         }
       }
 
-      command('project') {
+      command('projects') {
         describe 'anthill projects'
-        options {
-          f longOpt: 'folder', args: 1, 'gets the anthill projects in the folder'
-        }
-        execute { params ->
-          if (params.f) new ProjectCommands(config).folder(params.f)
+        options { h longOpt: 'help', 'todo' }
+
+        command('list') {
+          describe 'list anthill projects'
+          options {
+            f longOpt: 'folder', args: 1, 'gets the anthill projects in the folder'
+            i longOpt: 'inactive', 'include inactive projects'
+          }
+          execute { params ->
+            def handler = new ProjectCommands(config)
+            if (params.f) handler.list_folder(params.f, params.i)
+            else handler.list(params.i)
+          }
         }
       }
     }).run(args)

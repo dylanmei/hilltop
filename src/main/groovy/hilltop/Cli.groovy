@@ -14,10 +14,12 @@ class Cli {
   }
 
   def run(String... args) {
-    def command = commands['']
+    def path = ''
+    def command = commands[path]
     def params = execute(command, args)
     while (!params.isEmpty()) {
-      command = commands[':' + params.head()]
+      path = path + ':' + params.head()
+      command = commands[path]
 
       if (!command) break;
       params = execute(command, params.tail())
@@ -29,11 +31,11 @@ class Cli {
   def execute(command, params) {
     def builder = new CliBuilder(usage: usage(command))
     builder.writer = writer
-    builder.with command.config
+    builder.with command.config ?: {}
 
     def options = builder.parse(params)
     if (!options) return []
-    command.execute(options)
+    if (command.execute) command.execute(options)
     return options.arguments()
   }
 

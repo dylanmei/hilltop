@@ -18,13 +18,17 @@ class CliSpec extends Specification {
         writer << params.e
     }
 
-    command('sub-command') {
-      options {
-        x 'test sub-command x'
-      }
+    command('child') {
+      options {}
       execute { params ->
-        if (params.x)
-          writer << 'executing sub-command x'
+        writer << 'executing child'
+      }
+
+      command('grand-child') {
+        options {}
+        execute { params ->
+          writer << 'executing grand-child'
+        }
       }
     }
   }
@@ -49,13 +53,24 @@ class CliSpec extends Specification {
       writer.toString() == 'Hello World'
   }
 
-  def 'sub command with simple option is executed'() {
+  def 'child command is executed'() {
     def cli = new Cli('test', config)
     writer = new StringWriter()
 
     when:
-      cli.run('sub-command', '-x')
+      cli.run('child')
     then:
-      writer.toString() == 'executing sub-command x'
+      writer.toString() == 'executing child'
+  }
+
+  def 'grand-child command is executed'() {
+    def cli = new Cli('test', config)
+    writer = new StringWriter()
+
+    when:
+      cli.run('child', 'grand-child')
+    then:
+      writer.toString().contains('executing child')
+      writer.toString().contains('executing grand-child')
   }
 }
