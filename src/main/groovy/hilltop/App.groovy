@@ -23,24 +23,23 @@ class App {
           _ longOpt: 'remove', args: 1, argName: 'name', 'removes a configuration value'
         }
         execute { params ->
-          if (params.get) getConfigValue(params.get)
-          if (params.set) setConfigValue(params.set, params.sets[1])
-          if (params.remove) removeConfigValue(params.remove)
-          new ConfigLoader().save(config)
+          println params.arguments()
+          def handler = new ConfigCommands(config)
+          if (params.get) handler.get(params.get)
+          if (params.set) handler.set(params.set, params.sets[1])
+          if (params.remove) handler.remove(params.remove)
+        }
+      }
+
+      command('project') {
+        describe 'anthill projects'
+        options {
+          f longOpt: 'folder', args: 1, 'gets the anthill projects in the folder'
+        }
+        execute { params ->
+          if (params.f) new ProjectCommands(config).folder(params.f)
         }
       }
     }).run(args)
-  }
-
-  def getConfigValue(name) {
-    print "$name=${config.get(name)}\n"
-  }
-
-  def setConfigValue(name, value) {
-    config.put(name, value)
-  }
-
-  def removeConfigValue(name) {
-    config.remove(name)
   }
 }
