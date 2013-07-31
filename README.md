@@ -16,7 +16,7 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 * Unzip the Anthill Dev Kit into the *./depends* folder
 * Build the dependencies jar `gradle assemble`
 * Run the tests `gradle test`
-* add configuration variables
+* Add configuration variables
     * anthill server `./hilltop config --set server=anthill.local`
     * authorization token `./hilltop config --set token=mytoken`
 
@@ -35,7 +35,7 @@ Projects
 ## contributing
 
 1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
+2. Create your feature branch `git checkout -b my-new-feature`
+3. Commit your changes `git commit -am 'Added some feature'`
+4. Push to the branch `git push origin my-new-feature`
 5. Create new Pull Request
