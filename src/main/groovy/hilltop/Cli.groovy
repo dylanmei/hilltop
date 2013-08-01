@@ -29,14 +29,23 @@ class Cli {
   }
 
   def execute(command, params) {
-    def builder = new CliBuilder(usage: usage(command))
-    builder.writer = writer
-    builder.with command.config ?: {}
-
+    def builder = createBuilder(command)
     def options = builder.parse(params)
-    if (!options) return []
-    if (command.execute) command.execute(options)
-    return options.arguments()
+
+    def newParams = []
+    if (options.help) {
+      if (command.description)
+        writer << command.description + '\n'
+      builder.footer = help(command)
+      builder.usage()
+    }
+    else {
+      if (command.execute)
+        command.execute(options)
+      newParams = options.arguments()
+    }
+
+    newParams
   }
 
   def usage(command) {
@@ -45,6 +54,31 @@ class Cli {
     def commands = path == '' ?
       options : " ${path.split(':').tail().join(options)}$options"
     "$app$commands"
+  }
+
+  def help(command) {
+    def content = ''
+    def commands = command.children
+
+    if (!commands.isEmpty()) {
+      content = 'commands:\n' << ''
+      def padding = commands*.name.inject(0) { size, name -> name.size() > size ? name.size() : size }
+      commands.each {
+        content << "\u00A0 ${it.name.padRight(padding)}    $it.description\n"
+      }
+    }
+    content.toString()
+  }
+
+  private CliBuilder createBuilder(command) {
+    def builder = new CliBuilder(usage: usage(command))
+    builder.writer = writer
+    builder.with command.config ?: {}
+
+    def options = builder.getOptions()
+    if (!options.hasOption('help'))
+      options.addOption('h', 'help', false, 'Usage information')
+    builder
   }
 }
 
@@ -62,6 +96,7 @@ class CommandBuilder {
     def newCommand = createCommand(name)
 
     if (config) {
+
       def parent = current
       current = newCommand
       config.each { c ->
@@ -105,7 +140,6 @@ class CommandBuilder {
   private Command createCommand(name) {
     def command = current ?
       Command.Sub(current, name) : Command.Core()
-//    writer << "\nadding $command.path\n"
     return this.commands[command.path] = command
   }
 }

@@ -7,20 +7,20 @@ class App {
     config = new ConfigLoader().load()
 
     new Cli('hilltop', {
-      describe 'an anthill command-line utility'
+      describe 'An Anthill command-line utility'
       options {
-        v longOpt: 'version', 'the current hilltop version'
+        v longOpt: 'version', 'Gets the current Hilltop version'
       }
       execute { params ->
         if (params.v) quit('hilltop version: 0.1')
       }
 
       command('config') {
-        describe 'set and get configuration values'
+        describe 'Working with configuration values'
         options {
-          _ longOpt: 'get', args: 1, argName: 'name', 'gets a configuration value'
-          _ longOpt: 'set', args: 2, argName: 'name=value', valueSeparator: '=', 'sets a configuration value'
-          _ longOpt: 'remove', args: 1, argName: 'name', 'removes a configuration value'
+          _ longOpt: 'get', args: 1, argName: 'name', 'Gets a configuration value'
+          _ longOpt: 'set', args: 2, argName: 'name=value', valueSeparator: '=', 'Sets a configuration value'
+          _ longOpt: 'remove', args: 1, argName: 'name', 'Removes a configuration value'
         }
         execute { params ->
           def handler = new ConfigCommands(config)
@@ -33,15 +33,13 @@ class App {
 
       command('projects') {
         def handler = new ProjectCommands(config)
-
-        describe 'anthill projects'
-        options { h longOpt: 'help', 'todo' }
+        describe 'Working with Anthill projects'
 
         command('list') {
-          describe 'list anthill projects'
+          describe 'List Anthill projects'
           options {
-            f longOpt: 'folder', args: 1, 'gets the anthill projects in the folder'
-            i longOpt: 'inactive', 'include inactive projects'
+            f longOpt: 'folder', args: 1, 'List Anthill projects in a specific folder'
+            i longOpt: 'inactive', 'Includes inactive projects'
           }
           execute { params ->
             if (params.f) handler.list_folder(params.f, params.i)
@@ -50,7 +48,7 @@ class App {
         }
 
         command('show') {
-          describe 'show anthill project'
+          describe 'Show details of an Anthill project'
           execute { params ->
             if (params.arguments())
               handler.show(params.arguments())
