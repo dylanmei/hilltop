@@ -25,8 +25,9 @@ class App {
         execute { params ->
           def handler = new ConfigCommands(config)
           if (params.get) handler.get(params.get)
-          if (params.set) handler.set(params.set, params.sets[1])
-          if (params.remove) handler.remove(params.remove)
+          else if (params.set) handler.set(params.set, params.sets[1])
+          else if (params.remove) handler.remove(params.remove)
+          else handler.list()
         }
       }
 

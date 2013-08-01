@@ -20,5 +20,11 @@ class ConfigCommands {
     config.remove(name)
     new ConfigLoader().save(config)
   }
+
+  def list() {
+    def writer = new StringWriter()
+    config.writeTo(writer)
+    print writer.toString()
+  }
 }
 
