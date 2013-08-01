@@ -13,7 +13,7 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 
     `brew/chocolatey install gradle`
 
-* Unzip the Anthill Dev Kit into the *./depends* folder
+* Unzip the Anthill3 Dev Kit into the *./depends* folder
 * Build the dependencies jar `gradle assemble`
 * Run the tests `gradle test`
 * Add configuration variables
