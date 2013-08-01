@@ -12,6 +12,28 @@ class ProjectCommands {
     this.config = config
   }
 
+  def show(name) {
+    work {
+      def projects = ProjectFactory.getInstance()
+        .restoreAllForName(name)
+      if (projects.size() > 1) {
+        println "There are #{projects.size()} named <${name}>; taking the first one)"
+      }
+
+      if (projects.size() == 0) {
+        println "No such project <${name}>"; return
+      }
+
+      def project = projects[0]
+      def folder = project.getFolder()
+      def workflows = project.getOriginatingWorkflowArray()
+      def hint = project.isActive() ? '' : ' [inactive]'
+      println "${project.getName()}${hint}"
+      println "Folder\t\t${folder.getPath()}"
+      println "Workflows\t${workflows.collect {w -> w.getName()}.join('\n\t\t')}"
+    }
+  }
+
   def list(inactive) {
     work {
       def projects = inactive ?
@@ -37,15 +59,14 @@ class ProjectCommands {
     }
   }
 
-  private work(Closure... tasks) {
+  private work(Closure task) {
     def token = config.get('token')
     def server = config.get('server')
 
     def client = AnthillClient.connect(server, 4567, token)
-    tasks.each { t ->
-      def uow = client.createUnitOfWork()
-      t()
-      uow.commitAndClose();
-    }
+    def uow = client.createUnitOfWork()
+    def result = task()
+    uow.commitAndClose();
+    result
   }
 }

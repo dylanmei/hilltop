@@ -31,6 +31,8 @@ class App {
       }
 
       command('projects') {
+        def handler = new ProjectCommands(config)
+
         describe 'anthill projects'
         options { h longOpt: 'help', 'todo' }
 
@@ -41,9 +43,16 @@ class App {
             i longOpt: 'inactive', 'include inactive projects'
           }
           execute { params ->
-            def handler = new ProjectCommands(config)
             if (params.f) handler.list_folder(params.f, params.i)
             else handler.list(params.i)
+          }
+        }
+
+        command('show') {
+          describe 'show anthill project'
+          execute { params ->
+            if (params.arguments())
+              handler.show(params.arguments())
           }
         }
       }
