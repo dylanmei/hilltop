@@ -33,7 +33,7 @@ class CliSpec extends Specification {
     }
   }
 
-  def 'core command with simple option is executed'() {
+  def 'command with simple option is executed'() {
     def cli = new Cli('test', config)
     writer = new StringWriter()
 
@@ -43,7 +43,7 @@ class CliSpec extends Specification {
       writer.toString() == 'version 1'
   }
 
-  def 'core command with argument option is executed'() {
+  def 'command with argument option is executed'() {
     def cli = new Cli('test', config)
     writer = new StringWriter()
 

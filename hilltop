@@ -10,5 +10,5 @@ CLASSPATH="$HILLTOP_HOME/src/main/groovy:$HILLTOP_HOME/build/libs/hilltop-depend
 export HILLTOP_HOME CLASSPATH
 
 # Start hilltop
-groovy -cp ./src/main/groovy:./build/libs/hilltop-dependencies.jar ./hilltop.groovy $@
-#groovy $HILLTOP_HOME/hilltop.groovy $@
+groovy -cp ./src/main/groovy:./build/libs/hilltop-dependencies.jar ./hilltop.groovy "$@"
+#groovy $HILLTOP_HOME/hilltop.groovy "$@"
