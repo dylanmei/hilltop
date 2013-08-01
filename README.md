@@ -31,6 +31,7 @@ Projects
 
     ./hilltop projects list
     ./hilltop projects list --folder Services
+    ./hilltop projects show myproject
 
 ## contributing
 
