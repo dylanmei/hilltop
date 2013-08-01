@@ -54,6 +54,17 @@ class App {
               handler.show(params.arguments())
           }
         }
+
+        command('open') {
+          describe 'Launch an Anthill project in the browser'
+          options {
+            a longOpt: 'admin', 'Launch the administrative configuration page'
+          }
+          execute { params ->
+            if (params.arguments())
+              handler.open(params.arguments()[0], params.a)
+          }
+        }
       }
     }).run(args)
   }

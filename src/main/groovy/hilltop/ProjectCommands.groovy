@@ -14,23 +14,32 @@ class ProjectCommands {
 
   def show(name) {
     work {
-      def projects = ProjectFactory.getInstance()
-        .restoreAllForName(name)
-      if (projects.size() > 1) {
-        println "There are #{projects.size()} named <${name}>; taking the first one)"
-      }
+      def project = get_project_or_complain(name)
+      if (!project) return
 
-      if (projects.size() == 0) {
-        println "No such project <${name}>"; return
-      }
-
-      def project = projects[0]
       def folder = project.getFolder()
       def workflows = project.getOriginatingWorkflowArray()
       def hint = project.isActive() ? '' : ' [inactive]'
       println "${project.getName()}${hint}"
       println "Folder\t\t${folder.getPath()}"
       println "Workflows\t${workflows.collect {w -> w.getName()}.join('\n\t\t')}"
+    }
+  }
+
+  def open(name, admin) {
+    def url = work {
+      def project = get_project_or_complain(name)
+      if (!project) return
+
+      return admin ?
+        "http://${config.server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
+        "http://${config.server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
+    }
+
+    if (url) {
+      Class<?> d = Class.forName("java.awt.Desktop");
+      d.getDeclaredMethod("browse", [java.net.URI.class] as Class[]).invoke(
+      d.getDeclaredMethod("getDesktop").invoke(null), [java.net.URI.create(url)] as Object[]);
     }
   }
 
@@ -57,6 +66,20 @@ class ProjectCommands {
           .each { p -> println "${p.getName()}" }
       }
     }
+  }
+
+  private get_project_or_complain(name) {
+      def projects = ProjectFactory.getInstance()
+        .restoreAllForName(name)
+      if (projects.size() > 1) {
+        println "There are #{projects.size()} named <${name}>; taking the first one)"
+      }
+
+      if (projects.size() == 0) {
+        println "No such project <${name}>"; return
+      }
+
+      projects[0]
   }
 
   private work(Closure task) {
