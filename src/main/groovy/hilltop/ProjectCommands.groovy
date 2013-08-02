@@ -27,13 +27,14 @@ class ProjectCommands {
   }
 
   def open(name, admin) {
+    def settings = config.get('anthill')
     def url = work {
       def project = get_project_or_complain(name)
       if (!project) return
 
       return admin ?
-        "http://${config.server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
-        "http://${config.server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
+        "http://${settings.api_server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
+        "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
     }
 
     if (url) {
@@ -83,10 +84,8 @@ class ProjectCommands {
   }
 
   private work(Closure task) {
-    def token = config.get('token')
-    def server = config.get('server')
-
-    def client = AnthillClient.connect(server, 4567, token)
+    def settings = config.get('anthill')
+    def client = AnthillClient.connect(settings.api_server, 4567, settings.api_token)
     def uow = client.createUnitOfWork()
     def result = task()
     uow.commitAndClose();

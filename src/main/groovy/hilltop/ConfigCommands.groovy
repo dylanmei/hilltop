@@ -8,17 +8,28 @@ class ConfigCommands {
   }
 
   def get(name) {
-    println "$name=${config.get(name)}"
+    def value = name.tokenize('.')
+      .inject(config) { c, key -> c[key] }
+    println "$name=${value}"
   }
 
   def set(name, value) {
     config.put(name, value)
     new ConfigLoader().save(config)
+    println "Configuration value <${name}> has been set"
   }
 
   def remove(name) {
-    config.remove(name)
-    new ConfigLoader().save(config)
+    def map = config.flatten()
+    if (!map.containsKey(name))
+      println "No such configuration value <${name}>"
+    else {
+      map.remove(name)
+      config.clear()
+      config.putAll(map)
+      new ConfigLoader().save(config)
+      println "Configuration value <${name}> has been removed"
+    }
   }
 
   def list() {

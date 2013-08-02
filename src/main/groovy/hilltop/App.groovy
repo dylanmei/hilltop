@@ -16,7 +16,7 @@ class App {
       }
 
       command('config') {
-        describe 'Working with configuration values'
+        describe 'List, set, or remove configuration values'
         options {
           _ longOpt: 'get', args: 1, argName: 'name', 'Gets a configuration value'
           _ longOpt: 'set', args: 2, argName: 'name=value', valueSeparator: '=', 'Sets a configuration value'
@@ -34,6 +34,10 @@ class App {
       command('projects') {
         def handler = new ProjectCommands(config)
         describe 'Working with Anthill projects'
+        execute {
+          if (!check_anthill_configuration())
+            quit("Anthill configuration is incomplete")
+        }
 
         command('list') {
           describe 'List Anthill projects'
@@ -67,5 +71,10 @@ class App {
         }
       }
     }).run(args)
+  }
+
+  private Boolean check_anthill_configuration() {
+    def ah = config.get('anthill')
+    ah != null && !ah.api_token.isEmpty() && !ah.api_server.isEmpty()
   }
 }
