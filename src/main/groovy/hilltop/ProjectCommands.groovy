@@ -4,6 +4,7 @@ import com.urbancode.anthill3.main.client.AnthillClient;
 import com.urbancode.anthill3.persistence.UnitOfWork;
 import com.urbancode.anthill3.domain.folder.*;
 import com.urbancode.anthill3.domain.project.*;
+import com.urbancode.anthill3.domain.source.*;
 
 class ProjectCommands {
   def config
@@ -17,12 +18,30 @@ class ProjectCommands {
       def project = get_project_or_complain(name)
       if (!project) return
 
-      def folder = project.getFolder()
-      def workflows = project.getOriginatingWorkflowArray()
       def hint = project.isActive() ? '' : ' [inactive]'
       println "${project.getName()}${hint}"
+
+      if (project.getDescription())
+        println "Description\t${project.getDescription()}"
+
+      def folder = project.getFolder()
       println "Folder\t\t${folder.getPath()}"
-      println "Workflows\t${workflows.collect {w -> w.getName()}.join('\n\t\t')}"
+
+      def workflows = project.getWorkflowArray().sort { a, b ->
+        if (a.isOriginating()) return b.isOriginating() ? 0 : -1
+        if (b.isOriginating()) return a.isOriginating() ? 0 :  1
+        a.getName() <=> b.getName()
+      }
+      println "Workflows\t${workflows.collect {w -> w.getName() + (w.isOriginating() ? '*' : '')}.join('\n\t\t')}"
+
+      def sourceConfigType = project.getSourceConfigType()
+      println "Source Config\t${sourceConfigType.getName().tokenize('.').last()}"
+
+      def lifecycleModel = project.getLifeCycleModel()
+      println "Lifecycle\t${lifecycleModel.getName()}"
+
+      def environmentGroup = project.getEnvironmentGroup()
+      println "Environment\t${environmentGroup.getName()}"
     }
   }
 
@@ -73,7 +92,7 @@ class ProjectCommands {
       def projects = ProjectFactory.getInstance()
         .restoreAllForName(name)
       if (projects.size() > 1) {
-        println "There are #{projects.size()} named <${name}>; taking the first one)"
+        println "There are #{projects.size()} named <${name}>; taking the first one"
       }
 
       if (projects.size() == 0) {
