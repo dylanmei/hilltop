@@ -36,7 +36,7 @@ class App {
         describe 'Working with Anthill projects'
         execute {
           if (!check_anthill_configuration())
-            quit("Anthill configuration is incomplete")
+            quit("Your Anthill configuration requires anthill.api_server and anthill.api_token values.")
         }
 
         command('list') {

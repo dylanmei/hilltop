@@ -4,7 +4,7 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 
 ## setup
 
-* JVM 1.6+
+* JRE 1.6+
 * Groovy 2.1+
 
     `brew/chocolatey install groovy`

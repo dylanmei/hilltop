@@ -6,7 +6,7 @@ import com.urbancode.anthill3.domain.folder.*;
 import com.urbancode.anthill3.domain.project.*;
 import com.urbancode.anthill3.domain.source.*;
 
-class ProjectCommands {
+class ProjectCommands extends Commands {
   def config
 
   def ProjectCommands(config) {
@@ -16,13 +16,13 @@ class ProjectCommands {
   def show(name) {
     work {
       def project = get_project_or_complain(name)
-      if (!project) return
-
-      def hint = project.isActive() ? '' : ' [inactive]'
-      println "${project.getName()}${hint}"
+      println project.getName()
 
       if (project.getDescription())
         println "Description\t${project.getDescription()}"
+
+      if (!project.isActive())
+        println "Status\t\tInactive"
 
       def folder = project.getFolder()
       println "Folder\t\t${folder.getPath()}"
@@ -89,17 +89,15 @@ class ProjectCommands {
   }
 
   private get_project_or_complain(name) {
-      def projects = ProjectFactory.getInstance()
-        .restoreAllForName(name)
-      if (projects.size() > 1) {
-        println "There are #{projects.size()} named <${name}>; taking the first one"
-      }
+    def projects = ProjectFactory.getInstance()
+      .restoreAllForName(name)
 
-      if (projects.size() == 0) {
-        println "No such project <${name}>"; return
-      }
+    if (projects.size() > 1)
+      println "There are #{projects.size()} named <$name>; taking the first one"
+    if (projects.size() == 0)
+      quit "No such project <$name>"
 
-      projects[0]
+    projects[0]
   }
 
   private work(Closure task) {
