@@ -16,18 +16,32 @@ class App {
       }
 
       command('config') {
-        describe 'List, set, or remove configuration values'
-        options {
-          _ longOpt: 'get', args: 1, argName: 'name', 'Gets a configuration value'
-          _ longOpt: 'set', args: 2, argName: 'name=value', valueSeparator: '=', 'Sets a configuration value'
-          _ longOpt: 'remove', args: 1, argName: 'name', 'Removes a configuration value'
+        def handler = new ConfigCommands(config)
+        describe 'Manage configuration values'
+        command('get') {
+          describe 'Get a configuration value'
+          execute { p ->
+            if (!p.arguments()) help
+            handler.get(p.arguments().head())
+          }
         }
-        execute { params ->
-          def handler = new ConfigCommands(config)
-          if (params.get) handler.get(params.get)
-          else if (params.set) handler.set(params.set, params.sets[1])
-          else if (params.remove) handler.remove(params.remove)
-          else handler.list()
+        command('set') {
+          describe 'Set configuration values; <property=value> ...'
+          execute { p ->
+            if (!p.arguments()) help
+            handler.set(p.arguments())
+          }
+        }
+        command('remove') {
+          describe 'Remove configuration values'
+          execute { p ->
+            if (!p.arguments()) help
+            handler.remove(p.arguments())
+          }
+        }
+        command('list') {
+          describe 'List the current configuration values'
+          execute { handler.list() }
         }
       }
 

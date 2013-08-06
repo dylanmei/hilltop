@@ -40,6 +40,12 @@ class Cli {
       builder.usage()
     }
     else {
+
+      //options.arguments()
+
+      //if (command.name != '') 
+      //  println "executing ${command.name} args=${options.arguments().join(' ')}"
+
       if (command.execute)
         command.execute(options)
       newParams = options.arguments()
@@ -50,7 +56,7 @@ class Cli {
 
   def usage(command) {
     def path = command.path
-    def options = ' [<options>]'
+    def options = ' [<options>] '
     def commands = path == '' ?
       options : " ${path.split(':').tail().join(options)}$options"
     "$app$commands"

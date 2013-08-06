@@ -17,15 +17,16 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 * Build the dependencies jar `gradle assemble`
 * Run the tests `gradle test`
 * Add configuration variables
-    * anthill server `./hilltop config --set anthill.api_server=anthill.local`
-    * authorization token `./hilltop config --set anthill.api_token=mytoken`
+    * anthill server `./hilltop config set anthill.api_server=anthill.local`
+    * authorization token `./hilltop config set anthill.api_token=mytoken`
 
 ## commands
 
 Config
 
-    ./hilltop config --set anthill.api_server=anthill.local
-    ./hilltop config --get anthill.api_server
+    ./hilltop config list
+    ./hilltop config set anthill.api_server=anthill.local
+    ./hilltop config get anthill.api_server
 
 Projects
 

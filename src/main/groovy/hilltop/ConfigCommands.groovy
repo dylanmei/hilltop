@@ -13,23 +13,33 @@ class ConfigCommands {
     println "$name=${value}"
   }
 
-  def set(name, value) {
-    config.put(name, value)
+  def set(properties) {
+    properties.each {
+      def property, value = ''
+      def matcher = (it =~ /([^\s=]+)=(.*)/)
+      if (matcher.matches())
+        (property, value) = matcher[0].tail()
+      if (property) {
+        config.put(property, value)
+        println "Configuration value <${property}> has been set"
+      }
+    }
     new ConfigLoader().save(config)
-    println "Configuration value <${name}> has been set"
   }
 
-  def remove(name) {
+  def remove(properties) {
     def map = config.flatten()
-    if (!map.containsKey(name))
-      println "No such configuration value <${name}>"
-    else {
-      map.remove(name)
-      config.clear()
-      config.putAll(map)
-      new ConfigLoader().save(config)
-      println "Configuration value <${name}> has been removed"
+    properties.each {
+      if (!map.containsKey(it))
+        println "No such configuration value <${it}>"
+      else {
+        map.remove(it)
+        config.clear()
+        println "Configuration value <${it}> has been removed"
+      }
     }
+    config.putAll(map)
+    new ConfigLoader().save(config)
   }
 
   def list() {
