@@ -68,10 +68,9 @@ class ProjectCommands extends Commands {
       def projects = inactive ?
         ProjectFactory.getInstance().restoreAll() :
         ProjectFactory.getInstance().restoreAllActive()
-      projects.each { p ->
-        def hint = p.isActive() ? '' : ' [inactive]'
-        println "${p.getName()}${hint}"
-      }
+      if (inactive)
+        projects = projects.findAll { p -> !p.isActive }
+      projects.each { println it.getName() }
     }
   }
 
@@ -82,7 +81,7 @@ class ProjectCommands extends Commands {
         println "No such folder <${name}>"
       else {
         folder.getProjects()
-          .findAll { f -> f.isActive }
+          .findAll { f -> f.isActive != inactive }
           .each { p -> println "${p.getName()}" }
       }
     }
@@ -93,7 +92,7 @@ class ProjectCommands extends Commands {
       .restoreAllForName(name)
 
     if (projects.size() > 1)
-      println "There are #{projects.size()} named <$name>; taking the first one"
+      println "There are ${projects.size()} named <$name>; taking the first one"
     if (projects.size() == 0)
       quit "No such project <$name>"
 
