@@ -6,9 +6,9 @@ class Cli {
   def writer
   def commands = [:]
 
-  Cli(app, Closure... config) {
+  Cli(app, Closure config, writer = null) {
     this.app = app
-    this.writer = new PrintWriter(System.out)
+    this.writer = writer ?: new PrintWriter(System.out)
     new CommandBuilder(commands, writer).configure(config)
     this
   }
@@ -33,19 +33,13 @@ class Cli {
     def options = builder.parse(params)
 
     def newParams = []
-    if (options.help) {
+    if (shouldShowHelp(command, options)) {
       if (command.description)
         writer << command.description + '\n'
       builder.footer = help(command)
       builder.usage()
     }
     else {
-
-      //options.arguments()
-
-      //if (command.name != '') 
-      //  println "executing ${command.name} args=${options.arguments().join(' ')}"
-
       if (command.execute)
         command.execute(options)
       newParams = options.arguments()
@@ -59,7 +53,20 @@ class Cli {
     def options = ' [<options>] '
     def commands = path == '' ?
       options : " ${path.split(':').tail().join(options)}$options"
-    "$app$commands"
+
+    def arguments = ''
+    def args = command.arguments
+    def argName = args.name
+    if (args.exactly > 0) {
+      if (args.exactly == 1) arguments = "<${argName}>"
+      else if (args.exactly == 2) arguments = "<${argName}1> <${argName}2>"
+      else arguments = "<${argName}1>... <${argName}${args.exactly}>"
+    }
+    else if (args.minimum > 0) {
+      arguments = "<${argName}>..."
+    }
+
+    "$app$commands$arguments"
   }
 
   def help(command) {
@@ -85,6 +92,15 @@ class Cli {
     if (!options.hasOption('help'))
       options.addOption('h', 'help', false, 'Usage information')
     builder
+  }
+
+  private Boolean shouldShowHelp(command, options) {
+    if (options.help) return true
+    def args = command.arguments
+
+    if (args.minimum == 0)
+      return false
+    args.minimum > options.arguments().size()
   }
 }
 
@@ -128,6 +144,15 @@ class CommandBuilder {
     current
   }
 
+  def arguments(Map details) {
+    def args = current.arguments
+    args.exactly = details['exactly'] ?: 0
+    args.minimum = details['minimum'] ?: args.exactly
+    if (details['name'])
+      args.name = details['name']
+    current
+  }
+
   def quit(message, throwable = null) {
     if (message)
       writer << message + '\n'
@@ -157,6 +182,7 @@ class Command {
   def config
   def execute
   def children = []
+  def arguments = new CommandArguments()
 
   static Command Core() {
     new Command('')
@@ -175,4 +201,10 @@ class Command {
     this.name = name
     this.path = path ?: name
   }
+}
+
+class CommandArguments {
+  def name = 'arg'
+  def exactly = 0
+  def minimum = 0
 }

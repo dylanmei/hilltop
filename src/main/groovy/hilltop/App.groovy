@@ -18,27 +18,25 @@ class App {
       command('config') {
         def handler = new ConfigCommands(config)
         describe 'Manage configuration values'
+
         command('get') {
           describe 'Get a configuration value'
-          execute { p ->
-            if (!p.arguments()) help
-            handler.get(p.arguments().head())
-          }
+          arguments exactly: 1
+          execute { p -> handler.get(p.arguments().first()) }
         }
+
         command('set') {
-          describe 'Set configuration values; <property=value> ...'
-          execute { p ->
-            if (!p.arguments()) help
-            handler.set(p.arguments())
-          }
+          describe 'Set onfiguration values; <property=value> ...'
+          arguments minimum: 1
+          execute { p -> handler.set(p.arguments()) }
         }
+
         command('remove') {
           describe 'Remove configuration values'
-          execute { p ->
-            if (!p.arguments()) help
-            handler.remove(p.arguments())
-          }
+          arguments minimum: 1
+          execute { p -> handler.remove(p.arguments()) }
         }
+
         command('list') {
           describe 'List the current configuration values'
           execute { handler.list() }
@@ -67,20 +65,18 @@ class App {
 
         command('show') {
           describe 'Show details of an Anthill project'
-          execute { params ->
-            if (params.arguments())
-              handler.show(params.arguments())
-          }
+          arguments exactly: 1, name: 'project'
+          execute { p -> handler.show(p.arguments()) }
         }
 
         command('open') {
           describe 'Launch an Anthill project in the browser'
+          arguments exactly: 1, name: 'project'
           options {
             a longOpt: 'admin', 'Launch the administrative configuration page'
           }
-          execute { params ->
-            if (params.arguments())
-              handler.open(params.arguments()[0], params.a)
+          execute { p ->
+            handler.open(p.arguments().first(), p.a)
           }
         }
       }

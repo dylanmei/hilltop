@@ -39,6 +39,31 @@ class CliSpec extends Specification {
       writer.toString() == 'hello hilltop'
   }
 
+  def 'command with required argument is executed'() {
+    def writer = new StringWriter()
+    def cli = new Cli('test', {
+      arguments exactly: 1
+      execute { params ->
+        writer << 'hello ' + params.arguments().first()
+      }
+    })
+    when:
+      cli.run('hilltop')
+    then:
+      writer.toString() == 'hello hilltop'
+  }
+
+  def 'command with required argument missing executes help'() {
+    def writer = new StringWriter()
+    def cli = new Cli('test', {
+      arguments exactly: 1
+    }, new PrintWriter(writer))
+    when:
+      cli.run()
+    then:
+      writer.toString().contains('usage: test')
+  }
+
   def 'child command is executed'() {
     def writer = new StringWriter()
     def cli = new Cli('test', {
