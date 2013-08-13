@@ -9,7 +9,7 @@ class Cli {
   Cli(app, Closure config, writer = null) {
     this.app = app
     this.writer = writer ?: new PrintWriter(System.out)
-    new CommandBuilder(commands, writer).configure(config)
+    new CommandBuilder(commands, this.writer).configure(config)
     this
   }
 

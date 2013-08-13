@@ -1,12 +1,10 @@
 package hilltop
 
-import com.urbancode.anthill3.main.client.AnthillClient;
-import com.urbancode.anthill3.persistence.UnitOfWork;
 import com.urbancode.anthill3.domain.folder.*;
 import com.urbancode.anthill3.domain.project.*;
 import com.urbancode.anthill3.domain.source.*;
 
-class ProjectCommands extends Commands {
+class ProjectCommands extends AnthillCommands {
   def config
 
   def ProjectCommands(config) {
@@ -90,34 +88,5 @@ class ProjectCommands extends Commands {
           .each { p -> println "${p.getName()}" }
       }
     }
-  }
-
-  private get_project_or_complain(name) {
-    if (name == '.') name = infer_project_name(name)
-
-    def projects = ProjectFactory.getInstance()
-      .restoreAllForName(name)
-
-    if (projects.size() > 1)
-      println "There are ${projects.size()} named <$name>; taking the first one"
-    if (projects.size() == 0)
-      quit "No such project <$name>"
-
-    projects[0]
-  }
-
-  private String infer_project_name(name) {
-    if (name != '.') return name
-    System.getProperty("user.dir")
-      .tokenize(File.separator).last()
-  }
-
-  private work(Closure task) {
-    def settings = config.get('anthill')
-    def client = AnthillClient.connect(settings.api_server, 4567, settings.api_token)
-    def uow = client.createUnitOfWork()
-    def result = task()
-    uow.commitAndClose();
-    result
   }
 }
