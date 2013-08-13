@@ -37,6 +37,11 @@ class ProjectCommands extends Commands {
       def sourceConfigType = project.getSourceConfigType()
       println "Source Config\t${sourceConfigType.getName().tokenize('.').last()}"
 
+//      def configs = SourceConfigFactory.getInstance().restoreAllForProject(project)
+//      configs.each {
+//        println "${it.getId()}, ${it.getRepositoryUrl()}, ${it.getRepositoryName()}"
+//      }
+
       def lifecycleModel = project.getLifeCycleModel()
       println "Lifecycle\t${lifecycleModel.getName()}"
 
@@ -88,6 +93,8 @@ class ProjectCommands extends Commands {
   }
 
   private get_project_or_complain(name) {
+    if (name == '.') name = infer_project_name(name)
+
     def projects = ProjectFactory.getInstance()
       .restoreAllForName(name)
 
@@ -97,6 +104,12 @@ class ProjectCommands extends Commands {
       quit "No such project <$name>"
 
     projects[0]
+  }
+
+  private String infer_project_name(name) {
+    if (name != '.') return name
+    System.getProperty("user.dir")
+      .tokenize(File.separator).last()
   }
 
   private work(Closure task) {

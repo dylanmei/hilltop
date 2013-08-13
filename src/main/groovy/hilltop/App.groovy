@@ -66,7 +66,9 @@ class App {
         command('show') {
           describe 'Show details of an Anthill project'
           arguments exactly: 1, name: 'project'
-          execute { p -> handler.show(p.arguments()) }
+          execute { p ->
+            handler.show(p.arguments().first())
+          }
         }
 
         command('open') {
