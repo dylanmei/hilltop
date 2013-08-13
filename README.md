@@ -35,6 +35,11 @@ Projects
     ./hilltop projects show myproject
     ./hilltop projects open myproject
 
+Workflows
+
+    ./hilltop workflows show myproject myworkflow
+    ./hilltop workflows open myproject myworkflow
+
 ## contributing
 
 1. Fork it

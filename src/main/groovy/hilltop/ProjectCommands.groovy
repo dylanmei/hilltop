@@ -52,18 +52,12 @@ class ProjectCommands extends AnthillCommands {
     def settings = config.get('anthill')
     def url = work {
       def project = get_project_or_complain(name)
-      if (!project) return
-
       return admin ?
         "http://${settings.api_server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
         "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
     }
 
-    if (url) {
-      Class<?> d = Class.forName("java.awt.Desktop");
-      d.getDeclaredMethod("browse", [java.net.URI.class] as Class[]).invoke(
-      d.getDeclaredMethod("getDesktop").invoke(null), [java.net.URI.create(url)] as Object[]);
-    }
+    if (url) open_browser(url)
   }
 
   def list(inactive) {

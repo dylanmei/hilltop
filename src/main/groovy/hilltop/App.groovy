@@ -82,6 +82,33 @@ class App {
           }
         }
       }
+
+      command('workflows') {
+        def handler = new WorkflowCommands(config)
+        describe 'Working with Anthill workflows'
+        execute {
+          if (!check_anthill_configuration())
+            quit("Your Anthill configuration requires anthill.api_server and anthill.api_token values.")
+        }
+        command('show') {
+          describe 'Show details of an Anthill workflow'
+          arguments exactly: 2
+          execute { p ->
+            handler.show(p.arguments()[0], p.arguments()[1])
+          }
+        }
+
+        command('open') {
+          describe 'Launch an Anthill workflow in the browser'
+          arguments exactly: 2
+          options {
+            a longOpt: 'admin', 'Launch the administrative configuration page'
+          }
+          execute { p ->
+            handler.open(p.arguments()[0], p.arguments()[1], p.a)
+          }
+        }
+      }
     }).run(args)
   }
 
