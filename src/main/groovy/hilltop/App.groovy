@@ -46,10 +46,7 @@ class App {
       command('project') {
         def handler = new ProjectCommands(config)
         describe 'Working with Anthill projects'
-        execute {
-          if (!check_anthill_configuration())
-            quit("Your Anthill configuration requires anthill.api_server and anthill.api_token values.")
-        }
+        execute { check_anthill_configuration() }
 
         command('list') {
           describe 'List Anthill projects'
@@ -86,10 +83,8 @@ class App {
       command('workflow') {
         def handler = new WorkflowCommands(config)
         describe 'Working with Anthill workflows'
-        execute {
-          if (!check_anthill_configuration())
-            quit("Your Anthill configuration requires anthill.api_server and anthill.api_token values.")
-        }
+        execute { check_anthill_configuration() }
+
         command('show') {
           describe 'Show details of an Anthill workflow'
           arguments exactly: 2
@@ -112,8 +107,14 @@ class App {
     }).run(args)
   }
 
-  private Boolean check_anthill_configuration() {
+  private void check_anthill_configuration() {
     def ah = config.get('anthill')
-    ah != null && !ah.api_token.isEmpty() && !ah.api_server.isEmpty()
+    if (ah != null && !ah.api_token.isEmpty() && !ah.api_server.isEmpty()) return
+    quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'
+  }
+
+  private void quit(message) {
+    if (message) println message + '\n'
+    System.exit(0)
   }
 }
