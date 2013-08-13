@@ -43,7 +43,7 @@ class App {
         }
       }
 
-      command('projects') {
+      command('project') {
         def handler = new ProjectCommands(config)
         describe 'Working with Anthill projects'
         execute {
@@ -83,7 +83,7 @@ class App {
         }
       }
 
-      command('workflows') {
+      command('workflow') {
         def handler = new WorkflowCommands(config)
         describe 'Working with Anthill workflows'
         execute {

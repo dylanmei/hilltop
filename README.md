@@ -30,15 +30,15 @@ Config
 
 Projects
 
-    ./hilltop projects list
-    ./hilltop projects list --folder Services
-    ./hilltop projects show myproject
-    ./hilltop projects open myproject
+    ./hilltop project list
+    ./hilltop project list --folder Services
+    ./hilltop project show myproject
+    ./hilltop project open myproject
 
 Workflows
 
-    ./hilltop workflows show myproject myworkflow
-    ./hilltop workflows open myproject myworkflow
+    ./hilltop workflow show myproject myworkflow
+    ./hilltop workflow open myproject myworkflow
 
 ## contributing
 
