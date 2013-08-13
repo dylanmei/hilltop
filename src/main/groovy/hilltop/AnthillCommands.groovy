@@ -46,7 +46,7 @@ class AnthillCommands {
     def settings = config.get('anthill')
     def client = AnthillClient.connect(settings.api_server, 4567, settings.api_token)
     def uow = client.createUnitOfWork()
-    def result = task()
+    def result = task(uow)
     uow.commitAndClose();
     result
   }
