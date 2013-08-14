@@ -1,4 +1,4 @@
-package hilltop
+package hilltop.commands
 
 import com.urbancode.anthill3.domain.folder.*;
 import com.urbancode.anthill3.domain.project.*;
@@ -57,7 +57,7 @@ class ProjectCommands extends AnthillCommands {
         "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
     }
 
-    if (url) open_browser(url)
+    browse url
   }
 
   def list(inactive) {

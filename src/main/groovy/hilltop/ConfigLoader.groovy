@@ -1,6 +1,6 @@
 package hilltop
 
-class ConfigLoader {
+final class ConfigLoader {
   def static final HOME = System.getProperty('user.home')
 
   def load() {

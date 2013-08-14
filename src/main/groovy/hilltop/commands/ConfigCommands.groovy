@@ -1,5 +1,8 @@
-package hilltop
+package hilltop.commands
 
+import hilltop.ConfigLoader
+
+@Mixin(ConsoleCommands)
 class ConfigCommands {
   def config
 
@@ -24,6 +27,7 @@ class ConfigCommands {
         println "Configuration value <${property}> has been set"
       }
     }
+
     new ConfigLoader().save(config)
   }
 
@@ -48,4 +52,3 @@ class ConfigCommands {
     print writer.toString()
   }
 }
-

@@ -1,5 +1,5 @@
 
-package hilltop
+package hilltop.commands
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.workflow.*
@@ -47,7 +47,7 @@ class WorkflowCommands extends AnthillCommands {
               }
             }
           }
-          
+
 
 //          pluginConfig.repositoryArray.each { ra ->
 //            println "${ra.typeName}"
@@ -119,6 +119,6 @@ class WorkflowCommands extends AnthillCommands {
         "http://${settings.api_server}:8181/tasks/project/WorkflowTasks/viewDashboard?workflowId=${workflow.id}"
     }
 
-    if (url) open_browser(url)
+    browse url
   }
 }
