@@ -1,6 +1,7 @@
 
 package hilltop
 
+import hilltop.cli.*
 import spock.lang.*
 
 class CliSpec extends Specification {

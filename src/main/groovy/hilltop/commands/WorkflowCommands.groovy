@@ -17,8 +17,7 @@ class WorkflowCommands extends AnthillCommands {
       def (project, workflow) = get_workflow_or_complain(projectName, workflowName)
 
       def hint = workflow.isOriginating() ? '*' : ''
-      println "${workflow.getName()}$hint"
-//      println "Project".padRight(40) + project.name
+      println "${project.name} > ${workflow.getName()}$hint"
       if (workflow.getDescription())
         println "Description".padRight(40) + workflow.description
 
@@ -57,17 +56,20 @@ class WorkflowCommands extends AnthillCommands {
 //            }
           }
         }
-        else if (sourceConfigType.name.endsWith('.git.GitSourceConfig')) {
-          println "Source Type".padRight(40) + sourceConfig.repository.name
-          println "Repository URL".padRight(40) + sourceConfig.repositoryUrl
-          println "Repository Branch".padRight(40) + sourceConfig.revision
-        }
         else {
-          println "Source Type".padRight(40) + sourceConfigType.name
-          if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getRepositoryName'))
-            println "Repository Name".padRight(40) + sourceConfig.repositoryName
-          if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getWorkspaceName'))
-            println "Workspace Name".padRight(40) + sourceConfig.workspaceName
+          println "Source Type".padRight(40) + sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
+
+          if (sourceConfigType.name.endsWith('.git.GitSourceConfig')) {
+            println "Source Type".padRight(40) + sourceConfig.repository.name
+            println "Repository URL".padRight(40) + sourceConfig.repositoryUrl
+            println "Repository Branch".padRight(40) + sourceConfig.revision
+          }
+          else {
+            if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getRepositoryName'))
+              println "Repository Name".padRight(40) + sourceConfig.repositoryName
+            if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getWorkspaceName'))
+              println "Workspace Name".padRight(40) + sourceConfig.workspaceName
+          }
         }
       }
     }
