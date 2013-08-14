@@ -16,35 +16,31 @@ class ProjectCommands extends AnthillCommands {
       def project = get_project_or_complain(name)
       println project.getName()
 
+
       if (project.getDescription())
-        println "Description\t${project.getDescription()}"
+        println "Description".padRight(40) + project.description
 
       if (!project.isActive())
-        println "Status\t\tInactive"
+        println "Status".padRight(40) + "Inactive"
 
       def folder = project.getFolder()
-      println "Folder\t\t${folder.getPath()}"
+      println "Folder".padRight(40) + folder.path
 
       def workflows = project.getWorkflowArray().sort { a, b ->
         if (a.isOriginating()) return b.isOriginating() ? 0 : -1
         if (b.isOriginating()) return a.isOriginating() ? 0 :  1
         a.getName() <=> b.getName()
       }
-      println "Workflows\t${workflows.collect {w -> w.getName() + (w.isOriginating() ? '*' : '')}.join('\n\t\t')}"
+      println "Workflows".padRight(40) + "${workflows.collect {w -> w.getName() + (w.isOriginating() ? '*' : '')}.join('\n' + (' ') * 40)}"
 
       def sourceConfigType = project.getSourceConfigType()
-      println "Source Config\t${sourceConfigType.getName().tokenize('.').last()}"
-
-//      def configs = SourceConfigFactory.getInstance().restoreAllForProject(project)
-//      configs.each {
-//        println "${it.getId()}, ${it.getRepositoryUrl()}, ${it.getRepositoryName()}"
-//      }
+      println "Source Config".padRight(40) + sourceConfigType.name.tokenize('.').last()
 
       def lifecycleModel = project.getLifeCycleModel()
-      println "Lifecycle\t${lifecycleModel.getName()}"
+      println "Lifecycle".padRight(40) + lifecycleModel.name
 
       def environmentGroup = project.getEnvironmentGroup()
-      println "Environment\t${environmentGroup.getName()}"
+      println "Environment".padRight(40) + environmentGroup.name
     }
   }
 

@@ -43,9 +43,18 @@ class AnthillCommands {
       quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'
     }
 
+    def result
     def client = AnthillClient.connect(settings.api_server, 4567, settings.api_token)
     def uow = client.createUnitOfWork()
-    def result = task(uow)
+    try {
+      result = task(uow)
+    }
+    catch (Exception e) {
+      if (!uow.isClosed())
+        uow.cancel()
+      throw e
+    }
+
     uow.commitAndClose();
     result
   }
