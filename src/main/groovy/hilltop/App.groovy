@@ -105,25 +105,6 @@ class App {
             handler.open(p.arguments()[0], p.arguments()[1], p.a)
           }
         }
-
-        command('new') {
-          describe 'Create an Anthill workflow'
-          arguments exactly: 2
-          options {
-            o longOpt: 'originating', 'Create an originating workflow'
-          }
-          execute { p ->
-            handler.create(p.arguments()[0], p.arguments()[1], p.o)
-          }
-        }
-
-        command('remove') {
-          describe 'Delete an Anthill workflow'
-          arguments exactly: 2
-          execute { p ->
-            handler.remove(p.arguments()[0], p.arguments()[1])
-          }
-        }
       }
     }).run(args)
   }

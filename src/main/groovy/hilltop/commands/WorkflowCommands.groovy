@@ -73,6 +73,7 @@ class WorkflowCommands extends AnthillCommands {
     }
   }
 
+/*
   def create(projectName, workflowName, originating) {
     work { uow ->
       def project = get_project_or_complain(projectName)
@@ -95,6 +96,7 @@ class WorkflowCommands extends AnthillCommands {
 
     println "Workflow <${workflowName}> has been removed"
   }
+*/
 
   def open(projectName, workflowName, admin) {
     def settings = config.get('anthill')
