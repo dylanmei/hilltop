@@ -106,6 +106,25 @@ class App {
           }
         }
       }
+
+      command('build') {
+        def handler = new BuildCommands(config)
+        describe 'Working with Anthill builds'
+
+        command('request') {
+          describe 'Request a new Anthill Buildlife'
+          arguments exactly: 2
+          execute { p ->
+            handler.request(p.arguments()[0], p.arguments()[1])
+          }
+        }
+
+        command('open') {
+          describe 'Launch an Anthill buildlife in the browser'
+          arguments exactly: 1, name: 'buildlife'
+          execute { p -> handler.open(p.arguments()[0]) }
+        }
+      }
     }).run(args)
   }
 }

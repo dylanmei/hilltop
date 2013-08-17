@@ -40,6 +40,11 @@ Workflows
     ./hilltop workflow show myproject myworkflow
     ./hilltop workflow open myproject myworkflow
 
+Builds
+
+    ./hilltop build request myproject myworkflow
+    ./hilltop build open mybuildlifeid
+
 ## contributing
 
 1. Fork it
