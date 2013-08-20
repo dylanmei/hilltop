@@ -46,6 +46,10 @@ class CommandBuilder {
     args.minimum = details['minimum'] ?: args.exactly
     if (details['name'])
       args.name = details['name']
+    details.each {
+      if (it.key.startsWith('name'))
+        args.setProperty(it.key, it.value)
+    }
     current
   }
 

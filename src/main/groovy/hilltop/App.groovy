@@ -30,7 +30,7 @@ class App {
         }
 
         command('set') {
-          describe 'Set onfiguration values; <property=value> ...'
+          describe 'Set configuration values; <property=value> ...'
           arguments minimum: 1
           execute { p -> handler.set(p.arguments()) }
         }
@@ -89,7 +89,7 @@ class App {
 
         command('show') {
           describe 'Show details of an Anthill workflow'
-          arguments exactly: 2
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
           execute { p ->
             handler.show(p.arguments()[0], p.arguments()[1])
           }
@@ -97,7 +97,7 @@ class App {
 
         command('open') {
           describe 'Launch an Anthill workflow in the browser'
-          arguments exactly: 2
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
           options {
             a longOpt: 'admin', 'Launch the administrative configuration page'
           }
@@ -113,7 +113,7 @@ class App {
 
         command('request') {
           describe 'Request a new Anthill Buildlife'
-          arguments exactly: 2
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
           execute { p ->
             handler.request(p.arguments()[0], p.arguments()[1])
           }

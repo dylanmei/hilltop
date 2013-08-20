@@ -56,14 +56,11 @@ class Cli {
 
     def arguments = ''
     def args = command.arguments
-    def argName = args.name
     if (args.exactly > 0) {
-      if (args.exactly == 1) arguments = "<${argName}>"
-      else if (args.exactly == 2) arguments = "<${argName}1> <${argName}2>"
-      else arguments = "<${argName}1>... <${argName}${args.exactly}>"
+      arguments = args.getNames().collect { "<${it}>" }.join(' ')
     }
     else if (args.minimum > 0) {
-      arguments = "<${argName}>..."
+      arguments = "<${args.name}>..."
     }
 
     "$app$commands$arguments"
