@@ -5,6 +5,11 @@ class ConsoleCommands {
   def writer = new PrintWriter(System.out)
   def terminate = { System.exit(0) }
 
+  def echo(message) {
+    writer.println message
+    writer.flush()
+  }
+
   def quit(message, throwable = null) {
     if (message)
       writer.println message

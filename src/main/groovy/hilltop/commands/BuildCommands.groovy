@@ -1,14 +1,17 @@
 
 package hilltop.commands
 
-import com.urbancode.anthill3.domain.project.*
-import com.urbancode.anthill3.domain.source.*
+import hilltop.finders.WorkflowFinder
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.services.build.*
 
-class BuildCommands extends AnthillCommands {
+@Mixin(ConsoleCommands)
+@Mixin(AnthillCommands)
+class BuildCommands {
   def config
+
+  WorkflowFinder finder = new WorkflowFinder()
 
   def BuildCommands(config) {
     this.config = config
@@ -20,8 +23,8 @@ class BuildCommands extends AnthillCommands {
   }
 
   def request(projectName, workflowName) {
-    def request = work { uow ->
-      def (project, workflow) = get_workflow_or_complain(projectName, workflowName)
+    def request = work {
+      def workflow = getWorkflow(projectName, workflowName)
       createRequest(workflow)
     }
 
@@ -31,22 +34,22 @@ class BuildCommands extends AnthillCommands {
     def thread = Thread.start {
       def complete = false
       while (!complete && !Thread.currentThread().isInterrupted()) {
-        sleep  250
+        sleep 250
         print '.'
 
         work { uow ->
           request = BuildRequestFactory.getInstance().restore(request.id)
           if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
             def build = request.buildLife
-            println "Buildlife ${build.id} is available"
+            echo "Buildlife ${build.id} is available"
             complete = true
           }
           if (request.status == BuildRequestStatusEnum.BUILD_LIFE_NOT_NEEDED) {
-            println "Buildlife is not needed"
+            echo "Buildlife is not needed"
             complete = true
           }
           if (request.status == BuildRequestStatusEnum.FAILED) {
-            println "Buildlife creation failed"
+            echo "Buildlife creation failed"
             complete = true
           }
         }
@@ -79,4 +82,11 @@ class BuildCommands extends AnthillCommands {
     request.store()
     request
   }
+
+  private Workflow getWorkflow(projectName, workflowName) {
+    finder.workflow(projectName, workflowName) {
+      alert { m -> echo m }
+      error { m -> quit m }
+    }    
+  }  
 }

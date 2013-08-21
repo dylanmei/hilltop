@@ -1,12 +1,17 @@
 
 package hilltop.commands
-import com.urbancode.anthill3.domain.project.*
-import com.urbancode.anthill3.domain.source.*
+
+import hilltop.finders.WorkflowFinder
 import com.urbancode.anthill3.domain.workflow.*
+import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.source.plugin.*
 
-class WorkflowCommands extends AnthillCommands {
+@Mixin(ConsoleCommands)
+@Mixin(AnthillCommands)
+class WorkflowCommands {
   def config
+
+  WorkflowFinder finder = new WorkflowFinder()
 
   def WorkflowCommands(config) {
     this.config = config
@@ -14,16 +19,17 @@ class WorkflowCommands extends AnthillCommands {
 
   def show(projectName, workflowName) {
     work {
-      def (project, workflow) = get_workflow_or_complain(projectName, workflowName)
-
+      def workflow = getWorkflow(projectName, workflowName)
+      def project = workflow.project
       def hint = workflow.isOriginating() ? '*' : ''
-      println "${project.name} > ${workflow.getName()}$hint"
-      if (workflow.getDescription())
-        println "Description".padRight(40) + workflow.description
+      echo "${project.name} > ${workflow.name}$hint"
+
+      if (workflow.description)
+        echo "Description".padRight(40) + workflow.description
 
       def definition = workflow.getWorkflowDefinition()
       def lifecycleModel = definition.getLifeCycleModel()
-      println "Lifecycle".padRight(40) + lifecycleModel.name
+      echo "Lifecycle".padRight(40) + lifecycleModel.name
 
       if (workflow.isOriginating()) {
         def buildProfile = workflow.buildProfile
@@ -34,81 +40,63 @@ class WorkflowCommands extends AnthillCommands {
           def pluginConfig = sourceConfig.asType(PluginSourceConfig)
           def repository = pluginConfig.repositoryArray.first()
           def plugin = repository.plugin
-          println "Source Type".padRight(40) + repository.typeName
+          echo "Source Type".padRight(40) + repository.typeName
 
           if (plugin.pluginId.endsWith('.plugin.Git')) {
             def repoProps = repository.getPropertyValueGroupsWithType('repo').first().propertyMap
             def sourceProps = pluginConfig.sourcePropertyValueGroups.first().propertyMap
 
-            println "Repository URL".padRight(40) + repoProps['repoBaseUrl'] + sourceProps['remoteUrl']
-            println "Repository Branch".padRight(40) + sourceProps['branch']
+            echo "Repository URL".padRight(40) + repoProps['repoBaseUrl'] + sourceProps['remoteUrl']
+            echo "Repository Branch".padRight(40) + sourceProps['branch']
 
 //            repository.propertyValueGroups.each { pvg ->
 //              for (name in pvg.propertyNames) {
-//                println "  ${name}:".padRight(20) + pvg.getDisplayedValue(name)
+//                echo "  ${name}:".padRight(20) + pvg.getDisplayedValue(name)
 //              }
 //            }
 
 //            pluginConfig.sourcePropertyValueGroups.each { pvg ->
 //              for (name in pvg.propertyNames) {
-//                println "  ${name}:".padRight(20) + pvg.getPropertyValue(name)
+//                echo "  ${name}:".padRight(20) + pvg.getPropertyValue(name)
 //              }
 //            }
           }
         }
         else {
-          println "Source Type".padRight(40) + sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
+          echo "Source Type".padRight(40) + sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
 
           if (sourceConfigType.name.endsWith('.git.GitSourceConfig')) {
-            println "Source Type".padRight(40) + sourceConfig.repository.name
-            println "Repository URL".padRight(40) + sourceConfig.repositoryUrl
-            println "Repository Branch".padRight(40) + sourceConfig.revision
+            echo "Source Type".padRight(40) + sourceConfig.repository.name
+            echo "Repository URL".padRight(40) + sourceConfig.repositoryUrl
+            echo "Repository Branch".padRight(40) + sourceConfig.revision
           }
           else {
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getRepositoryName'))
-              println "Repository Name".padRight(40) + sourceConfig.repositoryName
+              echo "Repository Name".padRight(40) + sourceConfig.repositoryName
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getWorkspaceName'))
-              println "Workspace Name".padRight(40) + sourceConfig.workspaceName
+              echo "Workspace Name".padRight(40) + sourceConfig.workspaceName
           }
         }
       }
     }
   }
 
-/*
-  def create(projectName, workflowName, originating) {
-    work { uow ->
-      def project = get_project_or_complain(projectName)
-      def workflow = new Workflow(project)
-      workflow.name = workflowName
-//      if (originating) {
-//        def buildProfile = new BuildProfile(project, workflowName)
-//      }
-      workflow.setUnitOfWork(uow)
-      workflow.store()
-    }
-    println "Workflow <${workflowName}> has been created"
-  }
-
-  def remove(projectName, workflowName) {
-    work {
-      def (project, workflow) = get_workflow_or_complain(projectName, workflowName)
-      workflow.delete()
-    }
-
-    println "Workflow <${workflowName}> has been removed"
-  }
-*/
-
   def open(projectName, workflowName, admin) {
     def settings = config.get('anthill')
     def url = work {
-      def (project, workflow) = get_workflow_or_complain(projectName, workflowName)
+      def workflow = getWorkflow(projectName, workflowName)
       return admin ?
         "http://${settings.api_server}:8181/tasks/admin/project/workflow/WorkflowTasks/viewWorkflow?workflowId=${workflow.id}" :
         "http://${settings.api_server}:8181/tasks/project/WorkflowTasks/viewDashboard?workflowId=${workflow.id}"
     }
 
     browse url
+  }
+
+  private Workflow getWorkflow(projectName, workflowName) {
+    finder.workflow(projectName, workflowName) {
+      alert { m -> echo m }
+      error { m -> quit m }
+    }    
   }
 }
