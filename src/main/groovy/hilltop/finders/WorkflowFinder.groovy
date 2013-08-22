@@ -18,7 +18,7 @@ class WorkflowFinder {
 
       if (handler) {
         if (!workflow)
-          callback(handler).error "No such workflow <$workflowName> for project <$projectName>"
+          callback(handler).error "No such workflow <$workflowName> for project <$project.name>"
       }
     }
 

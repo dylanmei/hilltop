@@ -18,7 +18,7 @@ class ProjectCommands {
 
   def show(projectName) {
     work {
-      def project = getProject(projectName)
+      def project = findProject(projectName)
       echo project.name
 
       if (project.description)
@@ -51,7 +51,7 @@ class ProjectCommands {
   def open(projectName, admin) {
     def settings = config.get('anthill')
     def url = work {
-      def project = getProject(projectName)
+      def project = findProject(projectName)
       return admin ?
         "http://${settings.api_server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
         "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
@@ -84,7 +84,7 @@ class ProjectCommands {
     }
   }
 
-  private Project getProject(projectName) {
+  private Project findProject(projectName) {
     def project = finder.project(projectName) {
       alert { m -> echo m }
       error { m -> quit m }

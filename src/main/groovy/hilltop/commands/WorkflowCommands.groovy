@@ -19,7 +19,7 @@ class WorkflowCommands {
 
   def show(projectName, workflowName) {
     work {
-      def workflow = getWorkflow(projectName, workflowName)
+      def workflow = findWorkflow(projectName, workflowName)
       def project = workflow.project
       def hint = workflow.isOriginating() ? '*' : ''
       echo "${project.name} > ${workflow.name}$hint"
@@ -84,7 +84,7 @@ class WorkflowCommands {
   def open(projectName, workflowName, admin) {
     def settings = config.get('anthill')
     def url = work {
-      def workflow = getWorkflow(projectName, workflowName)
+      def workflow = findWorkflow(projectName, workflowName)
       return admin ?
         "http://${settings.api_server}:8181/tasks/admin/project/workflow/WorkflowTasks/viewWorkflow?workflowId=${workflow.id}" :
         "http://${settings.api_server}:8181/tasks/project/WorkflowTasks/viewDashboard?workflowId=${workflow.id}"
@@ -93,7 +93,7 @@ class WorkflowCommands {
     browse url
   }
 
-  private Workflow getWorkflow(projectName, workflowName) {
+  private Workflow findWorkflow(projectName, workflowName) {
     finder.workflow(projectName, workflowName) {
       alert { m -> echo m }
       error { m -> quit m }

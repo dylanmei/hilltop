@@ -1,30 +1,37 @@
 
 package hilltop.commands
 
+import hilltop.finders.BuildFinder
 import hilltop.finders.WorkflowFinder
 import com.urbancode.anthill3.domain.workflow.*
-import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.services.build.*
+import com.urbancode.anthill3.domain.buildrequest.*
+import com.urbancode.anthill3.domain.buildlife.*
 
 @Mixin(ConsoleCommands)
 @Mixin(AnthillCommands)
 class BuildCommands {
   def config
 
-  WorkflowFinder finder = new WorkflowFinder()
+  WorkflowFinder workflowFinder = new WorkflowFinder()
+  BuildFinder buildFinder = new BuildFinder()
 
   def BuildCommands(config) {
     this.config = config
   }
 
-  def open(buildlife) {
+  def open(id) {
     def settings = config.get('anthill')
-    browse "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife}"
+    def url = work {
+      def buildlife = findBuildlife(id)
+      "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
+    }
+    browse url
   }
 
   def request(projectName, workflowName) {
     def request = work {
-      def workflow = getWorkflow(projectName, workflowName)
+      def workflow = findWorkflow(projectName, workflowName)
       createRequest(workflow)
     }
 
@@ -72,7 +79,7 @@ class BuildCommands {
 
   private BuildRequest createRequest(workflow) {
     if (!workflow.isOriginating())
-      quit "$workflowName is not an originating workflow"
+      quit "${workflow.name} is not an originating workflow"
 
     def uow = workflow.unitOfWork
     def request = BuildRequest.createOriginatingRequest(
@@ -83,10 +90,16 @@ class BuildCommands {
     request
   }
 
-  private Workflow getWorkflow(projectName, workflowName) {
-    finder.workflow(projectName, workflowName) {
+  private Workflow findWorkflow(projectName, workflowName) {
+    workflowFinder.workflow(projectName, workflowName) {
       alert { m -> echo m }
       error { m -> quit m }
     }    
-  }  
+  }
+
+  private BuildLife findBuildlife(id) {
+    buildFinder.buildlife(id) {
+      error { m -> quit m }
+    }
+  }
 }

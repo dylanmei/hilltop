@@ -1,6 +1,6 @@
 package hilltop.finders
 
-import com.urbancode.anthill3.domain.project.*;
+import com.urbancode.anthill3.domain.project.*
 
 @Mixin(Callbacks)
 class ProjectFinder {
