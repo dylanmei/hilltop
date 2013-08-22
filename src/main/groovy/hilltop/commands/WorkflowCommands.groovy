@@ -97,6 +97,6 @@ class WorkflowCommands {
     finder.workflow(projectName, workflowName) {
       alert { m -> echo m }
       error { m -> quit m }
-    }    
+    }
   }
 }

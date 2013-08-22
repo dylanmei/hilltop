@@ -88,6 +88,6 @@ class ProjectCommands {
     def project = finder.project(projectName) {
       alert { m -> echo m }
       error { m -> quit m }
-    }    
+    }
   }
 }

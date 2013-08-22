@@ -15,5 +15,5 @@ class BuildFinder {
     }
 
     build
-  }  
+  }
 }

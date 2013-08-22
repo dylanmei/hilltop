@@ -45,6 +45,11 @@ Builds
     ./hilltop build request myproject myworkflow
     ./hilltop build open mybuildlifeid
 
+Environments
+
+    ./hilltop environment list
+    ./hilltop environment show myenvironment
+
 ## contributing
 
 1. Fork it

@@ -125,6 +125,22 @@ class App {
           execute { p -> handler.open(p.arguments()[0]) }
         }
       }
+
+      command('environment') {
+        def handler = new EnvironmentCommands(config)
+        describe 'Working with Anthill environments'
+
+        command('list') {
+          describe 'List Anthill environments'
+          execute { handler.list() }
+        }
+
+        command('show') {
+          describe 'Show details of an Anthill environment'
+          arguments exactly: 1, name: 'environment'
+          execute { p -> handler.show(p.arguments()[0]) }
+        }
+      }
     }).run(args)
   }
 }
