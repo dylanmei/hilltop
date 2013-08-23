@@ -14,9 +14,7 @@ class EnvironmentCommands {
 
   def show(environmentName) {
     work {
-      def environment = finder.environment(environmentName) {
-        error { m -> quit m }
-      }
+      def environment = findEnvironment(environmentName)
 
       echo environment.name
       if (environment.description)
@@ -31,6 +29,15 @@ class EnvironmentCommands {
     }
   }
 
+  def open(environmentName) {
+    def settings = config.get('anthill')
+    def url = work {
+      def environment = findEnvironment(environmentName)
+      "http://${settings.api_server}:8181/tasks/admin/servergroup/ServerGroupTasks/viewServerGroup?serverGroupId=${environment.id}"
+    }
+    browse url
+  }
+
   def list() {
     work {
       def environments = finder.all()
@@ -38,5 +45,11 @@ class EnvironmentCommands {
         echo it.name, it.description ?: ''
       }
     }
+  }
+
+  private ServerGroup findEnvironment(environmentName) {
+    finder.environment(environmentName) {
+      error { m -> quit m }
+    }    
   }
 }

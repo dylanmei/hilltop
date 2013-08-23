@@ -138,6 +138,12 @@ class App {
           arguments exactly: 1, name: 'environment'
           execute { p -> handler.show(p.arguments()[0]) }
         }
+
+        command('open') {
+          describe 'Launch an Anthill environment in the browser'
+          arguments exactly: 1, name: 'environment'
+          execute { p -> handler.open(p.arguments()[0]) }
+        }
       }
     }).run(args)
   }

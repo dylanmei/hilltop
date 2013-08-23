@@ -49,6 +49,7 @@ Environments
 
     ./hilltop environment list
     ./hilltop environment show myenvironment
+    ./hilltop environment open myenvironment
 
 ## contributing
 
