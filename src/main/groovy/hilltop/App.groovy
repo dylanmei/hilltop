@@ -4,8 +4,6 @@ import hilltop.cli.Cli
 import hilltop.commands.*
 
 class App {
-  def config = new ConfigLoader().load()
-
   def App(String... args) {
 
     new Cli('hilltop', {
@@ -20,7 +18,7 @@ class App {
       }
 
       command('config') {
-        def handler = new ConfigCommands(config)
+        def handler = new ConfigCommands()
         describe 'Manage configuration values'
 
         command('get') {
@@ -48,7 +46,7 @@ class App {
       }
 
       command('project') {
-        def handler = new ProjectCommands(config)
+        def handler = new ProjectCommands()
         describe 'Working with Anthill projects'
 
         command('list') {
@@ -84,7 +82,7 @@ class App {
       }
 
       command('workflow') {
-        def handler = new WorkflowCommands(config)
+        def handler = new WorkflowCommands()
         describe 'Working with Anthill workflows'
 
         command('show') {
@@ -108,7 +106,7 @@ class App {
       }
 
       command('build') {
-        def handler = new BuildCommands(config)
+        def handler = new BuildCommands()
         describe 'Working with Anthill builds'
 
         command('request') {
@@ -127,7 +125,7 @@ class App {
       }
 
       command('environment') {
-        def handler = new EnvironmentCommands(config)
+        def handler = new EnvironmentCommands()
         describe 'Working with Anthill environments'
 
         command('list') {

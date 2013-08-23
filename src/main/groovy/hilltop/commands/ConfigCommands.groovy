@@ -1,18 +1,14 @@
 package hilltop.commands
 
-import hilltop.ConfigLoader
+import hilltop.Config
 
 @Mixin(ConsoleCommands)
 class ConfigCommands {
-  def config
-
-  def ConfigCommands(config) {
-  	this.config = config
-  }
+  def config = new Config()
 
   def get(name) {
     def value = name.tokenize('.')
-      .inject(config) { c, key -> c[key] }
+      .inject(config) { c, key -> c.get(key) }
     echo "$name=${value}"
   }
 
@@ -28,27 +24,35 @@ class ConfigCommands {
       }
     }
 
-    new ConfigLoader().save(config)
+    config.save()
   }
 
   def remove(properties) {
-    def map = config.flatten()
     properties.each {
-      if (!map.containsKey(it))
+      if (!exists(it))
         echo "No such configuration value <${it}>"
       else {
-        map.remove(it)
-        config.clear()
+        config.remove(it)
         echo "Configuration value <${it}> has been removed"
       }
     }
-    config.putAll(map)
-    new ConfigLoader().save(config)
+
+    config.save()
   }
 
   def list() {
     def writer = new StringWriter()
     config.writeTo(writer)
-    echo writer.toString()
+    def content = writer.toString()
+    if (!content) echo "[Empty]"
+    else {
+      echo "[${Config.FILE}]"
+      echo writer.toString()
+    }
+  }
+
+  private Boolean exists(name) {
+    null != name.tokenize('.')
+      .inject(config) { c, key -> c.get(key) }
   }
 }

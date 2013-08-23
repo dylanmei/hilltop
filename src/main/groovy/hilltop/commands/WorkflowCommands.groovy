@@ -1,6 +1,7 @@
 
 package hilltop.commands
 
+import hilltop.Config
 import hilltop.finders.WorkflowFinder
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*
@@ -9,13 +10,8 @@ import com.urbancode.anthill3.domain.source.plugin.*
 @Mixin(ConsoleCommands)
 @Mixin(AnthillCommands)
 class WorkflowCommands {
-  def config
-
+  def config = new Config()
   WorkflowFinder finder = new WorkflowFinder()
-
-  def WorkflowCommands(config) {
-    this.config = config
-  }
 
   def show(projectName, workflowName) {
     work {

@@ -1,5 +1,6 @@
 package hilltop.commands
 
+import hilltop.Config
 import hilltop.finders.ProjectFinder
 import com.urbancode.anthill3.domain.folder.*
 import com.urbancode.anthill3.domain.project.*
@@ -8,13 +9,8 @@ import com.urbancode.anthill3.domain.source.*
 @Mixin(ConsoleCommands)
 @Mixin(AnthillCommands)
 class ProjectCommands {
-  def config
-
+  def config = new Config()
   ProjectFinder finder = new ProjectFinder()
-
-  def ProjectCommands(config) {
-    this.config = config
-  }
 
   def show(projectName) {
     work {

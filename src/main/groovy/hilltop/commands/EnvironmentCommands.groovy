@@ -1,5 +1,6 @@
 package hilltop.commands
 
+import hilltop.Config
 import hilltop.finders.EnvironmentFinder
 import com.urbancode.anthill3.domain.agent.*
 import com.urbancode.anthill3.services.agent.*
@@ -8,13 +9,8 @@ import com.urbancode.anthill3.domain.servergroup.*
 @Mixin(ConsoleCommands)
 @Mixin(AnthillCommands)
 class EnvironmentCommands {
-  def config
-
+  def config = new Config()
   EnvironmentFinder finder = new EnvironmentFinder()
-
-  def EnvironmentCommands(config) {
-    this.config = config
-  }
 
   def show(environmentName) {
     work {

@@ -1,6 +1,7 @@
 
 package hilltop.commands
 
+import hilltop.Config
 import hilltop.finders.BuildFinder
 import hilltop.finders.WorkflowFinder
 import com.urbancode.anthill3.domain.workflow.*
@@ -11,14 +12,9 @@ import com.urbancode.anthill3.domain.buildlife.*
 @Mixin(ConsoleCommands)
 @Mixin(AnthillCommands)
 class BuildCommands {
-  def config
-
+  def config = new Config()
   WorkflowFinder workflowFinder = new WorkflowFinder()
   BuildFinder buildFinder = new BuildFinder()
-
-  def BuildCommands(config) {
-    this.config = config
-  }
 
   def open(id) {
     def settings = config.get('anthill')
