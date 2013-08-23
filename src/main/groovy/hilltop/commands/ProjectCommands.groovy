@@ -61,31 +61,29 @@ class ProjectCommands {
 
   def list(inactive) {
     work {
-      def projects = inactive ?
-        ProjectFactory.getInstance().restoreAll() :
-        ProjectFactory.getInstance().restoreAllActive()
-      if (inactive)
-        projects = projects.findAll { p -> !p.isActive }
+      def projects = finder.all(inactive)
       projects.each { echo it.name }
     }
   }
 
-  def list_folder(name, inactive) {
+  def list_in_folder(String name, inactive) {
     work {
-      def folder = FolderFactory.getInstance().restoreForName(name)
-      if (!folder)
-        echo "No such folder <${name}>"
-      else {
-        folder.getProjects()
-          .findAll { f -> f.isActive != inactive }
-          .each { p -> echo p.name }
-      }
+      def folder = findFolder(name)
+      folder.projects
+        .findAll { f -> f.isActive != inactive }
+        .each { p -> echo p.name }
     }
   }
 
   private Project findProject(projectName) {
-    def project = finder.project(projectName) {
+    finder.project(projectName) {
       alert { m -> echo m }
+      error { m -> quit m }
+    }
+  }
+
+  private Folder findFolder(folderName) {
+    finder.folder(folderName) {
       error { m -> quit m }
     }
   }

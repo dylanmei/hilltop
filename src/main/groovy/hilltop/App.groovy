@@ -53,11 +53,11 @@ class App {
           describe 'List Anthill projects'
           options {
             f longOpt: 'folder', args: 1, 'List Anthill projects in a specific folder'
-            i longOpt: 'inactive', 'Includes inactive projects'
+            i longOpt: 'inactive', 'List inactive projects'
           }
-          execute { params ->
-            if (params.f) handler.list_folder(params.f, params.i)
-            else handler.list(params.i)
+          execute { p ->
+            if (!p.f) handler.list(p.i)
+            else handler.list_in_folder(p.f, p.i)
           }
         }
 

@@ -1,9 +1,20 @@
 package hilltop.finders
 
 import com.urbancode.anthill3.domain.project.*
+import com.urbancode.anthill3.domain.folder.*
 
 @Mixin(FinderCallbacks)
 class ProjectFinder {
+
+  def all(inactive) {
+    def projects = inactive ?
+      ProjectFactory.getInstance().restoreAll() :
+      ProjectFactory.getInstance().restoreAllActive()
+    if (inactive)
+      projects = projects.findAll { p -> !p.isActive }
+
+    projects
+  }
 
   def project(name, Closure handler) {
     if (name == '.')
@@ -22,10 +33,19 @@ class ProjectFinder {
     }
 
     project
- }
+  }
+
+  def folder(name, Closure handler) {
+    def folder = FolderFactory.getInstance().restoreForName(name)
+    if (handler && !folder) {
+      callback(handler).error "No such folder <$name>"
+    }
+
+    folder
+  }
 
   private String guessProjectName() {
-    System.getProperty("user.dir")
+    System.getProperty('user.dir')
       .tokenize(File.separator).last()
   }
 }
