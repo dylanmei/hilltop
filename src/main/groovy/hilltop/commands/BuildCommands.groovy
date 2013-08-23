@@ -60,7 +60,7 @@ class BuildCommands {
             complete = true
           }
         }
-      } 
+      }
     }
 
     thread.join()
@@ -94,7 +94,7 @@ class BuildCommands {
     workflowFinder.workflow(projectName, workflowName) {
       alert { m -> echo m }
       error { m -> quit m }
-    }    
+    }
   }
 
   private BuildLife findBuildlife(id) {

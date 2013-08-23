@@ -22,17 +22,16 @@ class EnvironmentCommands {
         error { m -> quit m }
       }
 
-      if (environment == null)
-        echo "it's null"
-
       echo environment.name
       if (environment.description)
-        echo "Description".padRight(40) + environment.description
+        echo "Description", environment.description
 
       def agents = environment.agentArray
-      AgentManagerClient ac = new AgentManagerClient()
+      def manager = new AgentManagerClient()
 
-      echo "Agents".padRight(40) + "${agents.collect { a -> a.name + (ac.getAgentStatus(a).online ? '' : ' (offline)')}.join('\n' + (' ') * 40)}"
+      echo "Agents", {
+        line -> agents.each { a -> line.echo "${manager.getAgentStatus(a).online ? ' ' : '!'} ${a.name}" }
+      }
     }
   }
 
@@ -40,7 +39,7 @@ class EnvironmentCommands {
     work {
       def environments = finder.all()
       environments.each {
-        echo it.name.padRight(40) + (it.description ?: '')
+        echo it.name, it.description ?: ''
       }
     }
   }

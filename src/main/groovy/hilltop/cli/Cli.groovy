@@ -8,7 +8,7 @@ class Cli {
 
   Cli(app, Closure config, writer = null) {
     this.app = app
-    this.writer = writer ?: new PrintWriter(System.out)
+    this.writer = writer ?: new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"))
     new CommandBuilder(commands, this.writer).configure(config)
     this
   }

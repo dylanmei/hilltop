@@ -13,7 +13,7 @@ class ConfigCommands {
   def get(name) {
     def value = name.tokenize('.')
       .inject(config) { c, key -> c[key] }
-    println "$name=${value}"
+    echo "$name=${value}"
   }
 
   def set(properties) {
@@ -24,7 +24,7 @@ class ConfigCommands {
         (property, value) = matcher[0].tail()
       if (property) {
         config.put(property, value)
-        println "Configuration value <${property}> has been set"
+        echo "Configuration value <${property}> has been set"
       }
     }
 
@@ -35,11 +35,11 @@ class ConfigCommands {
     def map = config.flatten()
     properties.each {
       if (!map.containsKey(it))
-        println "No such configuration value <${it}>"
+        echo "No such configuration value <${it}>"
       else {
         map.remove(it)
         config.clear()
-        println "Configuration value <${it}> has been removed"
+        echo "Configuration value <${it}> has been removed"
       }
     }
     config.putAll(map)
@@ -49,6 +49,6 @@ class ConfigCommands {
   def list() {
     def writer = new StringWriter()
     config.writeTo(writer)
-    print writer.toString()
+    echo writer.toString()
   }
 }

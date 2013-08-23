@@ -1,14 +1,52 @@
 
 package hilltop.commands
 
+import org.codehaus.groovy.runtime.FlushingStreamWriter
+
 class ConsoleCommands {
-  def writer = new PrintWriter(System.out)
+  def writer = new PrintWriter(new FlushingStreamWriter(System.out))
   def terminate = { System.exit(0) }
 
   def echo(message) {
-    //writer.println truncate(message, 240)
     writer.println message
-    writer.flush()
+  }
+
+  def echo(name, value) {
+    writer.println name.padRight(40) + value.toString()
+  }
+
+  def echo(name, Iterable<String> values) {
+    echo(name, values.iterator())
+  }
+
+  def echo(name, Iterator<String> values) {
+    def i = values.iterator();
+    def line = name.padRight(40)
+    if (i.hasNext())
+    {
+      line += i.next()
+    }
+    echo line
+    while (i.hasNext()) {
+      line = (' ' * 40) + i.next()
+      echo line
+    }
+  }
+
+  def echo(name, Closure closure) {
+    writer.print name.padRight(40)
+    closure(new EchoVisitor(writer: writer))
+  }
+
+  class EchoVisitor {
+    def writer
+    def line = 0
+
+    def echo(String message) {
+      if (line++ > 0)
+        writer.print (' ' * 40)
+      writer.println message
+    }
   }
 
   def quit(message, throwable = null) {

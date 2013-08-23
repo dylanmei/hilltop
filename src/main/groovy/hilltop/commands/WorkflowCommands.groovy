@@ -21,15 +21,18 @@ class WorkflowCommands {
     work {
       def workflow = findWorkflow(projectName, workflowName)
       def project = workflow.project
-      def hint = workflow.isOriginating() ? '*' : ''
-      echo "${project.name} > ${workflow.name}$hint"
+
+      echo workflow.name
+      echo "Project", project.name
+
+      echo "Originating", workflow.isOriginating() ? "Yes" : "No"
 
       if (workflow.description)
-        echo "Description".padRight(40) + workflow.description
+        echo "Description", workflow.description
 
       def definition = workflow.getWorkflowDefinition()
       def lifecycleModel = definition.getLifeCycleModel()
-      echo "Lifecycle".padRight(40) + lifecycleModel.name
+      echo "Lifecycle", lifecycleModel.name
 
       if (workflow.isOriginating()) {
         def buildProfile = workflow.buildProfile
@@ -40,14 +43,14 @@ class WorkflowCommands {
           def pluginConfig = sourceConfig.asType(PluginSourceConfig)
           def repository = pluginConfig.repositoryArray.first()
           def plugin = repository.plugin
-          echo "Source Type".padRight(40) + repository.typeName
+          echo "Source Type", repository.typeName
 
           if (plugin.pluginId.endsWith('.plugin.Git')) {
             def repoProps = repository.getPropertyValueGroupsWithType('repo').first().propertyMap
             def sourceProps = pluginConfig.sourcePropertyValueGroups.first().propertyMap
 
-            echo "Repository URL".padRight(40) + repoProps['repoBaseUrl'] + sourceProps['remoteUrl']
-            echo "Repository Branch".padRight(40) + sourceProps['branch']
+            echo "Repository URL", repoProps['repoBaseUrl'] + sourceProps['remoteUrl']
+            echo "Repository Branch", sourceProps['branch']
 
 //            repository.propertyValueGroups.each { pvg ->
 //              for (name in pvg.propertyNames) {
@@ -63,18 +66,18 @@ class WorkflowCommands {
           }
         }
         else {
-          echo "Source Type".padRight(40) + sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
+          echo "Source Type", sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
 
           if (sourceConfigType.name.endsWith('.git.GitSourceConfig')) {
-            echo "Source Type".padRight(40) + sourceConfig.repository.name
-            echo "Repository URL".padRight(40) + sourceConfig.repositoryUrl
-            echo "Repository Branch".padRight(40) + sourceConfig.revision
+            echo "Source Type", sourceConfig.repository.name
+            echo "Repository URL", sourceConfig.repositoryUrl
+            echo "Repository Branch", sourceConfig.revision
           }
           else {
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getRepositoryName'))
-              echo "Repository Name".padRight(40) + sourceConfig.repositoryName
+              echo "Repository Name", sourceConfig.repositoryName
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getWorkspaceName'))
-              echo "Workspace Name".padRight(40) + sourceConfig.workspaceName
+              echo "Workspace Name", sourceConfig.workspaceName
           }
         }
       }
