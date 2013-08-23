@@ -7,8 +7,8 @@ import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.source.plugin.*
 
-@Mixin(ConsoleCommands)
-@Mixin(AnthillCommands)
+@Mixin(ConsoleHelper)
+@Mixin(AnthillHelper)
 class WorkflowCommands {
   def config = new Config()
   WorkflowFinder finder = new WorkflowFinder()

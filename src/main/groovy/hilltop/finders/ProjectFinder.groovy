@@ -2,7 +2,7 @@ package hilltop.finders
 
 import com.urbancode.anthill3.domain.project.*
 
-@Mixin(Callbacks)
+@Mixin(FinderCallbacks)
 class ProjectFinder {
 
   def project(name, Closure handler) {

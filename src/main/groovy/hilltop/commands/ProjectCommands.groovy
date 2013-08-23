@@ -6,8 +6,8 @@ import com.urbancode.anthill3.domain.folder.*
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.source.*
 
-@Mixin(ConsoleCommands)
-@Mixin(AnthillCommands)
+@Mixin(ConsoleHelper)
+@Mixin(AnthillHelper)
 class ProjectCommands {
   def config = new Config()
   ProjectFinder finder = new ProjectFinder()

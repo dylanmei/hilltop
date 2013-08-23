@@ -2,7 +2,7 @@ package hilltop.commands
 
 import hilltop.Config
 
-@Mixin(ConsoleCommands)
+@Mixin(ConsoleHelper)
 class ConfigCommands {
   def config = new Config()
 

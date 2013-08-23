@@ -3,9 +3,13 @@ package hilltop.commands
 
 import org.codehaus.groovy.runtime.FlushingStreamWriter
 
-class ConsoleCommands {
+class ConsoleHelper {
   def writer = new PrintWriter(new FlushingStreamWriter(System.out))
   def terminate = { System.exit(0) }
+
+  def echo() {
+    writer.println ''
+  }
 
   def echo(message) {
     writer.println message

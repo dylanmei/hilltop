@@ -2,7 +2,7 @@ package hilltop.finders
 
 import com.urbancode.anthill3.domain.workflow.*
 
-@Mixin(Callbacks)
+@Mixin(FinderCallbacks)
 class WorkflowFinder {
 
   private ProjectFinder projectFinder = new ProjectFinder()

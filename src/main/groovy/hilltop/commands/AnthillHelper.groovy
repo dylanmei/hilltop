@@ -2,10 +2,8 @@ package hilltop.commands
 
 import com.urbancode.anthill3.main.client.AnthillClient;
 import com.urbancode.anthill3.persistence.UnitOfWork;
-import com.urbancode.anthill3.domain.project.*;
-import com.urbancode.anthill3.domain.workflow.*;
 
-class AnthillCommands {
+class AnthillHelper {
   protected work(Closure task) {
     def settings = config.get('anthill')
     if (settings == null || settings.api_token.isEmpty() || settings.api_server.isEmpty()) {

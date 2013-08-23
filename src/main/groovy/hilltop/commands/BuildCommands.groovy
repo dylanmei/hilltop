@@ -9,8 +9,8 @@ import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 
-@Mixin(ConsoleCommands)
-@Mixin(AnthillCommands)
+@Mixin(ConsoleHelper)
+@Mixin(AnthillHelper)
 class BuildCommands {
   def config = new Config()
   WorkflowFinder workflowFinder = new WorkflowFinder()
@@ -19,7 +19,7 @@ class BuildCommands {
   def open(id) {
     def settings = config.get('anthill')
     def url = work {
-      def buildlife = findBuildlife(id)
+      def buildlife = findBuildlife(id as int)
       "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
     }
     browse url
@@ -34,32 +34,24 @@ class BuildCommands {
     print "Created build request ${request.id} for $workflowName; Waiting for Buildlife..."
     submitRequest(request)
 
-    def thread = Thread.start {
-      def complete = false
-      while (!complete && !Thread.currentThread().isInterrupted()) {
-        sleep 250
-        print '.'
+    def building = false; while (!building) {
+      sleep 250; print '.'
 
-        work { uow ->
-          request = BuildRequestFactory.getInstance().restore(request.id)
-          if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
-            def build = request.buildLife
-            echo "Buildlife ${build.id} is available"
-            complete = true
-          }
-          if (request.status == BuildRequestStatusEnum.BUILD_LIFE_NOT_NEEDED) {
-            echo "Buildlife is not needed"
-            complete = true
-          }
-          if (request.status == BuildRequestStatusEnum.FAILED) {
-            echo "Buildlife creation failed"
-            complete = true
-          }
+      work {
+        request = findRequest(request.id)
+
+        if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
+          building = true
+          echo "Buildlife ${request.buildLife.id} is available"
         }
       }
+      if (request.status == BuildRequestStatusEnum.BUILD_LIFE_NOT_NEEDED) {
+        echo "Buildlife is not needed"; break
+      }
+      if (request.status == BuildRequestStatusEnum.FAILED) {
+        echo "Buildlife creation failed"; break
+      }
     }
-
-    thread.join()
   }
 
   private void submitRequest(request) {
@@ -95,6 +87,12 @@ class BuildCommands {
 
   private BuildLife findBuildlife(id) {
     buildFinder.buildlife(id) {
+      error { m -> quit m }
+    }
+  }
+
+  private BuildRequest findRequest(id) {
+    buildFinder.request(id) {
       error { m -> quit m }
     }
   }

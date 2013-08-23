@@ -3,7 +3,7 @@ package hilltop.finders
 
 import com.urbancode.anthill3.domain.servergroup.*
 
-@Mixin(Callbacks)
+@Mixin(FinderCallbacks)
 class EnvironmentFinder {
   def all() {
     ServerGroupFactory.getInstance().restoreAll()

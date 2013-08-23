@@ -1,6 +1,6 @@
 package hilltop.finders
 
-class Callbacks {
+class FinderCallbacks {
   def callback(handler) {
     new CallbackBuilder(handler).callback
   }

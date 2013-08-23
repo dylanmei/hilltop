@@ -6,8 +6,8 @@ import com.urbancode.anthill3.domain.agent.*
 import com.urbancode.anthill3.services.agent.*
 import com.urbancode.anthill3.domain.servergroup.*
 
-@Mixin(ConsoleCommands)
-@Mixin(AnthillCommands)
+@Mixin(ConsoleHelper)
+@Mixin(AnthillHelper)
 class EnvironmentCommands {
   def config = new Config()
   EnvironmentFinder finder = new EnvironmentFinder()
@@ -25,8 +25,8 @@ class EnvironmentCommands {
       def agents = environment.agentArray
       def manager = new AgentManagerClient()
 
-      echo "Agents", {
-        line -> agents.each { a -> line.echo "${manager.getAgentStatus(a).online ? ' ' : '!'} ${a.name}" }
+      echo "Agents", { line ->
+        agents.each { a -> line.echo "${manager.getAgentStatus(a).online ? ' ' : '!'} ${a.name}" }
       }
     }
   }
