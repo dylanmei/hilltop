@@ -17,12 +17,16 @@ class Cli {
     def path = ''
     def command = commands[path]
     def params = execute(command, args)
+    def lastCommand = command
     while (!params.isEmpty()) {
       path = path + ':' + params.head()
       command = commands[path]
 
-      if (!command) break;
+      if (!command) {
+        showHelp(lastCommand); break
+      }
       params = execute(command, params.tail())
+      lastCommand = command
     }
 
     writer.flush()
@@ -33,12 +37,8 @@ class Cli {
     def options = builder.parse(params)
 
     def newParams = []
-    if (shouldShowHelp(command, options)) {
-      if (command.description)
-        writer << command.description + '\n'
-      builder.footer = help(command)
-      builder.usage()
-    }
+    if (shouldShowHelp(command, options))
+      showHelp(command, builder)
     else {
       if (command.execute)
         command.execute(options)
@@ -74,7 +74,7 @@ class Cli {
       content = 'commands:\n' << ''
       def padding = commands*.name.inject(0) { size, name -> name.size() > size ? name.size() : size }
       commands.each {
-        content << "\u00A0 ${it.name.padRight(padding)}    $it.description\n"
+        content << "\u00A0${it.name.padRight(padding)}    $it.description\n"
       }
     }
     content.toString()
@@ -89,6 +89,17 @@ class Cli {
     if (!options.hasOption('help'))
       options.addOption('h', 'help', false, 'Usage information')
     builder
+  }
+
+  private void showHelp(command) {
+    showHelp(command, createBuilder(command))
+  }
+
+  private Void showHelp(command, builder) {
+      if (command.description)
+        writer.println command.description
+      builder.footer = help(command)
+      builder.usage()
   }
 
   private Boolean shouldShowHelp(command, options) {
