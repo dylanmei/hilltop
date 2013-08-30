@@ -45,7 +45,7 @@ class WorkflowCommands {
             def repoProps = repository.getPropertyValueGroupsWithType('repo').first().propertyMap
             def sourceProps = pluginConfig.sourcePropertyValueGroups.first().propertyMap
 
-            echo "Repository URL", repoProps['repoBaseUrl'] + sourceProps['remoteUrl']
+            echo "Repository URL", repoProps['repoBaseUrl'].toString() + sourceProps['remoteUrl'].toString()
             echo "Repository Branch", sourceProps['branch']
 
 //            repository.propertyValueGroups.each { pvg ->
