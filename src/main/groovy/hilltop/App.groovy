@@ -109,16 +109,19 @@ class App {
         def handler = new BuildCommands()
         describe 'Working with Anthill builds'
 
-        command('request') {
+        command('start') {
           describe 'Request a new Anthill Buildlife'
           arguments exactly: 2, name1: 'project', name2: 'workflow'
+          options {
+            o longOpt: 'open', 'Launch the Buildlife when ready'
+          }
           execute { p ->
-            handler.request(p.arguments()[0], p.arguments()[1])
+            handler.start(p.arguments()[0], p.arguments()[1], p.open)
           }
         }
 
         command('open') {
-          describe 'Launch an Anthill buildlife in the browser'
+          describe 'Launch an Anthill Buildlife in the browser'
           arguments exactly: 1, name: 'buildlife'
           execute { p -> handler.open(p.arguments()[0]) }
         }

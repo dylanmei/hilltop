@@ -25,7 +25,7 @@ class BuildCommands {
     browse url
   }
 
-  def request(projectName, workflowName) {
+  def start(projectName, workflowName, openBrowser) {
     def request = work {
       def workflow = findWorkflow(projectName, workflowName)
       createRequest(workflow)
@@ -34,15 +34,15 @@ class BuildCommands {
     print "Created build request ${request.id} for $workflowName; Waiting for Buildlife..."
     submitRequest(request)
 
-    def building = false; while (!building) {
+    def buildlife = null; while (!buildlife) {
       sleep 250; print '.'
 
       work {
         request = findRequest(request.id)
 
         if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
-          building = true
-          echo "Buildlife ${request.buildLife.id} is available"
+          buildlife = request.buildLife
+          echo "Buildlife ${buildlife.id} is available"
         }
       }
       if (request.status == BuildRequestStatusEnum.BUILD_LIFE_NOT_NEEDED) {
@@ -52,6 +52,9 @@ class BuildCommands {
         echo "Buildlife creation failed"; break
       }
     }
+
+    if (buildlife && openBrowser)
+      open(buildlife.id)
   }
 
   private void submitRequest(request) {

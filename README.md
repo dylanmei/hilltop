@@ -32,24 +32,24 @@ Projects
 
     ./hilltop project list
     ./hilltop project list --folder Services
-    ./hilltop project show myproject
-    ./hilltop project open myproject
+    ./hilltop project show <project>
+    ./hilltop project open <project>
 
 Workflows
 
-    ./hilltop workflow show myproject myworkflow
-    ./hilltop workflow open myproject myworkflow
+    ./hilltop workflow show <project> <workflow>
+    ./hilltop workflow open <project> <workflow>
 
 Builds
 
-    ./hilltop build request myproject myworkflow
-    ./hilltop build open mybuildlifeid
+    ./hilltop build start <project> <workflow>
+    ./hilltop build open <buildlife>
 
 Environments
 
     ./hilltop environment list
-    ./hilltop environment show myenvironment
-    ./hilltop environment open myenvironment
+    ./hilltop environment show <environment>
+    ./hilltop environment open <environment>
 
 ## contributing
 

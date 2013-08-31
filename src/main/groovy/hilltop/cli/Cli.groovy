@@ -22,9 +22,11 @@ class Cli {
       path = path + ':' + params.head()
       command = commands[path]
 
-      if (!command) {
-        showHelp(lastCommand); break
-      }
+//      if (!command) {
+//        showHelp(lastCommand); break
+//      }
+      if (!command) break;
+
       params = execute(command, params.tail())
       lastCommand = command
     }
