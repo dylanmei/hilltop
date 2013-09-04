@@ -56,8 +56,7 @@ class App {
             i longOpt: 'inactive', 'List inactive projects'
           }
           execute { p ->
-            if (!p.f) handler.list(p.i)
-            else handler.list_in_folder(p.f, p.i)
+            handler.list(p.inactive, p.folder)
           }
         }
 

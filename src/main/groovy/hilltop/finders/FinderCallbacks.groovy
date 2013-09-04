@@ -1,8 +1,20 @@
 package hilltop.finders
 
 class FinderCallbacks {
-  def callback(handler) {
-    new CallbackBuilder(handler).callback
+  Closure callbackHandler
+
+  def callbacks(Closure handler) {
+    this.callbackHandler = handler
+  }
+
+  def alert(message) {
+    if (callbackHandler)
+      new CallbackBuilder(handler).callback.alert(message)
+  }
+
+  def error(message) {
+    if (callbackHandler)
+      new CallbackBuilder(handler).callback.error(message)
   }
 
   class CallbackBuilder {

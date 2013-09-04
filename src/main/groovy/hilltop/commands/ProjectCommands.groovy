@@ -10,11 +10,14 @@ import com.urbancode.anthill3.domain.source.*
 @Mixin(AnthillHelper)
 class ProjectCommands {
   def config = new Config()
-  ProjectFinder finder = new ProjectFinder()
+  def finder = new ProjectFinder({
+    alert { m -> echo m }
+    error { m -> quit m }
+  })
 
   def show(projectName) {
     work {
-      def project = findProject(projectName)
+      def project = finder.project(projectName)
       echo project.name
 
       if (project.description)
@@ -50,7 +53,7 @@ class ProjectCommands {
   def open(projectName, admin) {
     def settings = config.get('anthill')
     def url = work {
-      def project = findProject(projectName)
+      def project = finder.project(projectName)
       return admin ?
         "http://${settings.api_server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
         "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
@@ -59,32 +62,17 @@ class ProjectCommands {
     browse url
   }
 
-  def list(inactive) {
+  def list(inactive, folderName) {
     work {
-      def projects = finder.all(inactive)
+      def projects
+      if (!folderName) projects = finder.all(inactive)
+      else {
+        def folder = finder.folder(folderName)
+        projects = folder.projects
+          .findAll { f -> f.isActive != inactive }
+      }
+
       projects.each { echo it.name }
-    }
-  }
-
-  def list_in_folder(String name, inactive) {
-    work {
-      def folder = findFolder(name)
-      folder.projects
-        .findAll { f -> f.isActive != inactive }
-        .each { p -> echo p.name }
-    }
-  }
-
-  private Project findProject(projectName) {
-    finder.project(projectName) {
-      alert { m -> echo m }
-      error { m -> quit m }
-    }
-  }
-
-  private Folder findFolder(folderName) {
-    finder.folder(folderName) {
-      error { m -> quit m }
     }
   }
 }

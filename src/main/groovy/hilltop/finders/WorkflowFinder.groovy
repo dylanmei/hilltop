@@ -4,6 +4,7 @@ import com.urbancode.anthill3.domain.workflow.*
 
 @Mixin(FinderCallbacks)
 class WorkflowFinder {
+  
   private ProjectFinder projectFinder = new ProjectFinder()
 
   def workflow(projectName, workflowName, Closure handler) {

@@ -13,12 +13,12 @@ import com.urbancode.anthill3.domain.source.plugin.*
 @Mixin(AnthillHelper)
 class WorkflowCommands {
   def config = new Config()
-  ProjectFinder projectFinder = new ProjectFinder()
-  WorkflowFinder workflowFinder = new WorkflowFinder()
+  ProjectFinder projectFinder = createProjectFinder()
+  WorkflowFinder workflowFinder = createWorkflowFinder()
 
   def show(projectName, workflowName) {
     work {
-      def workflow = findWorkflow(projectName, workflowName)
+      def workflow = workflowFinder.workflow(projectName, workflowName)
       def project = workflow.project
 
       echo workflow.name
@@ -86,7 +86,7 @@ class WorkflowCommands {
   def open(projectName, workflowName, admin) {
     def settings = config.get('anthill')
     def url = work {
-      def workflow = findWorkflow(projectName, workflowName)
+      def workflow = workflowFinder.workflow(projectName, workflowName)
       return admin ?
         "http://${settings.api_server}:8181/tasks/admin/project/workflow/WorkflowTasks/viewWorkflow?workflowId=${workflow.id}" :
         "http://${settings.api_server}:8181/tasks/project/WorkflowTasks/viewDashboard?workflowId=${workflow.id}"
@@ -97,7 +97,7 @@ class WorkflowCommands {
 
   def list(projectName, inactive) {
     work {
-      def project = findProject(projectName)
+      def project = projectFinder.project(projectName)
       def workflows = workflowFinder.all(project, inactive).sort { a, b ->
         if (a.isOriginating()) return b.isOriginating() ? 0 : -1
         if (b.isOriginating()) return a.isOriginating() ? 0 :  1
@@ -108,17 +108,17 @@ class WorkflowCommands {
     }
   }
 
-  private Project findProject(projectName) {
-    projectFinder.project(projectName) {
+  static ProjectFinder createProjectFinder() {
+    new ProjectFinder({
       alert { m -> echo m }
       error { m -> quit m }
-    }
+    })
   }
 
-  private Workflow findWorkflow(projectName, workflowName) {
-    workflowFinder.workflow(projectName, workflowName) {
+  static WorkflowFinder createWorkflowFinder() {
+    new WorkflowFinder({
       alert { m -> echo m }
       error { m -> quit m }
-    }
+    })
   }
 }

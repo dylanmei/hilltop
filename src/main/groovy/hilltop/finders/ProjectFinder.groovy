@@ -3,8 +3,10 @@ package hilltop.finders
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.folder.*
 
-@Mixin(FinderCallbacks)
-class ProjectFinder {
+class ProjectFinder extends Finder {
+  def ProjectFinder(Closure handlers) {
+    super(handlers)
+  }
 
   def all(inactive) {
     def projects = inactive ?
@@ -16,7 +18,7 @@ class ProjectFinder {
     projects
   }
 
-  def project(name, Closure handler) {
+  def project(name) {
     if (name == '.')
       name = guessProjectName()
 
@@ -24,21 +26,19 @@ class ProjectFinder {
       .restoreAllForName(name)
 
     def project = projects == [] ? null : projects[0]
-  
-    if (handler) {
-      if (!project)
-        callback(handler).error("No such project <$name>")
-      else if (projects.size() > 1)
-        callback(handler).alert("There are ${projects.size()} projects named <$name>; taking the first one")
-    }
+
+    if (!project)
+      error "No such project <$name>"
+    else if (projects.size() > 1)
+      alert "There are ${projects.size()} projects named <$name>; taking the first one"
 
     project
   }
 
-  def folder(name, Closure handler) {
+  def folder(name) {
     def folder = FolderFactory.getInstance().restoreForName(name)
-    if (handler && !folder) {
-      callback(handler).error "No such folder <$name>"
+    if (!folder) {
+      error "No such folder <$name>"
     }
 
     folder
