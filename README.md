@@ -37,6 +37,7 @@ Projects
 
 Workflows
 
+    ./hilltop workflow list <project>
     ./hilltop workflow show <project> <workflow>
     ./hilltop workflow open <project> <workflow>
 

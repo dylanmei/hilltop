@@ -2,7 +2,9 @@
 package hilltop.commands
 
 import hilltop.Config
+import hilltop.finders.ProjectFinder
 import hilltop.finders.WorkflowFinder
+import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.source.plugin.*
@@ -11,7 +13,8 @@ import com.urbancode.anthill3.domain.source.plugin.*
 @Mixin(AnthillHelper)
 class WorkflowCommands {
   def config = new Config()
-  WorkflowFinder finder = new WorkflowFinder()
+  ProjectFinder projectFinder = new ProjectFinder()
+  WorkflowFinder workflowFinder = new WorkflowFinder()
 
   def show(projectName, workflowName) {
     work {
@@ -92,8 +95,28 @@ class WorkflowCommands {
     browse url
   }
 
+  def list(projectName, inactive) {
+    work {
+      def project = findProject(projectName)
+      def workflows = workflowFinder.all(project, inactive).sort { a, b ->
+        if (a.isOriginating()) return b.isOriginating() ? 0 : -1
+        if (b.isOriginating()) return a.isOriginating() ? 0 :  1
+        a.getName() <=> b.getName()
+      }
+
+      workflows.each { w -> echo "${w.isOriginating() ? '*' : ' '} ${w.name}" }
+    }
+  }
+
+  private Project findProject(projectName) {
+    projectFinder.project(projectName) {
+      alert { m -> echo m }
+      error { m -> quit m }
+    }
+  }
+
   private Workflow findWorkflow(projectName, workflowName) {
-    finder.workflow(projectName, workflowName) {
+    workflowFinder.workflow(projectName, workflowName) {
       alert { m -> echo m }
       error { m -> quit m }
     }

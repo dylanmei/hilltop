@@ -85,6 +85,15 @@ class App {
         def handler = new WorkflowCommands()
         describe 'Working with Anthill workflows'
 
+        command('list') {
+          describe 'List Anthill workflows in a project'
+          arguments exactly: 1, name: 'project'
+          options {
+            i longOpt: 'inactive', 'List inactive workflows'
+          }
+          execute { p -> handler.list(p.arguments()[0], p.inactive) }
+        }
+
         command('show') {
           describe 'Show details of an Anthill workflow'
           arguments exactly: 2, name1: 'project', name2: 'workflow'

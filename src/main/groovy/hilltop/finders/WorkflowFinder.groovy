@@ -4,7 +4,6 @@ import com.urbancode.anthill3.domain.workflow.*
 
 @Mixin(FinderCallbacks)
 class WorkflowFinder {
-
   private ProjectFinder projectFinder = new ProjectFinder()
 
   def workflow(projectName, workflowName, Closure handler) {
@@ -23,5 +22,14 @@ class WorkflowFinder {
     }
 
     workflow
+  }
+
+  def all(project, inactive) {
+    def workflows = inactive ?
+      WorkflowFactory.getInstance().restoreAllForProject(project) :
+      WorkflowFactory.getInstance().restoreAllActiveForProject(project)
+    if (inactive)
+      workflows = workflows.findAll { w -> !w.isActive }
+    workflows
   }
 }
