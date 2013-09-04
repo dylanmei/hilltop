@@ -13,8 +13,12 @@ import com.urbancode.anthill3.domain.source.plugin.*
 @Mixin(AnthillHelper)
 class WorkflowCommands {
   def config = new Config()
-  ProjectFinder projectFinder = createProjectFinder()
-  WorkflowFinder workflowFinder = createWorkflowFinder()
+  def projectFinder = new ProjectFinder({
+    alert { m -> echo m }; error { m -> quit m }
+  })
+  def workflowFinder = new WorkflowFinder({
+    alert { m -> echo m }; error { m -> quit m }
+  })
 
   def show(projectName, workflowName) {
     work {
@@ -106,19 +110,5 @@ class WorkflowCommands {
 
       workflows.each { w -> echo "${w.isOriginating() ? '*' : ' '} ${w.name}" }
     }
-  }
-
-  static ProjectFinder createProjectFinder() {
-    new ProjectFinder({
-      alert { m -> echo m }
-      error { m -> quit m }
-    })
-  }
-
-  static WorkflowFinder createWorkflowFinder() {
-    new WorkflowFinder({
-      alert { m -> echo m }
-      error { m -> quit m }
-    })
   }
 }

@@ -15,7 +15,7 @@ class ConsoleHelper {
     writer.println message
   }
 
-  def echo(name, value) {
+  def echo(name, String value) {
     writer.println name.padRight(40) + value.toString()
   }
 
@@ -30,6 +30,7 @@ class ConsoleHelper {
     {
       line += i.next()
     }
+    else line += 'None'
     echo line
     while (i.hasNext()) {
       line = (' ' * 40) + i.next()
@@ -39,7 +40,9 @@ class ConsoleHelper {
 
   def echo(name, Closure closure) {
     writer.print name.padRight(40)
-    closure(new EchoVisitor(writer: writer))
+    def visitor = new EchoVisitor(writer: writer)
+    closure(visitor)
+    if (visitor.line == 0) echo()
   }
 
   class EchoVisitor {

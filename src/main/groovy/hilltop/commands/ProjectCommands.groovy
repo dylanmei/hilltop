@@ -11,8 +11,7 @@ import com.urbancode.anthill3.domain.source.*
 class ProjectCommands {
   def config = new Config()
   def finder = new ProjectFinder({
-    alert { m -> echo m }
-    error { m -> quit m }
+    alert { m -> echo m }; error { m -> quit m }
   })
 
   def show(projectName) {

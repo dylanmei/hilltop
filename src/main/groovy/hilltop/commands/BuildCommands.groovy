@@ -13,13 +13,17 @@ import com.urbancode.anthill3.domain.buildlife.*
 @Mixin(AnthillHelper)
 class BuildCommands {
   def config = new Config()
-  WorkflowFinder workflowFinder = new WorkflowFinder()
-  BuildFinder buildFinder = new BuildFinder()
+  def workflowFinder = new WorkflowFinder({
+    error { m -> quit m }
+  })
+  def buildFinder = new BuildFinder({
+    error { m -> quit m }
+  })
 
   def open(id) {
     def settings = config.get('anthill')
     def url = work {
-      def buildlife = findBuildlife(id as int)
+      def buildlife = buildFinder.buildlife(id as int)
       "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
     }
     browse url
@@ -27,7 +31,7 @@ class BuildCommands {
 
   def start(projectName, workflowName, openBrowser) {
     def request = work {
-      def workflow = findWorkflow(projectName, workflowName)
+      def workflow = workflowFinder.workflow(projectName, workflowName)
       createRequest(workflow)
     }
 
@@ -38,7 +42,7 @@ class BuildCommands {
       sleep 250; print '.'
 
       work {
-        request = findRequest(request.id)
+        request = buildFinder.request(request.id)
 
         if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
           buildlife = request.buildLife
@@ -79,24 +83,5 @@ class BuildCommands {
     request.unitOfWork = uow
     request.store()
     request
-  }
-
-  private Workflow findWorkflow(projectName, workflowName) {
-    workflowFinder.workflow(projectName, workflowName) {
-      alert { m -> echo m }
-      error { m -> quit m }
-    }
-  }
-
-  private BuildLife findBuildlife(id) {
-    buildFinder.buildlife(id) {
-      error { m -> quit m }
-    }
-  }
-
-  private BuildRequest findRequest(id) {
-    buildFinder.request(id) {
-      error { m -> quit m }
-    }
   }
 }

@@ -4,23 +4,26 @@ package hilltop.finders
 import com.urbancode.anthill3.domain.buildlife.*
 import com.urbancode.anthill3.domain.buildrequest.*
 
-@Mixin(FinderCallbacks)
-class BuildFinder {
-  def buildlife(id, Closure handler) {
+class BuildFinder extends Finder {
+  def BuildFinder(Closure handlers) {
+    super(handlers)
+  }
+
+  def buildlife(id) {
     def build = BuildLifeFactory.getInstance().restore(id)
 
-    if (handler && !build) {
-      callback(handler).error("No such buildlife <$id>")
+    if (!build) {
+      error "No such buildlife <$id>"
     }
 
     build
   }
 
-  def request(id, Closure handler) {
+  def request(id) {
     def req = BuildRequestFactory.getInstance().restore(id)
 
-    if (handler && !req) {
-      callback(handler).error("No such build request <$id>")
+    if (!req) {
+      error "No such build request <$id>"
     }
 
     req

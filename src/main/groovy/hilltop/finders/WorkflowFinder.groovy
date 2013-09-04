@@ -1,25 +1,27 @@
 package hilltop.finders
 
+import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.workflow.*
 
-@Mixin(FinderCallbacks)
-class WorkflowFinder {
-  
-  private ProjectFinder projectFinder = new ProjectFinder()
+class WorkflowFinder extends Finder {
+  private ProjectFinder projectFinder
 
-  def workflow(projectName, workflowName, Closure handler) {
+  def WorkflowFinder(Closure handlers) {
+    super(handlers)
+    projectFinder = new ProjectFinder(handlers)
+  }
+
+  def workflow(projectName, workflowName) {
 
     def workflow = null
-    def project = projectFinder.project(projectName, handler)
+    def project = projectFinder.project(projectName)
 
     if (project) {
       workflow = WorkflowFactory.getInstance()
         .restoreForProjectAndWorkflowName(project, workflowName)
 
-      if (handler) {
-        if (!workflow)
-          callback(handler).error "No such workflow <$workflowName> for project <$project.name>"
-      }
+      if (!workflow)
+        error "No such workflow <$workflowName> for project <$project.name>"
     }
 
     workflow

@@ -10,11 +10,13 @@ import com.urbancode.anthill3.domain.servergroup.*
 @Mixin(AnthillHelper)
 class EnvironmentCommands {
   def config = new Config()
-  EnvironmentFinder finder = new EnvironmentFinder()
+  def finder = new EnvironmentFinder({
+    error { m -> quit m }
+  })
 
-  def show(environmentName) {
+  def show(name) {
     work {
-      def environment = findEnvironment(environmentName)
+      def environment = finder.environment(name)
 
       echo environment.name
       if (environment.description)
@@ -29,10 +31,10 @@ class EnvironmentCommands {
     }
   }
 
-  def open(environmentName) {
+  def open(name) {
     def settings = config.get('anthill')
     def url = work {
-      def environment = findEnvironment(environmentName)
+      def environment = finder.environment(name)
       "http://${settings.api_server}:8181/tasks/admin/servergroup/ServerGroupTasks/viewServerGroup?serverGroupId=${environment.id}"
     }
     browse url
@@ -45,11 +47,5 @@ class EnvironmentCommands {
         echo it.name, it.description ?: ''
       }
     }
-  }
-
-  private ServerGroup findEnvironment(environmentName) {
-    finder.environment(environmentName) {
-      error { m -> quit m }
-    }    
   }
 }

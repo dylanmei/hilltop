@@ -3,18 +3,23 @@ package hilltop.finders
 
 import com.urbancode.anthill3.domain.servergroup.*
 
-@Mixin(FinderCallbacks)
-class EnvironmentFinder {
+class EnvironmentFinder extends Finder {
+  def EnvironmentFinder(Closure handlers) {
+    super(handlers)
+  }
+
   def all() {
     ServerGroupFactory.getInstance().restoreAll()
   }
 
-  def environment(name, Closure handler) {
-    def env = ServerGroupFactory.getInstance().restoreForName(name)
+  def environment(name) {
+    def env = ServerGroupFactory.getInstance()
+      .restoreForName(name)
 
-    if (handler && !env) {
-      callback(handler).error("No such environment <$name>")
+    if (!env) {
+      error "No such environment <$name>"
     }
+
     env
   }
 }
