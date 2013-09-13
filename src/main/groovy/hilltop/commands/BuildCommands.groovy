@@ -29,6 +29,27 @@ class BuildCommands {
     browse url
   }
 
+  def show_request(id) {
+    work {
+      def request = buildFinder.request(id as int)
+      def project = request.project
+      def workflow = request.workflow
+
+      echo workflow.name
+      echo "Project", project.name
+
+      echo 'Status', request.status.toString()
+      if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED)
+        echo 'Buildlife', request.buildLife.id.toString()
+      if (request.status == BuildRequestStatusEnum.STARTED_WORKFLOW) 
+        echo 'WorkflowCase', request.workflowCase.id.toString()
+
+      echo "Properties", { line ->
+        request.propertyNames.each { n -> line.echo "$n ${request.getPropertyValue(n)}" }
+      }      
+    }
+  }
+
   def start(projectName, workflowName, openBrowser) {
     def request = work {
       def workflow = workflowFinder.workflow(projectName, workflowName)
