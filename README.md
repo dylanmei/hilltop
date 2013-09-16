@@ -48,8 +48,8 @@ Builds
 
 Build requests
 
-    ./hilltop build open <request>
-    ./hilltop build show <request>
+    ./hilltop request open <request>
+    ./hilltop request show <request>
 
 Environments
 
