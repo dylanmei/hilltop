@@ -136,14 +136,20 @@ class App {
       }
 
       command('request') {
-        def handler = new BuildCommands()
+        def handler = new RequestCommands()
         describe 'Working with Anthill build requests'
 
         command('show') {
           describe 'Show details of an Anthill build request'
           arguments exactly: 1, name: 'request'
-          execute { p -> handler.show_request(p.arguments()[0]) }
+          execute { p -> handler.show(p.arguments()[0]) }
         }
+
+	command('open') {
+	  describe 'Launch an Anthill build request in the browser'
+	  arguments exactly: 1, name: 'request'
+	  execute { p -> handler.open(p.arguments()[0]) }
+	}
       }
 
       command('environment') {
