@@ -18,6 +18,7 @@ class ProjectCommands {
     work {
       def project = finder.project(projectName)
       echo project.name
+      echo link(project, false)
 
       if (project.description)
         echo "Description", project.description
@@ -53,9 +54,7 @@ class ProjectCommands {
     def settings = config.get('anthill')
     def url = work {
       def project = finder.project(projectName)
-      return admin ?
-        "http://${settings.api_server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
-        "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
+      link(project, admin)
     }
 
     browse url
@@ -73,5 +72,12 @@ class ProjectCommands {
 
       projects.each { echo it.name }
     }
+  }
+
+  def link(project, admin) {
+    def settings = config.get('anthill')
+    return admin ?
+      "http://${settings.api_server}:8181/tasks/admin/project/ProjectTasks/viewProject?projectId=${project.id}" :
+      "http://${settings.api_server}:8181/tasks/project/ProjectTasks/viewDashboard?projectId=${project.id}"
   }
 }
