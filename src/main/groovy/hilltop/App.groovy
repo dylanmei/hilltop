@@ -128,6 +128,12 @@ class App {
           }
         }
 
+        command('show') {
+          describe 'Show details of an Anthill Buildlife'
+          arguments exactly: 1, name: 'buildlife'
+          execute { p -> handler.show(p.arguments()[0]) }
+        }
+
         command('open') {
           describe 'Launch an Anthill Buildlife in the browser'
           arguments exactly: 1, name: 'buildlife'
@@ -145,11 +151,11 @@ class App {
           execute { p -> handler.show(p.arguments()[0]) }
         }
 
-	command('open') {
-	  describe 'Launch an Anthill build request in the browser'
-	  arguments exactly: 1, name: 'request'
-	  execute { p -> handler.open(p.arguments()[0]) }
-	}
+        command('open') {
+          describe 'Launch an Anthill build request in the browser'
+          arguments exactly: 1, name: 'request'
+          execute { p -> handler.open(p.arguments()[0]) }
+        }
       }
 
       command('environment') {

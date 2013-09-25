@@ -18,8 +18,8 @@ class RequestCommands {
   def open(id) {
     def settings = config.get('anthill')
     def url = work {
-      def buildlife = buildFinder.request(id as int)
-      "http://${settings.api_server}:8181/tasks/project/BuildRequestTasks/viewBuildRequest?buildRequestId=${id}"
+      def request = buildFinder.request(id as int)
+      link(request)
     }
     browse url
   }
@@ -30,18 +30,26 @@ class RequestCommands {
       def project = request.project
       def workflow = request.workflow
 
-      echo workflow.name
-      echo "Project", project.name
+      echo "$project.name $workflow.name"
+      echo link(request)
 
       echo 'Status', request.status.toString()
+      echo 'Requester', "$request.requesterName ($request.requestSource.name)"
       if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED)
         echo 'Buildlife', request.buildLife.id.toString()
       if (request.status == BuildRequestStatusEnum.STARTED_WORKFLOW) 
         echo 'WorkflowCase', request.workflowCase.id.toString()
 
-      echo "Properties", { line ->
-        request.propertyNames.each { n -> line.echo "$n=${request.getPropertyValue(n)}" }
-      }      
+      if (request.propertyNames) {
+        echo "Properties", { line ->
+          request.propertyNames.each { n -> line.echo "$n=${request.getPropertyValue(n)}" }
+        }      
+      }
     }
   }
+
+  def link(request) {
+    def settings = config.get('anthill')
+    "http://${settings.api_server}:8181/tasks/project/BuildRequestTasks/viewBuildRequest?buildRequestId=${request.id}"
+  }    
 }

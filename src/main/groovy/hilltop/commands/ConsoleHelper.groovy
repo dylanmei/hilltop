@@ -15,6 +15,10 @@ class ConsoleHelper {
     writer.println message
   }
 
+  def echo(name, Long value) {
+    echo(name, value.toString())
+  }
+
   def echo(name, String value) {
     writer.println name.padRight(40) + value.toString()
   }

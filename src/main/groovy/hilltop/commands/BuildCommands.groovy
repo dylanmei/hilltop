@@ -24,29 +24,38 @@ class BuildCommands {
     def settings = config.get('anthill')
     def url = work {
       def buildlife = buildFinder.buildlife(id as int)
-      "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
+      link(buildlife)
     }
     browse url
   }
 
-  def show_request(id) {
+  def show(id) {
     work {
-      def request = buildFinder.request(id as int)
-      def project = request.project
-      def workflow = request.workflow
+      def buildlife = buildFinder.buildlife(id as int)
+      def project = buildlife.project
+      def workflow = buildlife.originatingWorkflow
 
-      echo workflow.name
-      echo "Project", project.name
+      echo "$project.name $workflow.name"
+      echo link(buildlife)
 
-      echo 'Status', request.status.toString()
-      if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED)
-        echo 'Buildlife', request.buildLife.id.toString()
-      if (request.status == BuildRequestStatusEnum.STARTED_WORKFLOW) 
-        echo 'WorkflowCase', request.workflowCase.id.toString()
+      def request = buildlife.originatingRequest
+      echo "Build Request", request.id
 
-      echo "Properties", { line ->
-        request.propertyNames.each { n -> line.echo "$n ${request.getPropertyValue(n)}" }
-      }      
+      if (buildlife.statusArray) {
+        echo "Status", { line ->
+          buildlife.statusArray.each { s -> line.echo "$s.status [${s.dateAssigned.format('d MMM yyyy HH:mm:ss Z')}]" }
+        }
+      }
+
+      if (buildlife.latestStamp)
+        echo "Stamp", buildlife.latestStampValue
+
+
+      if (buildlife.propertyNames) {
+        echo "Properties", { line ->
+          buildlife.propertyNames.each { n -> line.echo "$n ${buildlife.getPropertyValue(n)}" }
+        }
+      }
     }
   }
 
@@ -81,6 +90,11 @@ class BuildCommands {
     if (buildlife && openBrowser)
       open(buildlife.id)
   }
+
+  def link(buildlife) {
+    def settings = config.get('anthill')
+    "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
+  }  
 
   private void submitRequest(request) {
     def service = new BuildServiceImplClient()
