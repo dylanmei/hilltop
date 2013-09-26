@@ -29,7 +29,7 @@ class ProjectFinder extends Finder {
       error "No such project <$name>"
     }
     else if (projects.size() == 1) {
-      project[0]
+      projects[0]
     }
     else  {
       alert "There are ${projects.size()} projects named <$name>; taking the first one"
