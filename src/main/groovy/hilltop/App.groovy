@@ -69,10 +69,10 @@ class App {
         }
 
         command('open') {
-          describe 'Launch an Anthill project in the browser'
+          describe 'Open an Anthill project in the browser'
           arguments exactly: 1, name: 'project'
           options {
-            a longOpt: 'admin', 'Launch the administrative configuration page'
+            a longOpt: 'admin', 'Open the administrative configuration page'
           }
           execute { p ->
             handler.open(p.arguments().first(), p.a)
@@ -102,10 +102,10 @@ class App {
         }
 
         command('open') {
-          describe 'Launch an Anthill workflow in the browser'
+          describe 'Open an Anthill workflow in the browser'
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           options {
-            a longOpt: 'admin', 'Launch the administrative configuration page'
+            a longOpt: 'admin', 'Open the administrative configuration page'
           }
           execute { p ->
             handler.open(p.arguments()[0], p.arguments()[1], p.a)
@@ -117,25 +117,36 @@ class App {
         def handler = new BuildCommands()
         describe 'Working with Anthill builds'
 
-        command('start') {
-          describe 'Request a new Anthill Buildlife'
+        command('new') {
+          describe 'Request a new Anthill buildlife'
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           options {
-            o longOpt: 'open', 'Launch the Buildlife when ready'
+            o longOpt: 'open', 'Open the buildlife when ready'
           }
           execute { p ->
             handler.start(p.arguments()[0], p.arguments()[1], p.open)
           }
         }
 
+        command('run') {
+          describe 'Run a workflow against an Anthill buildlife'
+          arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
+          options {
+            o longOpt: 'open', 'Open the buildlife when ready'
+          }
+          execute { p ->
+            handler.run(p.arguments()[0], p.arguments()[1], p.arguments()[2], p.open)
+          }
+        }
+
         command('show') {
-          describe 'Show details of an Anthill Buildlife'
+          describe 'Show details of an Anthill buildlife'
           arguments exactly: 1, name: 'buildlife'
           execute { p -> handler.show(p.arguments()[0]) }
         }
 
         command('open') {
-          describe 'Launch an Anthill Buildlife in the browser'
+          describe 'Open an Anthill buildlife in the browser'
           arguments exactly: 1, name: 'buildlife'
           execute { p -> handler.open(p.arguments()[0]) }
         }
@@ -152,7 +163,7 @@ class App {
         }
 
         command('open') {
-          describe 'Launch an Anthill build request in the browser'
+          describe 'Open an Anthill build request in the browser'
           arguments exactly: 1, name: 'request'
           execute { p -> handler.open(p.arguments()[0]) }
         }
@@ -174,7 +185,7 @@ class App {
         }
 
         command('open') {
-          describe 'Launch an Anthill environment in the browser'
+          describe 'Open an Anthill environment in the browser'
           arguments exactly: 1, name: 'environment'
           execute { p -> handler.open(p.arguments()[0]) }
         }

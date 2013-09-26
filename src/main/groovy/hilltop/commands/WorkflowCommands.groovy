@@ -84,6 +84,12 @@ class WorkflowCommands {
           }
         }
       }
+
+      if (!workflow.isOriginating()) {
+        echo "Environments", { line ->
+          workflow.serverGroupArray.each { line.echo it.name }
+        }
+      }
     }
   }
 

@@ -43,9 +43,10 @@ Workflows
 
 Builds
 
-    ./hilltop build start <project> <workflow>
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
+    ./hilltop build new <project> <workflow>
+    ./hilltop build run <buildlife> <workflow> <environment>
 
 Build requests
 

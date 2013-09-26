@@ -23,7 +23,7 @@ class BuildCommands {
   def open(id) {
     def settings = config.get('anthill')
     def url = work {
-      def buildlife = buildFinder.buildlife(id as int)
+      def buildlife = buildFinder.buildlife(id as long)
       link(buildlife)
     }
     browse url
@@ -31,7 +31,7 @@ class BuildCommands {
 
   def show(id) {
     work {
-      def buildlife = buildFinder.buildlife(id as int)
+      def buildlife = buildFinder.buildlife(id as long)
       def project = buildlife.project
       def workflow = buildlife.originatingWorkflow
 
@@ -62,11 +62,13 @@ class BuildCommands {
   def start(projectName, workflowName, openBrowser) {
     def request = work {
       def workflow = workflowFinder.workflow(projectName, workflowName)
-      createRequest(workflow)
+      if (!workflow.isOriginating())
+        quit "${workflow.name} is not an originating workflow"
+      createBuildRequest(workflow)
     }
 
     print "Created build request ${request.id} for $workflowName; Waiting for Buildlife..."
-    submitRequest(request)
+    buildRequest(request)
 
     def buildlife = null; while (!buildlife) {
       sleep 250; print '.'
@@ -91,12 +93,59 @@ class BuildCommands {
       open(buildlife.id)
   }
 
+  def run(id, workflowName, environmentName, openBrowser) {
+    def request = work {
+
+      def buildlife = buildFinder.buildlife(id as long)
+      def project = buildlife.project
+
+      def workflow = project.workflowArray
+        .find { !it.isOriginating() && it.isActive() && it.name.matches(~"(?i)$workflowName") }
+
+      if (!workflow)
+        quit "Cannot find runnable workflow <$workflowName> for project <$project.name>"
+
+      def environment = workflow.serverGroupArray
+        .find { it.name.matches(~"(?i)$environmentName")}
+
+      if (!environment)
+        quit "Cannot find environment <$environmentName> assigned to workflow <$workflow.name>"
+
+      createRunRequest(buildlife, workflow, environment)
+    }
+
+    runWorkflow(request)
+    echo "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
+
+    if (openBrowser) open(id)
+  }
+
   def link(buildlife) {
     def settings = config.get('anthill')
     "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
   }  
 
-  private void submitRequest(request) {
+  private BuildRequest createBuildRequest(workflow) {
+    def uow = workflow.unitOfWork
+    def request = BuildRequest.createOriginatingRequest(
+      workflow.buildProfile, uow.user, RequestSourceEnum.MANUAL, uow.user)
+    request.forcedFlag = true
+    request.unitOfWork = uow
+    request.store()
+    request
+  }
+
+  private BuildRequest createRunRequest(buildlife, workflow, environment) {
+    def uow = buildlife.unitOfWork
+    def request = BuildRequest.createNonOriginatingRequest(
+      buildlife, workflow, environment, uow.user, RequestSourceEnum.MANUAL, uow.user)
+    request.forcedFlag = true
+    request.unitOfWork = uow
+    request.store()
+    request
+  }
+
+  private void buildRequest(request) {
     def service = new BuildServiceImplClient()
     try {
       service.init()
@@ -107,16 +156,14 @@ class BuildCommands {
     }
   }
 
-  private BuildRequest createRequest(workflow) {
-    if (!workflow.isOriginating())
-      quit "${workflow.name} is not an originating workflow"
-
-    def uow = workflow.unitOfWork
-    def request = BuildRequest.createOriginatingRequest(
-      workflow.buildProfile, uow.user, RequestSourceEnum.MANUAL, uow.user)
-    request.forcedFlag = true
-    request.unitOfWork = uow
-    request.store()
-    request
+  private void runWorkflow(request) {
+    def service = new BuildServiceImplClient()
+    try {
+      service.init()
+      service.runWorkflow(request)
+    }
+    finally {
+      service.shutdown()
+    }
   }
 }
