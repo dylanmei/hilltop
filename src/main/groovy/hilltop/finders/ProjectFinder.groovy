@@ -25,14 +25,16 @@ class ProjectFinder extends Finder {
     def projects = ProjectFactory.getInstance()
       .restoreAllForName(name)
 
-    def project = projects == [] ? null : projects[0]
-
-    if (!project)
+    if (!projects) {
       error "No such project <$name>"
-    else if (projects.size() > 1)
+    }
+    else if (projects.size() == 1) {
+      project[0]
+    }
+    else  {
       alert "There are ${projects.size()} projects named <$name>; taking the first one"
-
-    project
+      projects.sort { it.isActive() ? -1 : 1 }.first()
+    }
   }
 
   def folder(name) {
