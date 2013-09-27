@@ -13,7 +13,10 @@ configurations {
 
 sourceSets {
   main { compileClasspath += configurations.anthill }
-  test { compileClasspath += configurations.anthill }
+  test {
+    runtimeClasspath += configurations.anthill
+    compileClasspath += configurations.anthill
+  }
 }
 
 task depends(type: Jar) {
@@ -30,6 +33,7 @@ task depends(type: Jar) {
   }
 }
 
+//test.dependsOn depends
 assemble.dependsOn depends
 
 dependencies {
@@ -38,4 +42,6 @@ dependencies {
   anthill fileTree(dir: 'depends/anthill3-dev-kit/remoting/lib', include: '*.jar')
 
   testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+  testCompile 'cglib:cglib-nodep:2.2'
+  testCompile 'org.objenesis:objenesis:1.2'
 }
