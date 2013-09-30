@@ -1,12 +1,13 @@
 
-package hilltop.finders
+package hilltop.anthill
 
 import com.urbancode.anthill3.domain.buildlife.*
 import com.urbancode.anthill3.domain.buildrequest.*
 
-class BuildFinder extends Finder {
+@Mixin(FeedbackHelper)
+class BuildFinder {
   def BuildFinder(Closure handlers) {
-    super(handlers)
+    if (handlers) init_feedback(handlers)
   }
 
   def buildlife(id) {

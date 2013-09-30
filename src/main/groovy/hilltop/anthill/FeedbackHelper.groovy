@@ -1,9 +1,9 @@
-package hilltop.finders
+package hilltop.anthill
 
-class Finder {
+class FeedbackHelper {
   Closure callbackHandler
 
-  def Finder(Closure handlers) {
+  protected void init_feedback(Closure handlers) {
     this.callbackHandler = handlers
   }
 

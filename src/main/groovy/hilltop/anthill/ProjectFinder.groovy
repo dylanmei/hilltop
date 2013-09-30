@@ -1,11 +1,12 @@
-package hilltop.finders
+package hilltop.anthill
 
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.folder.*
 
-class ProjectFinder extends Finder {
+@Mixin(FeedbackHelper)
+class ProjectFinder {
   def ProjectFinder(Closure handlers) {
-    super(handlers)
+    if (handlers) init_feedback(handlers)
   }
 
   def all(inactive) {

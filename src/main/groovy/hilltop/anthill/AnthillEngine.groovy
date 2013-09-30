@@ -1,5 +1,5 @@
 
-package hilltop.runners
+package hilltop.anthill
 
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.services.build.*

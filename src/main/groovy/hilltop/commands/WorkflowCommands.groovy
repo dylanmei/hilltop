@@ -2,8 +2,8 @@
 package hilltop.commands
 
 import hilltop.Config
-import hilltop.finders.ProjectFinder
-import hilltop.finders.WorkflowFinder
+import hilltop.anthill.ProjectFinder
+import hilltop.anthill.WorkflowFinder
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*

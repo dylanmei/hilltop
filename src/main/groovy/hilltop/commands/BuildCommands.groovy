@@ -2,8 +2,7 @@
 package hilltop.commands
 
 import hilltop.Config
-import hilltop.finders.*
-import hilltop.runners.*
+import hilltop.anthill.*
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*

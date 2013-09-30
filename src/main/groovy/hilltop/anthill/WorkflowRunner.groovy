@@ -1,12 +1,11 @@
-package hilltop.runners
+package hilltop.anthill
 
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 import com.urbancode.anthill3.domain.servergroup.*
-import hilltop.Feedback
 
-@Mixin(Feedback)
+@Mixin(FeedbackHelper)
 class WorkflowRunner {
   def buildlife
   def errorHandler

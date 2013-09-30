@@ -1,7 +1,7 @@
 package hilltop.commands
 
 import hilltop.Config
-import hilltop.finders.EnvironmentFinder
+import hilltop.anthill.EnvironmentFinder
 import com.urbancode.anthill3.domain.agent.*
 import com.urbancode.anthill3.services.agent.*
 import com.urbancode.anthill3.domain.servergroup.*

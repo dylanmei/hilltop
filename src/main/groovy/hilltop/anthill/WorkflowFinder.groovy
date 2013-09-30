@@ -1,13 +1,14 @@
-package hilltop.finders
+package hilltop.anthill
 
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.workflow.*
 
-class WorkflowFinder extends Finder {
+@Mixin(FeedbackHelper)
+class WorkflowFinder {
   private ProjectFinder projectFinder
 
   def WorkflowFinder(Closure handlers) {
-    super(handlers)
+    if (handlers) init_feedback(handlers)
     projectFinder = new ProjectFinder(handlers)
   }
 

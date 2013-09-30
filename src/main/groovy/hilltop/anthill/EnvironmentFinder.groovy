@@ -1,11 +1,12 @@
 
-package hilltop.finders
+package hilltop.anthill
 
 import com.urbancode.anthill3.domain.servergroup.*
 
-class EnvironmentFinder extends Finder {
+@Mixin(FeedbackHelper)
+class EnvironmentFinder {
   def EnvironmentFinder(Closure handlers) {
-    super(handlers)
+    if (handlers) init_feedback(handlers)
   }
 
   def all() {

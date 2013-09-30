@@ -2,7 +2,7 @@
 package hilltop.commands
 
 import hilltop.Config
-import hilltop.finders.BuildFinder
+import hilltop.anthill.BuildFinder
 import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*

@@ -1,7 +1,7 @@
 package hilltop.commands
 
 import hilltop.Config
-import hilltop.finders.ProjectFinder
+import hilltop.anthill.ProjectFinder
 import com.urbancode.anthill3.domain.folder.*
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.source.*
