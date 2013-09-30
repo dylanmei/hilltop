@@ -55,11 +55,14 @@ class WorkflowRunner {
   }
 
   def find_environments_to_run_in(name, workflows) {
-    workflows
+    def environments = workflows
       .collect { it.serverGroupArray }
-        .flatten()
-      .findAll { it.name.matches(~"(?i)$name") }
+      .flatten()
       .unique { it.name.toLowerCase() }
+    def best_match = environments
+      .find { it.name.matches(~"(?i)$name") }
+    best_match ? [best_match] :
+      environments.findAll { it.name.matches(~"(?i)${name.trim()}.*") }
   }
 
   public static void submit(BuildRequest request) {
