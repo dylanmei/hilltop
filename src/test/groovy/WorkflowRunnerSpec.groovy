@@ -9,7 +9,21 @@ import com.urbancode.anthill3.domain.buildlife.*
 import com.urbancode.anthill3.domain.servergroup.*
 import com.urbancode.anthill3.persistence.UnitOfWork
 
-import hilltop.runners.*
+import hilltop.anthill.*
+
+/*
+
+fixture:
+  project
+    master
+    deploy candidate
+      - load
+      - beta
+      - test integration
+    deploy staging
+      - load
+      - stage
+*/
 
 class WorkflowRunnerSpec extends Specification {
   def setup() {
@@ -18,25 +32,50 @@ class WorkflowRunnerSpec extends Specification {
 
   def 'run a workflow against an environment'() {
     setup:
-    def environment = create_environment(name: 'Dev')
-    def workflow = create_workflow(name: 'Deploy', environment: environment)
+    def environment = create_environment(name: 'beta')
+    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
 
     when:
     new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('Deploy', 'Dev', [:])
+      .request('deploy candidate', 'beta', [:])
 
     then:
     1 * AnthillEngine.create_workflow_request(_, workflow, environment)
   }
 
+  def 'run an originating workflow'() {
+    setup:
+    def workflow = create_workflow(name: 'master', originating: true)
+
+    when:
+    new WorkflowRunner(create_buildlife(workflow: workflow))
+      .request('master', 'beta', [:])
+    
+    then: 'an error is raised'
+    thrown(GroovyRuntimeException)
+  }
+
+  def 'run an inactive workflow'() {
+    setup:
+    def environment = create_environment(name: 'beta')
+    def workflow = create_workflow(name: 'deploy candidate', active: false, environment: environment)
+
+    when:
+    new WorkflowRunner(create_buildlife(workflow: workflow))
+      .request('deploy candidate', 'beta', [:])
+    
+    then: 'an error is raised'
+    thrown(GroovyRuntimeException)
+  }
+
   def 'run a workflow without an environment'() {
     setup:
-    def environment = create_environment(name: 'Dev')
-    def workflow = create_workflow(name: 'Deploy', environment: environment)
+    def environment = create_environment(name: 'beta')
+    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
 
     when: 'the environment name does not match'
     new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('Deploy', 'Beta', [:])
+      .request('deploy: candidate', 'dev', [:])
 
     then: 'an error is raised'
     thrown(GroovyRuntimeException)
@@ -44,12 +83,12 @@ class WorkflowRunnerSpec extends Specification {
 
   def 'run a workflow with a partial workflow name match'() {
     setup:
-    def environment = create_environment(name: 'Dev')
-    def workflow = create_workflow(name: 'Deploy to lower environment', environment: environment)
+    def environment = create_environment(name: 'beta')
+    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
 
     when:
     new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('Deploy to', 'Dev', [:])
+      .request('deploy', 'beta', [:])
 
     then:
     1 * AnthillEngine.create_workflow_request(_, workflow, environment)
@@ -57,20 +96,51 @@ class WorkflowRunnerSpec extends Specification {
 
   def 'run a workflow with a partial environment name match'() {
     setup:
-    def environment = create_environment(name: 'Development')
-    def workflow = create_workflow(name: 'Deploy', environment: environment)
+    def environment = create_environment(name: 'test integration')
+    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
 
     when:
     new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('Deploy', 'Dev', [:])
+      .request('deploy', 'test', [:])
 
     then:
     1 * AnthillEngine.create_workflow_request(_, workflow, environment)
   }
 
+  def 'run a workflow with the best partial environment name match'() {
+    setup:
+    def environment1 = create_environment(name: 'test')
+    def environment2 = create_environment(name: 'test integration')
+    def workflow = create_workflow(name: 'deploy candidate', environments: [environment1, environment2])
+
+    when:
+    new WorkflowRunner(create_buildlife(workflow: workflow))
+      .request('deploy', 'test', [:])
+
+    then:
+    1 * AnthillEngine.create_workflow_request(_, workflow, environment1)
+  }
+
+  def 'run a workflow by name with two matches that share an environment'() {
+    setup:
+    def environment = create_environment(name: 'load')
+    def workflow1 = create_workflow(name: 'deploy candidate', environment: environment)
+    def workflow2 = create_workflow(name: 'deploy staging', environment: environment)
+
+    when:
+    new WorkflowRunner(create_buildlife(workflows: [workflow1, workflow2]))
+      .request('deploy', 'load', [:])
+
+    then: 'an error is raised'
+    thrown(GroovyRuntimeException)
+  }
+
   def create_workflow(map) {
     def name = map['name'] ?: ''
-    def active = map['active'] ?: true
+    def active = map['active'] == null ?
+      true : map['active']
+    def originating = map['originating'] == null ?
+      false : map['originating']
 
     def environments = map['environments'] ?: []
     if (map['environment'])
@@ -79,6 +149,7 @@ class WorkflowRunnerSpec extends Specification {
     Mock(Workflow) {
       getName() >> name
       isActive() >> active
+      isOriginating() >> originating
       getServerGroupArray() >> environments
     }
   }
@@ -91,9 +162,12 @@ class WorkflowRunnerSpec extends Specification {
   }
 
   def create_buildlife(map) {
-    def workflow = map['workflow']
+    def workflows = map['workflows'] ?: []
+    if (map['workflow'])
+      workflows += map['workflow']
+
     def project = Mock(Project)
-    project.getWorkflowArray() >> [workflow]
+    project.getWorkflowArray() >> workflows
 
     Mock(BuildLife) {
       getProject() >> project
