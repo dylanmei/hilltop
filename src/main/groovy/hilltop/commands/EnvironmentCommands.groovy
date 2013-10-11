@@ -19,6 +19,8 @@ class EnvironmentCommands {
       def environment = finder.environment(name)
 
       echo environment.name
+      echo link_to(environment)
+
       if (environment.description)
         echo "Description", environment.description
 
@@ -33,11 +35,11 @@ class EnvironmentCommands {
 
   def open(name) {
     def settings = config.get('anthill')
-    def url = work {
-      def environment = finder.environment(name)
-      "http://${settings.api_server}:8181/tasks/admin/servergroup/ServerGroupTasks/viewServerGroup?serverGroupId=${environment.id}"
+    def environment = work {
+      finder.environment(name)
     }
-    browse url
+
+    browse link_to(environment)
   }
 
   def list() {

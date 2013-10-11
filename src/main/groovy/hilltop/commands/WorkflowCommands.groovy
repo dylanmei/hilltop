@@ -26,7 +26,7 @@ class WorkflowCommands {
       def project = workflow.project
 
       echo "$project.name $workflow.name"
-      echo link(workflow, false)
+      echo link_to(workflow)
 
       echo "Originating", workflow.isOriginating() ? "Yes" : "No"
 
@@ -95,20 +95,15 @@ class WorkflowCommands {
 
   def open(projectName, workflowName, admin) {
     def settings = config.get('anthill')
-    def url = work {
-      def workflow = workflowFinder.workflow(projectName, workflowName)
-      link(workflow, admin)
+    def workflow = work {
+      workflowFinder.workflow(projectName, workflowName)
     }
 
-    browse url
+    browse link_to {
+      resource workflow
+      attributes admin: admin
+    }
   }
-
-  def link(workflow, admin) {
-    def settings = config.get('anthill')
-    return admin ?
-        "http://${settings.api_server}:8181/tasks/admin/project/workflow/WorkflowTasks/viewWorkflow?workflowId=${workflow.id}" :
-        "http://${settings.api_server}:8181/tasks/project/WorkflowTasks/viewDashboard?workflowId=${workflow.id}"
-  }  
 
   def list(projectName, inactive) {
     work {

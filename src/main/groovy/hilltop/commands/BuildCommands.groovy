@@ -21,11 +21,11 @@ class BuildCommands {
 
   def open(id) {
     def settings = config.get('anthill')
-    def url = work {
-      def buildlife = buildFinder.buildlife(id as long)
-      link(buildlife)
+    def buildlife = work {
+      buildFinder.buildlife(id as long)
     }
-    browse url
+ 
+    browse link_to(buildlife)
   }
 
   def show(id) {
@@ -35,7 +35,7 @@ class BuildCommands {
       def workflow = buildlife.originatingWorkflow
 
       echo "$project.name $workflow.name"
-      echo link(buildlife)
+      echo link_to(buildlife)
 
       def request = buildlife.originatingRequest
       echo "Build Request", request.id
@@ -95,7 +95,6 @@ class BuildCommands {
 
   def run(id, workflowName, environmentName, openBrowser) {
     def request = work {
-
       def buildlife = buildFinder.buildlife(id as long)
       def runner = new WorkflowRunner(buildlife, {
         error { m -> quit m }
@@ -109,9 +108,4 @@ class BuildCommands {
 
     if (openBrowser) open(id)
   }
-
-  def link(buildlife) {
-    def settings = config.get('anthill')
-    "http://${settings.api_server}:8181/tasks/project/BuildLifeTasks/viewBuildLife?buildLifeId=${buildlife.id}"
-  } 
 }

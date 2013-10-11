@@ -17,11 +17,11 @@ class RequestCommands {
 
   def open(id) {
     def settings = config.get('anthill')
-    def url = work {
-      def request = buildFinder.request(id as int)
-      link(request)
+    def request = work {
+      buildFinder.request(id as int)
     }
-    browse url
+
+    browse link_to(request)
   }
 
   def show(id) {
@@ -31,7 +31,7 @@ class RequestCommands {
       def workflow = request.workflow
 
       echo "$project.name $workflow.name"
-      echo link(request)
+      echo link_to(request)
 
       echo 'Status', request.status.toString()
       echo 'Requester', "$request.requesterName ($request.requestSource.name)"
@@ -47,9 +47,4 @@ class RequestCommands {
       }
     }
   }
-
-  def link(request) {
-    def settings = config.get('anthill')
-    "http://${settings.api_server}:8181/tasks/project/BuildRequestTasks/viewBuildRequest?buildRequestId=${request.id}"
-  }    
 }
