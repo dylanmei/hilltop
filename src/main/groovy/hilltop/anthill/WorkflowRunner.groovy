@@ -23,14 +23,7 @@ class WorkflowRunner {
     if (workflows.size() == 0)
       error "Cannot find runnable workflow <$name> for project <$project.name>"
 
-    Workflow workflow
     ServerGroup server_group
-
-    if (workflows.size() == 1)
-      workflow = workflows.first()
-
-    if (workflows.size() > 1)
-      error "Multiple workflow matches not supported"
 
     def server_groups = find_environments_to_run_in(environment, workflows)
 
@@ -40,9 +33,17 @@ class WorkflowRunner {
     if (server_groups.size() == 1)
       server_group = server_groups.first()
 
-    if (workflows.size() > 1)
+    if (server_groups.size() > 1)
       error "Multiple environment matches not supported"
 
+    workflows = workflows.findAll { w ->
+      w.serverGroupArray.find { it.id == server_group.id } != null
+    }
+
+    if (workflows.size() > 1)
+      error "Multiple workflow matches not supported"
+
+    def workflow = workflows.first()
     AnthillEngine.create_workflow_request(buildlife, workflow, server_group)
   }
 
