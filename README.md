@@ -13,11 +13,11 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 
     `brew/chocolatey install gradle`
 
-* Unzip the [Anthill3 Dev Kit](http://docs.urbancode.com/anthill3-help-3.8/html/DevKit.html) into the *./depends* folder
+* Unzip the [Anthill3 Dev Kit](http://docs.urbancode.com/anthill3-help-3.8/html/DevKit.html) into the *./depends* folder so that the path *./depends/anthill3-dev-kit/remoting* exists.
 * Build the dependencies jar `gradle assemble`
 * Run the tests `gradle test`
 * Add configuration variables
-    * anthill server `./hilltop config set anthill.api_server=anthill.local`
+    * anthill server `./hilltop config set anthill.api_server=myserver`
     * authorization token `./hilltop config set anthill.api_token=mytoken`
 
 ## commands
@@ -25,7 +25,7 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 Config
 
     ./hilltop config list
-    ./hilltop config set anthill.api_server=anthill.local
+    ./hilltop config set anthill.api_server=myserver
     ./hilltop config get anthill.api_server
 
 Projects
@@ -66,3 +66,8 @@ Environments
 3. Commit your changes `git commit -am 'Added some feature'`
 4. Push to the branch `git push origin my-new-feature`
 5. Create new Pull Request
+
+***
+*****
+-----------------------------
+- - -
