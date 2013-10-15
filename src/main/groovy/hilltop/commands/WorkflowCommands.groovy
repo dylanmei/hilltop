@@ -94,7 +94,6 @@ class WorkflowCommands {
   }
 
   def open(projectName, workflowName, admin) {
-    def settings = config.get('anthill')
     def workflow = work {
       workflowFinder.workflow(projectName, workflowName)
     }
@@ -115,6 +114,19 @@ class WorkflowCommands {
       }
 
       workflows.each { w -> echo "${w.isOriginating() ? '*' : ' '} ${w.name}" }
+    }
+  }
+
+  def remove(projectName, workflowName) {
+    work {
+      def workflow = workflowFinder.workflow(projectName, workflowName)
+      try {
+        workflow.delete()
+        echo "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
+      }
+      catch (RuntimeException re) {
+       quit "Unable to remove workflow <$workflow.name> for project <$workflow.project.name>: $re.message"
+      }
     }
   }
 }
