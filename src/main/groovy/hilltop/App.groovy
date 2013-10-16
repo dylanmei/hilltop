@@ -1,6 +1,6 @@
 package hilltop
 
-import hilltop.cli.Cli
+import hilltop.cli.*
 import hilltop.commands.*
 
 class App {
@@ -196,6 +196,21 @@ class App {
           describe 'Open an Anthill environment in the browser'
           arguments exactly: 1, name: 'environment'
           execute { p -> handler.open(p.arguments()[0]) }
+        }
+      }
+
+      command('colony') {
+        def handler = new ColonyCommands()
+        describe 'Working with Anthill colony files'
+
+        command('init') {
+          describe 'Create a new Colonyfile'
+          execute { handler.init() }
+        }
+
+        command('exec') {
+          describe 'Execute a Colonyfile'
+          execute { handler.exec() }
         }
       }
     }).run(args)
