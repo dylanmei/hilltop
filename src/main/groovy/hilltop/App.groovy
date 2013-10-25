@@ -116,7 +116,7 @@ class App {
           describe 'Remove an Anthill workflow'
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           execute { p ->
-            handler.(p.arguments()[0], p.arguments()[1])
+            handler.remove(p.arguments()[0], p.arguments()[1])
           }
         }
       }
