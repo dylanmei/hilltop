@@ -21,7 +21,7 @@ class AnthillHelper {
   protected work(Closure task) {
     def settings = config.get('anthill')
     if (settings == null || settings.api_token.isEmpty() || settings.api_server.isEmpty()) {
-      quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token urls.'
+      quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'
     }
 
     def result

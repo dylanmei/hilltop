@@ -8,13 +8,13 @@ class ColonyCommands {
   def init() {
 
     def newConfig = """
-project ""Search"", {
-  folder ""/Services""
+project ""Beer"", {
+  folder ""/Beverages""
 }
-workflow ""build"", {
+workflow ""brew"", {
   originating yes
 }
-workflow ""deploy""
+workflow ""drink""
 """
 
     def file = new File('Colonyfile')
@@ -41,13 +41,11 @@ workflow ""deploy""
 
     def colony = builder.build()
     def project = colony.project
-    def workflows = colony.workflows
-
-    echo 'Project', "${project.name}, folder = $project.folder"
-    echo "Workflows", { line ->
-      workflows.each {
-        w -> line.echo "${w.name}, originating = $w.originating"
-      }
-    }    
+    echo 'Project', "${project.name}, folder = $project.folder.name"
+//    echo "Workflows", { line ->
+//      workflows.each {
+//        w -> line.echo "${w.name}, originating = $w.originating"
+//      }
+//    }   
   }
 }

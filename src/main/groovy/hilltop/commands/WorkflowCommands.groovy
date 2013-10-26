@@ -69,14 +69,13 @@ class WorkflowCommands {
           }
         }
         else {
-          echo "Source Type", sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
-
           if (sourceConfigType.name.endsWith('.git.GitSourceConfig')) {
             echo "Source Type", sourceConfig.repository.name
             echo "Repository URL", sourceConfig.repositoryUrl
             echo "Repository Branch", sourceConfig.revision
           }
           else {
+            echo "Source Type", sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getRepositoryName'))
               echo "Repository Name", sourceConfig.repositoryName
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getWorkspaceName'))
