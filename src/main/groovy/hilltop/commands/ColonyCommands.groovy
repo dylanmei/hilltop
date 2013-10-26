@@ -1,55 +1,53 @@
 package hilltop.commands
 
-import hilltop.Config
+import groovy.lang.*
+import hilltop.colonies.*
 
 @Mixin(ConsoleHelper)
 class ColonyCommands {
-  def config = new Config()
-
   def init() {
 
     def newConfig = """
-version = '1'
-projects {
-  project {
-    name = 'Project 1'
-  },
-  project {
-    name = 'Project 2'
-  }
+project ""Search"", {
+  folder ""/Services""
 }
+workflow ""build"", {
+  originating yes
+}
+workflow ""deploy""
 """
 
-    ConfigSlurper slurper = new ConfigSlurper()
-    ConfigObject colony = slurper.parse(newConfig)
-
-    def file = new File("Colonyfile")
-    file.withWriter{ writer ->
-      colony.writeTo(writer)
+    def file = new File('Colonyfile')
+    file.withWriter {
+      it.println '/* Created by hilltop 0.1 */'
+      it.print newConfig
     }
-
-
   }
-
-//http://mrhaki.blogspot.com/2009/08/grassroots-groovy-configuration-with.html
-//http://stackoverflow.com/questions/8394763/reading-config-file-with-nested-closures-with-groovys-configslurper
-//http://www.redtoad.ca/ataylor/2013/01/creating-a-groovy-configobject-from-a-closure/
 
   def exec() {
     def file = new File('Colonyfile')
     if (!file.exists()) return
 
-    def colony = new ConfigSlurper().parse(file.toURL())
-    echo colony.dump()
-    echo colony.projects[0].name
-  }
+    def builder = new ColonyBuilder()
+    def binding = new Binding([
+      colony: builder,
+      project: builder.&project,
+      workflow: builder.&workflow,
+      yes: true, no: false
+    ])
 
-  class ColonyScript extends Script {
-    Closure closure
-    def run() {
-      closure.resolveStrategy = Closure.DELEGATE_FIRST
-      closure.delegate = this
-      closure.call()
-    }
+    def shell = new GroovyShell(binding)
+    shell.evaluate(file)
+
+    def colony = builder.build()
+    def project = colony.project
+    def workflows = colony.workflows
+
+    echo 'Project', "${project.name}, folder = $project.folder"
+    echo "Workflows", { line ->
+      workflows.each {
+        w -> line.echo "${w.name}, originating = $w.originating"
+      }
+    }    
   }
 }
