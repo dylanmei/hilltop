@@ -26,13 +26,13 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 Config
 
     ./hilltop config list
-    ./hilltop config set anthill.api_server=anthill.local
-    ./hilltop config get anthill.api_server
+    ./hilltop config set <name=value>
+    ./hilltop config get <name>
 
 Projects
 
     ./hilltop project list
-    ./hilltop project list --folder Services
+    ./hilltop project list --folder <folder>
     ./hilltop project show <project or .>
     ./hilltop project open <project or .>
 
@@ -46,6 +46,7 @@ Workflows
 Folders
 
     ./hilltop folder list
+    ./hilltop folder show <name or path>
 
 Builds
 
@@ -62,7 +63,7 @@ Build requests
 Environments
 
     ./hilltop environment list
-    ./hilltop environment list --group "Service Environments"
+    ./hilltop environment list --group <group>
     ./hilltop environment show <environment>
     ./hilltop environment open <environment>
 
