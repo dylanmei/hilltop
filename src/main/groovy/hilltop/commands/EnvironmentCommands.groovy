@@ -42,9 +42,14 @@ class EnvironmentCommands {
     browse link_to(environment)
   }
 
-  def list() {
+  def list(groupName) {
     work {
-      def environments = finder.all()
+      def environments
+      if (!groupName) environments = finder.all()
+      else {
+        def group = finder.group(groupName)
+        environments = group.serverGroupArray
+      }
       environments.each {
         echo it.name, it.description ?: ''
       }

@@ -58,6 +58,7 @@ Build requests
 Environments
 
     ./hilltop environment list
+    ./hilltop environment list --group "Service Environments"
     ./hilltop environment show <environment>
     ./hilltop environment open <environment>
 

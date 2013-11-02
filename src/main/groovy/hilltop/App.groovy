@@ -183,7 +183,10 @@ class App {
 
         command('list') {
           describe 'List Anthill environments'
-          execute { handler.list() }
+          options {
+            f longOpt: 'group', args: 1, 'List Anthill environments in a specific environment group'
+          }
+          execute { p -> handler.list(p.group) }
         }
 
         command('show') {
