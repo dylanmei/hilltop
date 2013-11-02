@@ -62,6 +62,12 @@ Environments
     ./hilltop environment show <environment>
     ./hilltop environment open <environment>
 
+Lifecycles
+
+    ./hilltop lifecycle list
+    ./hilltop lifecycle show <lifecycle>
+    ./hilltop lifecycle open <lifecycle>
+
 ## contributing
 
 1. Fork it

@@ -201,6 +201,28 @@ class App {
           execute { p -> handler.open(p.arguments()[0]) }
         }
       }
+
+      command('lifecycle') {
+        def handler = new LifecycleCommands()
+        describe 'Working with Anthill lifecycles'
+
+        command('list') {
+          describe 'List Anthill lifecycles'
+          execute { handler.list() }
+        }
+
+        command('show') {
+          describe 'Show details of an Anthill lifecycle'
+          arguments exactly: 1, name: 'lifecycle'
+          execute { p -> handler.show(p.arguments()[0]) }
+        }
+
+        command('open') {
+          describe 'Open an Anthill lifecycle in the browser'
+          arguments exactly: 1, name: 'lifecycle'
+          execute { p -> handler.open(p.arguments()[0]) }
+        }
+      }
     }).run(args)
   }
 }
