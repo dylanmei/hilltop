@@ -1,7 +1,6 @@
 
 package hilltop.commands
 
-import hilltop.Config
 import hilltop.anthill.ProjectFinder
 import hilltop.anthill.WorkflowFinder
 import com.urbancode.anthill3.domain.project.*
@@ -9,16 +8,9 @@ import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.source.plugin.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class WorkflowCommands {
-  def config = new Config()
-  def projectFinder = new ProjectFinder({
-    alert { m -> echo m }; error { m -> quit m }
-  })
-  def workflowFinder = new WorkflowFinder({
-    alert { m -> echo m }; error { m -> quit m }
-  })
+class WorkflowCommands extends AnthillCommands {
+  def projectFinder = Finder(ProjectFinder)
+  def workflowFinder = Finder(WorkflowFinder)
 
   def show(projectName, workflowName) {
     work {

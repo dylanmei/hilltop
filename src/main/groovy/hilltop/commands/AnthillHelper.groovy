@@ -5,20 +5,20 @@ import com.urbancode.anthill3.persistence.UnitOfWork;
 import com.urbancode.anthill3.domain.persistent.Persistent;
 
 class AnthillHelper {
-  protected link_to(Closure link) {
+  def link_to(Closure link) {
     def settings = config.get('anthill')
     def result = new AnthillLink(settings)
     link.delegate = result; link()
     result.url()
   }
 
-  protected link_to(Persistent anthill_object) {
+  def link_to(Persistent anthill_object) {
     link_to {
       resource anthill_object
     }
   }
 
-  protected work(Closure task) {
+  def work(Closure task) {
     def settings = config.get('anthill')
     if (settings == null || settings.api_token.isEmpty() || settings.api_server.isEmpty()) {
       quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'

@@ -1,26 +1,16 @@
 
 package hilltop.commands
 
-import hilltop.Config
 import hilltop.anthill.*
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class BuildCommands {
-  def config = new Config()
-  def workflowFinder = new WorkflowFinder({
-    error { m -> quit m }
-  })
-  def buildFinder = new BuildFinder({
-    error { m -> quit m }
-  })
-  def requestFinder = new RequestFinder({
-    error { m -> quit m }
-  })
+class BuildCommands extends AnthillCommands {
+  def buildFinder = Finder(BuildFinder)
+  def requestFinder = Finder(RequestFinder)
+  def workflowFinder = Finder(WorkflowFinder)
 
   def open(id) {
     def settings = config.get('anthill')

@@ -3,8 +3,7 @@ package hilltop.commands
 import groovy.lang.*
 import hilltop.colonies.*
 
-@Mixin(ConsoleHelper)
-class ColonyCommands {
+class ColonyCommands extends AnthillCommands {
   def init() {
 
     def newConfig = """

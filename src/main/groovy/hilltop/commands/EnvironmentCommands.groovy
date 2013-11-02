@@ -1,18 +1,12 @@
 package hilltop.commands
 
-import hilltop.Config
 import hilltop.anthill.EnvironmentFinder
 import com.urbancode.anthill3.domain.agent.*
 import com.urbancode.anthill3.services.agent.*
 import com.urbancode.anthill3.domain.servergroup.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class EnvironmentCommands {
-  def config = new Config()
-  def finder = new EnvironmentFinder({
-    error { m -> quit m }
-  })
+class EnvironmentCommands extends AnthillCommands {
+  def finder = Finder(EnvironmentFinder)
 
   def show(name) {
     work {

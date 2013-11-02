@@ -1,19 +1,13 @@
 
 package hilltop.commands
 
-import hilltop.Config
 import hilltop.anthill.RequestFinder
 import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class RequestCommands {
-  def config = new Config()
-  def requestFinder = new RequestFinder({
-    error { m -> quit m }
-  })
+class RequestCommands extends AnthillCommands {
+  def requestFinder = Finder(RequestFinder)
 
   def open(id) {
     def settings = config.get('anthill')

@@ -1,16 +1,10 @@
 package hilltop.commands
 
-import hilltop.Config
 import hilltop.anthill.FolderFinder
 import com.urbancode.anthill3.domain.folder.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class FolderCommands {
-  def config = new Config()
-  def finder = new FolderFinder({
-    alert { m -> echo m }; error { m -> quit m }
-  })
+class FolderCommands extends AnthillCommands {
+  def finder = Finder(FolderFinder)
 
   def list(inactive) {
     work {

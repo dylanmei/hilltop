@@ -1,22 +1,17 @@
 package hilltop.commands
 
-import hilltop.Config
-import hilltop.anthill.ProjectFinder
+import hilltop.anthill.*
 import com.urbancode.anthill3.domain.folder.*
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.source.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class ProjectCommands {
-  def config = new Config()
-  def finder = new ProjectFinder({
-    alert { m -> echo m }; error { m -> quit m }
-  })
+class ProjectCommands extends AnthillCommands {
+  def projectFinder = Finder(ProjectFinder)
+  def folderFinder = Finder(FolderFinder)
 
   def show(projectName) {
     work {
-      def project = finder.one(projectName)
+      def project = projectFinder.one(projectName)
       echo project.name
       echo link_to(project)
 
@@ -53,7 +48,7 @@ class ProjectCommands {
   def open(projectName, admin) {
     def settings = config.get('anthill')
     def project = work {
-      finder.one(projectName)
+      projectFinder.one(projectName)
     }
 
     browse link_to {
@@ -65,9 +60,9 @@ class ProjectCommands {
   def list(inactive, folderName) {
     work {
       def projects
-      if (!folderName) projects = finder.all(inactive)
+      if (!folderName) projects = projectFinder.all(inactive)
       else {
-        def folder = finder.folder(folderName)
+        def folder = folderFinder.one(folderName)
         projects = folder.projects
           .findAll { f -> f.isActive != inactive }
       }

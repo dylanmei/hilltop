@@ -38,12 +38,6 @@ class ProjectFinder {
     }
   }
 
-  def folder(name) {
-    def folder = FolderFactory.getInstance().restoreForName(name)
-    if (!folder) error "No such folder <$name>"
-    folder
-  }
-
   private String guessProjectName() {
     System.getProperty('user.dir')
       .tokenize(File.separator).last()

@@ -13,5 +13,11 @@ class FolderFinder {
       FolderFactory.getInstance().restoreAll() :
       FolderFactory.getInstance().restoreAllActive()
   }
+
+  def one(name) {
+    def folder = FolderFactory.getInstance().restoreForName(name)
+    if (!folder) error "No such folder <$name>"
+    folder
+  }
 }
 

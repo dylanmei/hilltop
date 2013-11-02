@@ -5,7 +5,6 @@ import hilltop.Config
 @Mixin(ConsoleHelper)
 class ConfigCommands {
   def config = new Config()
-
   def get(name) {
     def value = name.tokenize('.')
       .inject(config) { c, key -> c.get(key) }

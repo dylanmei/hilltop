@@ -1,16 +1,10 @@
 package hilltop.commands
 
-import hilltop.Config
 import hilltop.anthill.LifecycleFinder
 import com.urbancode.anthill3.domain.lifecycle.*
 
-@Mixin(ConsoleHelper)
-@Mixin(AnthillHelper)
-class LifecycleCommands {
-  def config = new Config()
-  def finder = new LifecycleFinder({
-    error { m -> quit m }
-  })
+class LifecycleCommands extends AnthillCommands {
+  def finder = Finder(LifecycleFinder)
 
   def show(name) {
     work {
