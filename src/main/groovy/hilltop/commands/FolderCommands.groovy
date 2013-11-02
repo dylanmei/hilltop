@@ -12,4 +12,29 @@ class FolderCommands extends AnthillCommands {
       folders.each { echo it.path }
     }
   }
+
+  def show(name) {
+    work {
+      def folder = finder.one(name)
+      echo folder.name
+
+      if (folder.description)
+        echo "Description", folder.description
+
+      if (folder.parent)
+        echo "Parent-Folder", folder.parent.path
+
+      if (folder.children.size()) {
+        echo "Sub-Folders", { line ->
+          folder.children.each { f -> line.echo f.name }
+        }
+      }
+
+      if (folder.projects.size()) {
+        echo "Projects", { line ->
+          folder.projects.each { p -> line.echo p.name }
+        }
+      }
+    }    
+  }
 }

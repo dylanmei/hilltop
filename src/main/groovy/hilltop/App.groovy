@@ -132,6 +132,12 @@ class App {
           }
           execute { p -> handler.list(p.inactive) }
         }
+        
+        command('show') {
+          describe 'Show details of an Anthill folder'
+          arguments exactly: 1, name: 'folder'
+          execute { p -> handler.show(p.arguments()[0]) }
+        }        
       }
 
       command('build') {
