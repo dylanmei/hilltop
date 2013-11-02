@@ -33,21 +33,21 @@ Projects
 
     ./hilltop project list
     ./hilltop project list --folder Services
-    ./hilltop project show <project>
-    ./hilltop project open <project>
+    ./hilltop project show <project or .>
+    ./hilltop project open <project or .>
 
 Workflows
 
-    ./hilltop workflow list <project>
-    ./hilltop workflow show <project> <workflow>
-    ./hilltop workflow open <project> <workflow>
-    ./hilltop workflow remove <project> <workflow>
+    ./hilltop workflow list <project or .>
+    ./hilltop workflow show <project or .> <workflow>
+    ./hilltop workflow open <project or .> <workflow>
+    ./hilltop workflow remove <project or .> <workflow>
 
 Builds
 
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
-    ./hilltop build new <project> <workflow>
+    ./hilltop build new <project or .> <workflow>
     ./hilltop build run <buildlife> <workflow> <environment>
 
 Build requests

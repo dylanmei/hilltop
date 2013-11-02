@@ -13,11 +13,9 @@ class LifecycleFinder {
     LifeCycleModelFactory.getInstance().restoreAll()
   }
 
-  def lifecycle(name) {
-    def lifecycle = LifeCycleModelFactory.getInstance()
-      .restoreForName(name)
-    if (!lifecycle)
-      error "No such lifecycle <$name>"
+  def one(name) {
+    def lifecycle = LifeCycleModelFactory.getInstance().restoreForName(name)
+    if (!lifecycle) error "No such lifecycle <$name>"
     lifecycle
   }
 }

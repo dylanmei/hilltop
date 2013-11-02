@@ -16,7 +16,7 @@ class ProjectCommands {
 
   def show(projectName) {
     work {
-      def project = finder.project(projectName)
+      def project = finder.one(projectName)
       echo project.name
       echo link_to(project)
 
@@ -53,7 +53,7 @@ class ProjectCommands {
   def open(projectName, admin) {
     def settings = config.get('anthill')
     def project = work {
-      finder.project(projectName)
+      finder.one(projectName)
     }
 
     browse link_to {

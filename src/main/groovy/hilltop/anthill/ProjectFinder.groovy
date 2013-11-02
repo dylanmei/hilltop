@@ -19,7 +19,7 @@ class ProjectFinder {
     projects
   }
 
-  def project(name) {
+  def one(name) {
     if (name == '.')
       name = guessProjectName()
 
@@ -40,10 +40,7 @@ class ProjectFinder {
 
   def folder(name) {
     def folder = FolderFactory.getInstance().restoreForName(name)
-    if (!folder) {
-      error "No such folder <$name>"
-    }
-
+    if (!folder) error "No such folder <$name>"
     folder
   }
 

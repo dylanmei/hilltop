@@ -18,11 +18,14 @@ class BuildCommands {
   def buildFinder = new BuildFinder({
     error { m -> quit m }
   })
+  def requestFinder = new RequestFinder({
+    error { m -> quit m }
+  })
 
   def open(id) {
     def settings = config.get('anthill')
     def buildlife = work {
-      buildFinder.buildlife(id as long)
+      buildFinder.one(id as long)
     }
  
     browse link_to(buildlife)
@@ -30,7 +33,7 @@ class BuildCommands {
 
   def show(id) {
     work {
-      def buildlife = buildFinder.buildlife(id as long)
+      def buildlife = buildFinder.one(id as long)
       def project = buildlife.project
       def workflow = buildlife.originatingWorkflow
 
@@ -60,7 +63,7 @@ class BuildCommands {
 
   def start(projectName, workflowName, openBrowser) {
     def request = work {
-      def workflow = workflowFinder.workflow(projectName, workflowName)
+      def workflow = workflowFinder.one(projectName, workflowName)
       if (!workflow.isOriginating())
         quit "${workflow.name} is not an originating workflow"
 
@@ -74,7 +77,7 @@ class BuildCommands {
       sleep 250; print '.'
 
       work {
-        request = buildFinder.request(request.id)
+        request = requestFinder.one(request.id)
 
         if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
           buildlife = request.buildLife
@@ -95,7 +98,7 @@ class BuildCommands {
 
   def run(id, workflowName, environmentName, openBrowser) {
     def request = work {
-      def buildlife = buildFinder.buildlife(id as long)
+      def buildlife = buildFinder.one(id as long)
       def runner = new WorkflowRunner(buildlife, {
         error { m -> quit m }
       })

@@ -14,7 +14,7 @@ class LifecycleCommands {
 
   def show(name) {
     work {
-      def lifecycle = finder.lifecycle(name)
+      def lifecycle = finder.one(name)
 
       echo lifecycle.name
       echo link_to(lifecycle)
@@ -27,7 +27,7 @@ class LifecycleCommands {
   def open(name) {
     def settings = config.get('anthill')
     def lifecycle = work {
-      finder.lifecycle(name)
+      finder.one(name)
     }
 
     browse link_to(lifecycle)
