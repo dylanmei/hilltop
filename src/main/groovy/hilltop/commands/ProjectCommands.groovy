@@ -39,11 +39,11 @@ class ProjectCommands {
         workflows.each { w -> line.echo "${w.isOriginating() ? '*' : ' '} ${w.name}" }
       }
 
-      def sourceConfigType = project.getSourceConfigType()
-      echo "Source Config", sourceConfigType.name.tokenize('.').last()
+      if (project.sourceConfigType)
+        echo "Source Config", project.sourceConfigType.name.tokenize('.').last()
 
-      def lifecycleModel = project.getLifeCycleModel()
-      echo "Lifecycle", lifecycleModel.name
+      if (project.lifeCycleModel)
+        echo "Lifecycle", project.lifeCycleModel.name
 
       def environmentGroup = project.getEnvironmentGroup()
       echo "Environment", environmentGroup.name

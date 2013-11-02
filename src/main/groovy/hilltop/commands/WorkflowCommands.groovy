@@ -33,9 +33,9 @@ class WorkflowCommands {
       if (workflow.description)
         echo "Description", workflow.description
 
-      def definition = workflow.getWorkflowDefinition()
-      def lifecycleModel = definition.getLifeCycleModel()
-      echo "Lifecycle", lifecycleModel.name
+      def definition = workflow.workflowDefinition
+      if (definition.lifeCycleModel)
+        echo "Lifecycle", definition.lifeCycleModel.name
 
       if (workflow.isOriginating()) {
         def buildProfile = workflow.buildProfile
