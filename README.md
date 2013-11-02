@@ -35,6 +35,7 @@ Projects
     ./hilltop project list --folder <folder>
     ./hilltop project show <project or .>
     ./hilltop project open <project or .>
+    ./hilltop project remove <project or .>
 
 Workflows
 
@@ -54,6 +55,7 @@ Builds
     ./hilltop build open <buildlife>
     ./hilltop build new <project or .> <workflow>
     ./hilltop build run <buildlife> <workflow> <environment>
+    ./hilltop build remove <buildlife>
 
 Build requests
 

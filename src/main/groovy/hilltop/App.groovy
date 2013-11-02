@@ -78,6 +78,14 @@ class App {
             handler.open(p.arguments().first(), p.a)
           }
         }
+
+        command('remove') {
+          describe 'Remove an Anthill project'
+          arguments exactly: 1, name: 'project'
+          execute { p ->
+            handler.remove(p.arguments()[0])
+          }
+        }
       }
 
       command('workflow') {
@@ -176,6 +184,14 @@ class App {
           describe 'Open an Anthill buildlife in the browser'
           arguments exactly: 1, name: 'buildlife'
           execute { p -> handler.open(p.arguments()[0]) }
+        }
+
+        command('remove') {
+          describe 'Remove an Anthill buildlife'
+          arguments exactly: 1, name: 'buildlife'
+          execute { p ->
+            handler.remove(p.arguments()[0])
+          }
         }
       }
 

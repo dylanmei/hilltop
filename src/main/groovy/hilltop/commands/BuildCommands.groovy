@@ -51,6 +51,13 @@ class BuildCommands extends AnthillCommands {
     }
   }
 
+  def remove(id) {
+    work {
+      def buildlife = buildFinder.one(id as long)
+      buildlife.delete()
+    }
+  }
+
   def start(projectName, workflowName, openBrowser) {
     def request = work {
       def workflow = workflowFinder.one(projectName, workflowName)

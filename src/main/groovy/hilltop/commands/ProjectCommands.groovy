@@ -70,4 +70,17 @@ class ProjectCommands extends AnthillCommands {
       projects.each { echo it.name }
     }
   }
+
+  def remove(name) {
+    work {
+      def project = projectFinder.one(name)
+      try {
+        project.delete()
+        echo "Project <$project.name> has been removed"
+      }
+      catch (RuntimeException re) {
+       quit "Unable to remove project <$project.name>: $re.message"
+      }
+    }    
+  }
 }
