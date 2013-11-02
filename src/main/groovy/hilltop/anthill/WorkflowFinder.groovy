@@ -12,10 +12,9 @@ class WorkflowFinder {
     projectFinder = new ProjectFinder(handlers)
   }
 
-  def workflow(projectName, workflowName) {
-
+  def one(projectName, workflowName) {
     def workflow = null
-    def project = projectFinder.project(projectName)
+    def project = projectFinder.one(projectName)
 
     if (project) {
       workflow = WorkflowFactory.getInstance()

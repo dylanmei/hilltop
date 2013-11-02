@@ -14,19 +14,15 @@ class EnvironmentFinder {
     ServerGroupFactory.getInstance().restoreAll()
   }
 
-  def environment(name) {
-    def env = ServerGroupFactory.getInstance()
-      .restoreForName(name)
-    if (!env)
-      error "No such environment <$name>"
-    env
+  def one(name) {
+    def environment = ServerGroupFactory.getInstance().restoreForName(name)
+    if (!environment) error "No such environment <$name>"
+    environment
   }
 
   def group(name) {
-    def group = EnvironmentGroupFactory.getInstance()
-      .restoreForName(name)
-    if (!group)
-      error "No such environment group <$name>"
+    def group = EnvironmentGroupFactory.getInstance().restoreForName(name)
+    if (!group) error "No such environment group <$name>"
     group
   }
 }

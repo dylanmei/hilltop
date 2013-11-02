@@ -22,7 +22,7 @@ class WorkflowCommands {
 
   def show(projectName, workflowName) {
     work {
-      def workflow = workflowFinder.workflow(projectName, workflowName)
+      def workflow = workflowFinder.one(projectName, workflowName)
       def project = workflow.project
 
       echo "$project.name $workflow.name"
@@ -94,7 +94,7 @@ class WorkflowCommands {
 
   def open(projectName, workflowName, admin) {
     def workflow = work {
-      workflowFinder.workflow(projectName, workflowName)
+      workflowFinder.one(projectName, workflowName)
     }
 
     browse link_to {
@@ -105,7 +105,7 @@ class WorkflowCommands {
 
   def list(projectName, inactive) {
     work {
-      def project = projectFinder.project(projectName)
+      def project = projectFinder.one(projectName)
       def workflows = workflowFinder.all(project, inactive).sort { a, b ->
         if (a.isOriginating()) return b.isOriginating() ? 0 : -1
         if (b.isOriginating()) return a.isOriginating() ? 0 :  1
@@ -118,7 +118,7 @@ class WorkflowCommands {
 
   def remove(projectName, workflowName) {
     work {
-      def workflow = workflowFinder.workflow(projectName, workflowName)
+      def workflow = workflowFinder.one(projectName, workflowName)
       try {
         workflow.delete()
         echo "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"

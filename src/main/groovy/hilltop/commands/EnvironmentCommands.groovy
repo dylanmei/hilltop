@@ -16,7 +16,7 @@ class EnvironmentCommands {
 
   def show(name) {
     work {
-      def environment = finder.environment(name)
+      def environment = finder.one(name)
 
       echo environment.name
       echo link_to(environment)
@@ -36,7 +36,7 @@ class EnvironmentCommands {
   def open(name) {
     def settings = config.get('anthill')
     def environment = work {
-      finder.environment(name)
+      finder.one(name)
     }
 
     browse link_to(environment)

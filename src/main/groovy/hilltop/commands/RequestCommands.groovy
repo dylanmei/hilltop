@@ -2,7 +2,7 @@
 package hilltop.commands
 
 import hilltop.Config
-import hilltop.anthill.BuildFinder
+import hilltop.anthill.RequestFinder
 import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
@@ -11,14 +11,14 @@ import com.urbancode.anthill3.domain.buildlife.*
 @Mixin(AnthillHelper)
 class RequestCommands {
   def config = new Config()
-  def buildFinder = new BuildFinder({
+  def requestFinder = new RequestFinder({
     error { m -> quit m }
   })
 
   def open(id) {
     def settings = config.get('anthill')
     def request = work {
-      buildFinder.request(id as int)
+      requestFinder.one(id as int)
     }
 
     browse link_to(request)
@@ -26,7 +26,7 @@ class RequestCommands {
 
   def show(id) {
     work {
-      def request = buildFinder.request(id as int)
+      def request = requestFinder.one(id as int)
       def project = request.project
       def workflow = request.workflow
 

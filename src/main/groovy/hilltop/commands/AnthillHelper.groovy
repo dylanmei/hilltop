@@ -69,6 +69,8 @@ class AnthillHelper {
         return buildlife_link()
       if (className ==~ /.*\.ServerGroup$/)
         return environment_link()
+      if (className ==~ /.*\.LifeCycleModel$/)
+        return lifecycle_link()
 
       throw new GroovyRuntimeException("Cannot create a link for an unknown object: " + className)
     }
@@ -97,6 +99,10 @@ class AnthillHelper {
 
     def environment_link() {
       "http://$config.api_server:8181/tasks/admin/servergroup/ServerGroupTasks/viewServerGroup?serverGroupId=$obj.id"
+    }
+
+    def lifecycle_link() {
+      "http://$config.api_server:8181/tasks/admin/lifecyclemodel/LifeCycleModelTasks/viewLifeCycleModel?lifeCycleModelId=$obj.id"
     }
   }
 }
