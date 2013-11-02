@@ -43,6 +43,10 @@ Workflows
     ./hilltop workflow open <project or .> <workflow>
     ./hilltop workflow remove <project or .> <workflow>
 
+Folders
+
+    ./hilltop folder list
+
 Builds
 
     ./hilltop build show <buildlife>

@@ -53,7 +53,7 @@ class App {
           describe 'List Anthill projects'
           options {
             f longOpt: 'folder', args: 1, 'List Anthill projects in a specific folder'
-            i longOpt: 'inactive', 'List inactive projects'
+            i longOpt: 'inactive', 'Include inactive projects'
           }
           execute { p ->
             handler.list(p.inactive, p.folder)
@@ -88,7 +88,7 @@ class App {
           describe 'List Anthill workflows in a project'
           arguments exactly: 1, name: 'project'
           options {
-            i longOpt: 'inactive', 'List inactive workflows'
+            i longOpt: 'inactive', 'Include inactive workflows'
           }
           execute { p -> handler.list(p.arguments()[0], p.inactive) }
         }
@@ -118,6 +118,19 @@ class App {
           execute { p ->
             handler.remove(p.arguments()[0], p.arguments()[1])
           }
+        }
+      }
+
+      command('folder') {
+        def handler = new FolderCommands()
+        describe 'Working with Anthill folders'
+
+        command('list') {
+          describe 'List Anthill folders'
+          options {
+            i longOpt: 'inactive', 'Include inactive folders'
+          }
+          execute { p -> handler.list(p.inactive) }
         }
       }
 
@@ -238,7 +251,7 @@ class App {
           execute { handler.exec() }
         }
       }
-      
+
     }).run(args)
   }
 }
