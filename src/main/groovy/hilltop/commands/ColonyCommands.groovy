@@ -6,24 +6,35 @@ import hilltop.colonies.*
 class ColonyCommands extends AnthillCommands {
   def init() {
 
-    def newConfig = """
-project ""Beer"", {
-  folder ""/Beverages""
+    def newConfig = '''
+project "Example", {
+  folder "/Temp"
+  description "Example Colonyfile Project"
+  lifecycle   "Example Life-Cycle Model"
+  environment "Example Environment Group"
 }
-workflow ""brew"", {
+workflow "build", {
   originating yes
 }
-workflow ""drink""
-"""
+workflow "deploy"
+'''
 
     def file = new File('Colonyfile')
+    if (file.exists())
+      quit "File <$file.absolutePath> already exists!"
+
     file.withWriter {
       it.println '/* Created by hilltop 0.1 */'
       it.print newConfig
     }
+
+    echo "File created <$file.absolutePath>"
   }
 
-  def exec() {
+  def exec(noop) {
+    if (!noop)
+      quit "Running without --noop is not supported!"
+
     def file = new File('Colonyfile')
     if (!file.exists()) return
 
@@ -38,9 +49,16 @@ workflow ""drink""
     def shell = new GroovyShell(binding)
     shell.evaluate(file)
 
-    def colony = builder.build()
-    def project = colony.project
-    echo 'Project', "${project.name}, folder = $project.folder.name"
+    work {
+      def colony = builder.build()
+      def project = colony.project
+      echo 'Project', project.name
+      echo 'Folder', project.folder.path
+      echo 'Lifecycle', project.lifeCycleModel.name
+      echo 'Environment', project.environmentGroup.name
+
+
+    }
 //    echo "Workflows", { line ->
 //      workflows.each {
 //        w -> line.echo "${w.name}, originating = $w.originating"

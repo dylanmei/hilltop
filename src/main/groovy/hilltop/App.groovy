@@ -254,7 +254,10 @@ class App {
 
         command('exec') {
           describe 'Execute a Colonyfile'
-          execute { handler.exec() }
+          options {
+            n longOpt: 'noop', 'Execute Colonyfile without commiting changes'
+          }
+          execute { p -> handler.exec(p.noop) }
         }
       }
 
