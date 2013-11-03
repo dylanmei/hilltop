@@ -69,6 +69,11 @@ Environments
     ./hilltop environment show <environment>
     ./hilltop environment open <environment>
 
+Agents
+
+    ./hilltop agent list
+    ./hilltop agent open <agent>
+
 Lifecycles
 
     ./hilltop lifecycle list
