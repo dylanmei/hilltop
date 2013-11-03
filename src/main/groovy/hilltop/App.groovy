@@ -123,8 +123,12 @@ class App {
         command('remove') {
           describe 'Remove an Anthill workflow'
           arguments exactly: 2, name1: 'project', name2: 'workflow'
+          options {
+            n longOpt: 'noop', 'Remove Workflow without commiting changes'
+            f longOpt: 'force', 'Remove Workflow at all costs'
+          }
           execute { p ->
-            handler.remove(p.arguments()[0], p.arguments()[1])
+            handler.remove(p.arguments()[0], p.arguments()[1], p.force, p.noop)
           }
         }
       }

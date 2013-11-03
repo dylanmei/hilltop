@@ -27,15 +27,23 @@ class BuildCommands extends AnthillCommands {
       def project = buildlife.project
       def workflow = buildlife.originatingWorkflow
 
-      echo "$project.name $workflow.name"
+      echo "$project.name ${workflow?.name}"
       echo link_to(buildlife)
 
-      def request = buildlife.originatingRequest
-      echo "Build Request", request.id
+      if (buildlife.isPreflight())
+        echo 'Preflight', 'yes'
+      if (buildlife.isInactive())
+        echo 'Inactive', 'yes'
+      if (buildlife.isArchived())
+        echo 'Archived', 'yes'
+      else {
+        def request = buildlife.originatingRequest
+        echo "Build Request", request.id
 
-      if (buildlife.statusArray) {
-        echo "Status", { line ->
-          buildlife.statusArray.each { s -> line.echo "$s.status [${s.dateAssigned.format('d MMM yyyy HH:mm:ss Z')}]" }
+        if (buildlife.statusArray) {
+          echo "Status", { line ->
+            buildlife.statusArray.each { s -> line.echo "$s.status [${s.dateAssigned.format('d MMM yyyy HH:mm:ss Z')}]" }
+          }
         }
       }
 

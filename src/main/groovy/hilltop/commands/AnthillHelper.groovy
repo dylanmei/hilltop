@@ -1,10 +1,26 @@
 package hilltop.commands
 
+import hilltop.anthill.*
 import com.urbancode.anthill3.main.client.AnthillClient;
 import com.urbancode.anthill3.persistence.UnitOfWork;
 import com.urbancode.anthill3.domain.persistent.Persistent;
 
 class AnthillHelper {
+  def connect() {
+    def settings = config.get('anthill')
+    if (settings == null || settings.api_token.isEmpty() || settings.api_server.isEmpty()) {
+      quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'
+    }
+    AnthillClient.connect(settings.api_server, 4567, settings.api_token)
+  }
+
+  def work(Closure task) {
+    def client = connect()
+    def result = AnthillEngine.submit_work(client, task)
+    client.disconnect()
+    result
+  }
+
   def link_to(Closure link) {
     def settings = config.get('anthill')
     def result = new AnthillLink(settings)
@@ -16,28 +32,6 @@ class AnthillHelper {
     link_to {
       resource anthill_object
     }
-  }
-
-  def work(Closure task) {
-    def settings = config.get('anthill')
-    if (settings == null || settings.api_token.isEmpty() || settings.api_server.isEmpty()) {
-      quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'
-    }
-
-    def result
-    def client = AnthillClient.connect(settings.api_server, 4567, settings.api_token)
-    def uow = client.createUnitOfWork()
-    try {
-      result = task(uow)
-    }
-    catch (Exception e) {
-      if (!uow.isClosed())
-        uow.cancel()
-      throw e
-    }
-
-    uow.commitAndClose();
-    result
   }
 
   class AnthillLink {

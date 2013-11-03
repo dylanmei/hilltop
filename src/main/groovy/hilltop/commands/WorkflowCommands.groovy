@@ -1,16 +1,17 @@
 
 package hilltop.commands
 
-import hilltop.anthill.ProjectFinder
-import hilltop.anthill.WorkflowFinder
+import hilltop.anthill.*
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.source.plugin.*
+import com.urbancode.anthill3.domain.buildlife.*
 
 class WorkflowCommands extends AnthillCommands {
-  def projectFinder = Finder(ProjectFinder)
   def workflowFinder = Finder(WorkflowFinder)
+  def projectFinder = Finder(ProjectFinder)
+  def buildFinder = Finder(BuildFinder)
 
   def show(projectName, workflowName) {
     work {
@@ -108,16 +109,19 @@ class WorkflowCommands extends AnthillCommands {
     }
   }
 
-  def remove(projectName, workflowName) {
+  def remove(projectName, workflowName, force, noop) {
+    def workflow, project
     work {
-      def workflow = workflowFinder.one(projectName, workflowName)
-      try {
-        workflow.delete()
-        echo "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
-      }
-      catch (RuntimeException re) {
-       quit "Unable to remove workflow <$workflow.name> for project <$workflow.project.name>: $re.message"
-      }
+      workflow = workflowFinder.one(projectName, workflowName)
+      project = workflow.project
     }
+
+    def destroyer = new WorkflowDestroyer(connect(), {
+      error { m -> quit m }
+      alert { m -> echo m }
+    })
+
+    destroyer.go(workflow, force, noop)
+    echo "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
   }
 }

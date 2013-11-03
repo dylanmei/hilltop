@@ -6,6 +6,8 @@ import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 import com.urbancode.anthill3.domain.servergroup.*
+import com.urbancode.anthill3.main.client.AnthillClient;
+import com.urbancode.anthill3.persistence.UnitOfWork;
 
 class AnthillEngine {
   public static BuildRequest create_build_request(Workflow workflow) {
@@ -26,6 +28,21 @@ class AnthillEngine {
     request.unitOfWork = uow
     request.store()
     request    
+  }
+
+  public static Object submit_work(AnthillClient client, Closure task) {
+    def result
+    def uow = client.createUnitOfWork()
+     try {
+       result = task(uow)
+     }
+     catch (Exception e) {
+       if (!uow.isClosed())
+         uow.cancel()
+       throw e
+     }
+     uow.commitAndClose();
+     result    
   }
 
   public static void submit_build_request(BuildRequest request) {

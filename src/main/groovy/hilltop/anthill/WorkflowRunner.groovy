@@ -8,7 +8,6 @@ import com.urbancode.anthill3.domain.servergroup.*
 @Mixin(FeedbackHelper)
 class WorkflowRunner {
   def buildlife
-  def errorHandler
 
   public WorkflowRunner(buildlife, Closure handlers = null) {
     this.buildlife = buildlife
