@@ -19,7 +19,6 @@ class LifecycleCommands extends AnthillCommands {
   }
 
   def open(name) {
-    def settings = config.get('anthill')
     def lifecycle = work {
       finder.one(name)
     }

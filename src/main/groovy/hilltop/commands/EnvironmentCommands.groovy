@@ -28,7 +28,6 @@ class EnvironmentCommands extends AnthillCommands {
   }
 
   def open(name) {
-    def settings = config.get('anthill')
     def environment = work {
       finder.one(name)
     }

@@ -10,7 +10,6 @@ class RequestCommands extends AnthillCommands {
   def requestFinder = Finder(RequestFinder)
 
   def open(id) {
-    def settings = config.get('anthill')
     def request = work {
       requestFinder.one(id as int)
     }

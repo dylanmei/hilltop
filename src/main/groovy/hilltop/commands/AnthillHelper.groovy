@@ -63,6 +63,8 @@ class AnthillHelper {
         return buildlife_link()
       if (className ==~ /.*\.ServerGroup$/)
         return environment_link()
+      if (className ==~ /.*\.Agent$/)
+        return agent_link()
       if (className ==~ /.*\.LifeCycleModel$/)
         return lifecycle_link()
 
@@ -93,6 +95,10 @@ class AnthillHelper {
 
     def environment_link() {
       "http://$config.api_server:8181/tasks/admin/servergroup/ServerGroupTasks/viewServerGroup?serverGroupId=$obj.id"
+    }
+
+    def agent_link() {
+      "http://$config.api_server:8181/tasks/admin/agent/AgentTasks/viewAgent?agent_id=$obj.id"
     }
 
     def lifecycle_link() {

@@ -241,6 +241,22 @@ class App {
         }
       }
 
+      command('agent') {
+        def handler = new AgentCommands()
+        describe 'Working with Anthill agents'
+
+        command('list') {
+          describe 'List Anthill agents'
+          execute { p -> handler.list() }
+        }
+
+        command('open') {
+          describe 'Open an Anthill agent in the browser'
+          arguments exactly: 1, name: 'agent'
+          execute { p -> handler.open(p.arguments()[0]) }
+        }
+      }
+
       command('lifecycle') {
         def handler = new LifecycleCommands()
         describe 'Working with Anthill lifecycles'

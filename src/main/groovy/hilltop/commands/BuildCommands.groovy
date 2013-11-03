@@ -13,7 +13,6 @@ class BuildCommands extends AnthillCommands {
   def workflowFinder = Finder(WorkflowFinder)
 
   def open(id) {
-    def settings = config.get('anthill')
     def buildlife = work {
       buildFinder.one(id as long)
     }

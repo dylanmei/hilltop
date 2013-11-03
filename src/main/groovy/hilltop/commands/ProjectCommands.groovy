@@ -46,7 +46,6 @@ class ProjectCommands extends AnthillCommands {
   }
 
   def open(projectName, admin) {
-    def settings = config.get('anthill')
     def project = work {
       projectFinder.one(projectName)
     }
