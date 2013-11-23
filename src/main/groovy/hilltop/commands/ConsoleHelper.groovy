@@ -1,71 +1,42 @@
 
 package hilltop.commands
 
-import org.codehaus.groovy.runtime.FlushingStreamWriter
+import hilltop.App
 
 class ConsoleHelper {
-  def writer = new PrintWriter(new FlushingStreamWriter(System.out))
+  def out = App.out
   def terminate = { System.exit(0) }
-
-  def echo() {
-    writer.println ''
-  }
-
-  def echo(message) {
-    writer.println message
-  }
-
-  def echo(name, Long value) {
-    echo(name, value.toString())
-  }
-
-  def echo(name, String value) {
-    writer.println name.padRight(40) + value.toString()
-  }
-
-  def echo(name, Iterable<String> values) {
-    echo(name, values.iterator())
-  }
-
-  def echo(name, Iterator<String> values) {
-    def i = values.iterator();
-    def line = name.padRight(40)
-    if (i.hasNext())
-    {
-      line += i.next()
-    }
-    else line += 'None'
-    echo line
-    while (i.hasNext()) {
-      line = (' ' * 40) + i.next()
-      echo line
-    }
-  }
-
-  def echo(name, Closure closure) {
-    writer.print name.padRight(40)
-    def visitor = new EchoVisitor(writer: writer)
-    closure(visitor)
-    if (visitor.line == 0) echo()
-  }
-
-  class EchoVisitor {
-    def writer
-    def line = 0
-
-    def echo(String message) {
-      if (line++ > 0)
-        writer.print (' ' * 40)
-      writer.println message
-    }
-  }
 
   def quit(message, throwable = null) {
     if (message)
-      writer.println message
-    writer.flush()
+      out.echo message
+    out.flush()
 
     if (!throwable) terminate()
     throw throwable
+  }
+
+  def echo(message) {
+    out.echo(message)
+  }
+
+  def echo(name, Long value) {
+    out.echo(name, value.toString())
+  }
+
+  def echo(name, String value) {
+    out.echo(name, value)
+  }
+
+  def echo(name, Iterable<String> values) {
+    out.echo(name, values)
+  }
+
+  def echo(name, Iterator<String> values) {
+    out.echo(name, values)
+  }
+
+  def echo(name, Closure closure) {
+    out.echo(name, closure)
   }
 }

@@ -4,16 +4,20 @@ import hilltop.cli.*
 import hilltop.commands.*
 
 class App {
+  static def out = new Out()
+
   def App(String... args) {
 
     new Cli('hilltop', {
       describe 'An Anthill command-line utility'
       options {
         v longOpt: 'version', 'Gets the current Hilltop version'
+        j longOpt: 'json', 'Output JSON format'
       }
       execute { params ->
         if (params.v) {
-          println 'hilltop version: 0.1'; System.exit(0)
+          out.echo('hilltop version: 0.1')
+          System.exit(0)
         }
       }
 
@@ -298,5 +302,6 @@ class App {
       }
 
     }).run(args)
+    out.flush()
   }
 }
