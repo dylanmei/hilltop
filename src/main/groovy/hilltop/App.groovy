@@ -16,7 +16,7 @@ class App {
       }
       execute { params ->
         if (params.v) {
-          out.echo('hilltop version: 0.1')
+          out.echo('version', 'hilltop version: 0.1')
           System.exit(0)
         }
       }
@@ -252,6 +252,12 @@ class App {
         command('list') {
           describe 'List Anthill agents'
           execute { p -> handler.list() }
+        }
+
+        command('show') {
+          describe 'Show details of an Anthill agent'
+          arguments exactly: 1, name: 'agent'
+          execute { p -> handler.show(p.arguments()[0]) }
         }
 
         command('open') {

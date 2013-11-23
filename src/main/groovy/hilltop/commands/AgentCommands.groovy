@@ -15,6 +15,14 @@ class AgentCommands extends AnthillCommands {
     }
   }
 
+  def show(name) {
+    def agent = work {
+      finder.one(name)
+    }
+
+    echo agent, uri: link_to(agent)
+  }
+
   def open(name) {
     def agent = work {
       finder.one(name)

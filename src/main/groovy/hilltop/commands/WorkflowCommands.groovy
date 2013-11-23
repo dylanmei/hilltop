@@ -18,9 +18,7 @@ class WorkflowCommands extends AnthillCommands {
       def workflow = workflowFinder.one(projectName, workflowName)
       def project = workflow.project
 
-      echo "$project.name $workflow.name"
-      echo link_to(workflow)
-
+      echo workflow, label: "$project.name $workflow.name", uri: link_to(workflow)
       echo "Originating", workflow.isOriginating() ? "Yes" : "No"
 
       if (workflow.description)

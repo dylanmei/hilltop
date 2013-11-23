@@ -14,7 +14,20 @@ class Out {
   }
 
   def echo(name, String value) {
-    writer.println name.padRight(40) + value.toString()
+    switch (name) {
+      case 'id': // never print
+        break
+
+      case 'label':
+      case 'version':
+      case 'uri':
+        // print without labels
+        writer.println value
+        break
+
+      default:
+        writer.println name.padRight(40) + value
+    }
   }
 
   def echo(name, Iterable<String> values) {

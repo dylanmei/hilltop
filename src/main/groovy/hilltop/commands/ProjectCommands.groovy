@@ -12,17 +12,13 @@ class ProjectCommands extends AnthillCommands {
   def show(projectName) {
     work {
       def project = projectFinder.one(projectName)
-      echo project.name
-      echo link_to(project)
+      echo project, uri: link_to(project)
 
       if (project.description)
         echo "Description", project.description
 
-      if (!project.isActive())
-        echo "Status", "Inactive"
-
-      def folder = project.getFolder()
-      echo "Folder", folder.path
+      echo "Status", project.isActive() ? "Active" : "Inactive"
+      echo "Folder", project.folder.path
 
       def workflows = project.getWorkflowArray().sort { a, b ->
         if (a.isOriginating()) return b.isOriginating() ? 0 : -1

@@ -2,6 +2,7 @@
 package hilltop.commands
 
 import hilltop.App
+import com.urbancode.anthill3.domain.persistent.Persistent;
 
 class ConsoleHelper {
   def out = App.out
@@ -16,27 +17,36 @@ class ConsoleHelper {
     throw throwable
   }
 
-  def echo(message) {
+  def echo(String message) {
     out.echo(message)
   }
 
-  def echo(name, Long value) {
+  def echo(String name, Long value) {
     out.echo(name, value.toString())
   }
 
-  def echo(name, String value) {
+  def echo(String name, String value) {
     out.echo(name, value)
   }
 
-  def echo(name, Iterable<String> values) {
+  def echo(Map map = [:], Persistent p) {
+    out.echo 'id', p.id
+    if (!map.containsKey('label'))
+      out.echo 'label', p.name
+    map.each {
+      out.echo it.key, it.value
+    }
+  }
+
+  def echo(String name, Iterable<String> values) {
     out.echo(name, values)
   }
 
-  def echo(name, Iterator<String> values) {
+  def echo(String name, Iterator<String> values) {
     out.echo(name, values)
   }
 
-  def echo(name, Closure closure) {
+  def echo(String name, Closure closure) {
     out.echo(name, closure)
   }
 }

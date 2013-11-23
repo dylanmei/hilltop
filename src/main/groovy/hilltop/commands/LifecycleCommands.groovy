@@ -9,9 +9,7 @@ class LifecycleCommands extends AnthillCommands {
   def show(name) {
     work {
       def lifecycle = finder.one(name)
-
-      echo lifecycle.name
-      echo link_to(lifecycle)
+      echo lifecycle, uri: link_to(lifecycle)
 
       if (lifecycle.description)
         echo "Description", lifecycle.description

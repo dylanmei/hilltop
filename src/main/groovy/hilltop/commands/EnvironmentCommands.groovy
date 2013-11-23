@@ -11,9 +11,7 @@ class EnvironmentCommands extends AnthillCommands {
   def show(name) {
     work {
       def environment = finder.one(name)
-
-      echo environment.name
-      echo link_to(environment)
+      echo environment, uri: link_to(environment)
 
       if (environment.description)
         echo "Description", environment.description

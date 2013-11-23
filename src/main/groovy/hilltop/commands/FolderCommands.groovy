@@ -16,7 +16,7 @@ class FolderCommands extends AnthillCommands {
   def show(name) {
     work {
       def folder = finder.one(name)
-      echo folder.name
+      echo folder
 
       if (folder.description)
         echo "Description", folder.description

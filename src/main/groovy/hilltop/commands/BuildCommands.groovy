@@ -26,8 +26,8 @@ class BuildCommands extends AnthillCommands {
       def project = buildlife.project
       def workflow = buildlife.originatingWorkflow
 
-      echo "$project.name ${workflow?.name}"
-      echo link_to(buildlife)
+      echo buildlife, label: "Buildlife $id", uri: link_to(buildlife)
+      echo "Workflow", "$project.name $workflow.name"
 
       if (buildlife.isPreflight())
         echo 'Preflight', 'yes'

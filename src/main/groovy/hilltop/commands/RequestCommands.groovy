@@ -23,8 +23,8 @@ class RequestCommands extends AnthillCommands {
       def project = request.project
       def workflow = request.workflow
 
-      echo "$project.name $workflow.name"
-      echo link_to(request)
+      echo request, label: "Build Request $id", uri: link_to(request)
+      echo "Workflow", "$project.name $workflow.name"
 
       echo 'Status', request.status.toString()
       echo 'Requester', "$request.requesterName ($request.requestSource.name)"
