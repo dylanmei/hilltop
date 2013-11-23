@@ -37,11 +37,12 @@ class Out {
   def echo(name, Iterator<String> values) {
     def i = values.iterator();
     def line = name.padRight(40)
-    if (i.hasNext())
-    {
+    if (i.hasNext()) {
       line += i.next()
     }
-    else line += 'None'
+    else {
+      line += 'None'
+    }
     echo line
     while (i.hasNext()) {
       line = (' ' * 40) + i.next()

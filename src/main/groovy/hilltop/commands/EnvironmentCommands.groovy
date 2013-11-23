@@ -1,16 +1,18 @@
 package hilltop.commands
 
 import hilltop.anthill.EnvironmentFinder
+import hilltop.anthill.EnvironmentGroupFinder
 import com.urbancode.anthill3.domain.agent.*
 import com.urbancode.anthill3.services.agent.*
 import com.urbancode.anthill3.domain.servergroup.*
 
 class EnvironmentCommands extends AnthillCommands {
-  def finder = Finder(EnvironmentFinder)
+  def environmentfinder = Finder(EnvironmentFinder)
+  def groupFinder = Finder(EnvironmentGroupFinder)
 
   def show(name) {
     work {
-      def environment = finder.one(name)
+      def environment = environmentfinder.one(name)
       echo environment, uri: link_to(environment)
 
       if (environment.description)
@@ -18,6 +20,11 @@ class EnvironmentCommands extends AnthillCommands {
 
       def agents = environment.agentArray
       def manager = new AgentManagerClient()
+
+      def groups = groupFinder.fetch(environment)
+      echo "Groups", { line ->
+        groups.each { g -> line.echo g.name }
+      }
 
       echo "Agents", { line ->
         agents.each { a -> line.echo "${manager.getAgentStatus(a).online ? ' ' : '!'} ${a.name}" }
@@ -27,7 +34,7 @@ class EnvironmentCommands extends AnthillCommands {
 
   def open(name) {
     def environment = work {
-      finder.one(name)
+      environmentfinder.one(name)
     }
 
     browse link_to(environment)
@@ -36,9 +43,9 @@ class EnvironmentCommands extends AnthillCommands {
   def list(groupName) {
     work {
       def environments
-      if (!groupName) environments = finder.all()
+      if (!groupName) environments = environmentfinder.all()
       else {
-        def group = finder.group(groupName)
+        def group = groupFinder.one(groupName)
         environments = group.serverGroupArray
       }
       environments.each {

@@ -2,7 +2,6 @@
 package hilltop.anthill
 
 import com.urbancode.anthill3.domain.servergroup.*
-import com.urbancode.anthill3.domain.environmentgroup.*
 
 @Mixin(FeedbackHelper)
 class EnvironmentFinder {
@@ -18,11 +17,5 @@ class EnvironmentFinder {
     def environment = ServerGroupFactory.getInstance().restoreForName(name)
     if (!environment) error "No such environment <$name>"
     environment
-  }
-
-  def group(name) {
-    def group = EnvironmentGroupFactory.getInstance().restoreForName(name)
-    if (!group) error "No such environment group <$name>"
-    group
   }
 }
