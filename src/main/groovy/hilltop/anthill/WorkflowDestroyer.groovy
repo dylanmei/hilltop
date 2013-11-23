@@ -19,6 +19,7 @@ class WorkflowDestroyer {
 
   public void go(Workflow workflow, force, noop) {
     work {
+      check_is_originating_workflow(workflow)
       check_no_dependant_projects(workflow)
       check_no_pending_requests(workflow)
     }
@@ -73,7 +74,7 @@ class WorkflowDestroyer {
   }
 
   private void delete_workflow(workflow, noop) {
-    "Removing Workflow..."
+    alert "Removing Workflow..."
     work {
       try {
         if (!noop) workflow.delete()
@@ -82,6 +83,13 @@ class WorkflowDestroyer {
         error "Unable to remove Workflow <$workflow.name> from Project <$workflow.project.name>: $de.message"
       }
     }
+  }
+
+  private void check_is_originating_workflow(workflow) {
+    // TODO: These have buildlifes that are connected to
+    // the buildlifes of the originating workflow...
+    if (!workflow.isOriginating())
+      error "Cannot remove non-originating workflows"
   }
 
   private void check_no_dependant_projects(workflow) {
