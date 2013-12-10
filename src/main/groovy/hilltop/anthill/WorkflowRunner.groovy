@@ -27,7 +27,7 @@ class WorkflowRunner {
     def server_groups = find_environments_to_run_in(environment, workflows)
 
     if (server_groups.size() == 0)
-      error "Cannot find environment <$environment> assigned to workflow <$workflow.name>"
+      error "Cannot find environment <$environment> assigned to workflow <$name>"
 
     if (server_groups.size() == 1)
       server_group = server_groups.first()

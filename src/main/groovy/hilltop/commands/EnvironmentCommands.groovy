@@ -19,13 +19,13 @@ class EnvironmentCommands extends AnthillCommands {
         echo "Description", environment.description
 
       def agents = environment.agentArray
-      def manager = new AgentManagerClient()
 
       def groups = groupFinder.fetch(environment)
       echo "Groups", { line ->
         groups.each { g -> line.echo g.name }
       }
 
+      def manager = new AgentManagerClient()
       echo "Agents", { line ->
         agents.each { a -> line.echo "${manager.getAgentStatus(a).online ? ' ' : '!'} ${a.name}" }
       }

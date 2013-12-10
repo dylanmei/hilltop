@@ -74,8 +74,10 @@ class BuildCommands extends AnthillCommands {
       AnthillEngine.create_build_request(workflow)
     }
 
-    print "Created build request ${request.id} for $workflowName; Waiting for Buildlife..."
-    AnthillEngine.submit_build_request(request)
+    work {
+      AnthillEngine.submit_build_request(request)
+      print "Created build request ${request.id} for $workflowName; Waiting for Buildlife..."
+    }
 
     def buildlife = null; while (!buildlife) {
       sleep 250; print '.'
@@ -110,8 +112,10 @@ class BuildCommands extends AnthillCommands {
       runner.request(workflowName, environmentName, [:])
     }
 
-    WorkflowRunner.submit(request)
-    echo "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
+    work {
+      WorkflowRunner.submit(request)
+      echo "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
+    }
 
     if (openBrowser) open(id)
   }
