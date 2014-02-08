@@ -25,7 +25,7 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 
 Config
 
-    ./hilltop config list
+    ./hilltop config show
     ./hilltop config set <name=value>
     ./hilltop config get <name>
 

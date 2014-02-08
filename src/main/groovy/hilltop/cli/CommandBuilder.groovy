@@ -10,8 +10,8 @@ class CommandBuilder {
     this.writer = writer
   }
 
-  def command(name, Closure... config) {
-    def newCommand = createCommand(name)
+  def command(name, desc, Closure... config) {
+    def newCommand = createCommand(name, desc)
 
     if (config) {
 
@@ -65,12 +65,13 @@ class CommandBuilder {
 
   private void configure(Closure... config) {
     if (this.commands.isEmpty())
-      command(null, config)
+      command(null, '', config)
   }
 
-  private Command createCommand(name) {
+  private Command createCommand(name, desc) {
     def command = current ?
       Command.Sub(current, name) : Command.Core()
+    command.description = desc
     return this.commands[command.path] = command
   }
 }

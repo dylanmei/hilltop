@@ -39,7 +39,7 @@ class ConfigCommands {
     config.save()
   }
 
-  def list() {
+  def show() {
     def writer = new StringWriter()
     config.writeTo(writer)
     def content = writer.toString()

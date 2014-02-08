@@ -42,8 +42,16 @@ class Cli {
     if (shouldShowHelp(command, options))
       showHelp(command, builder)
     else {
-      if (command.execute)
-        command.execute(options)
+      if (command.execute) {
+        if (command.execute.getMaximumNumberOfParameters() > 1) {
+          command.execute(options, options.arguments())
+        }
+        else {
+          command.execute(options)
+        }
+//        println(command.execute.getMaximumNumberOfParameters())
+//        command.execute(options, options.arguments())
+      }
       newParams = options.arguments()
     }
 

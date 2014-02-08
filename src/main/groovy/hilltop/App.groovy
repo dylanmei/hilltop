@@ -10,300 +10,282 @@ class App {
 
     new Cli('hilltop', {
       describe 'An Anthill command-line utility'
-      options {
-        v longOpt: 'version', 'Gets the current Hilltop version'
-        j longOpt: 'json', 'Output JSON format'
-      }
-      execute { params ->
-        if (params.v) {
+
+      command('version', 'Get this Hilltop version') {
+        execute {
           out.echo('version', 'hilltop version: 0.1')
-          System.exit(0)
         }
       }
 
-      command('config') {
+      command('config', 'Manage configuration values') {
         def handler = new ConfigCommands()
-        describe 'Manage configuration values'
 
-        command('get') {
-          describe 'Get a configuration value'
+        command('get', 'Get a configuration value') {
           arguments exactly: 1
-          execute { p -> handler.get(p.arguments().first()) }
+          execute { opt, arguments -> handler.get(arguments[0]) }
         }
 
-        command('set') {
-          describe 'Set configuration values; <property=value> ...'
+        command('set', 'Set configuration values; <property=value> ...') {
           arguments minimum: 1
-          execute { p -> handler.set(p.arguments()) }
+          execute { opt, arguments -> handler.set(arguments) }
         }
 
-        command('remove') {
-          describe 'Remove configuration values'
+        command('remove', 'Remove configuration values') {
           arguments minimum: 1
-          execute { p -> handler.remove(p.arguments()) }
+          execute { opt, arguments -> handler.remove(arguments) }
         }
 
-        command('list') {
-          describe 'List the current configuration values'
-          execute { handler.list() }
+        command('show', 'Show the current configuration values') {
+          execute { handler.show() }
         }
       }
 
-      command('project') {
+      command('project', 'Working with Anthill projects') {
         def handler = new ProjectCommands()
-        describe 'Working with Anthill projects'
 
-        command('list') {
-          describe 'List Anthill projects'
+        command('list', 'List Anthill projects') {
           options {
             f longOpt: 'folder', args: 1, 'List Anthill projects in a specific folder'
             i longOpt: 'inactive', 'Include inactive projects'
           }
-          execute { p ->
-            handler.list(p.inactive, p.folder)
+          execute { opt ->
+            handler.list(opt.inactive, opt.folder)
           }
         }
 
-        command('show') {
-          describe 'Show details of an Anthill project'
+        command('show', 'Show details of an Anthill project') {
           arguments exactly: 1, name: 'project'
-          execute { p ->
-            handler.show(p.arguments().first())
+          execute { opt, arguments ->
+            handler.show(arguments[0])
           }
         }
 
-        command('open') {
-          describe 'Open an Anthill project in the browser'
+        command('open', 'Open an Anthill project in the browser') {
           arguments exactly: 1, name: 'project'
           options {
             a longOpt: 'admin', 'Open the administrative configuration page'
           }
-          execute { p ->
-            handler.open(p.arguments().first(), p.a)
+          execute { opt, arguments ->
+            handler.open(arguments[0], opt.admin)
           }
         }
 
-        command('remove') {
-          describe 'Remove an Anthill project'
+        command('remove', 'Remove an Anthill project') {
           arguments exactly: 1, name: 'project'
-          execute { p ->
-            handler.remove(p.arguments()[0])
+          execute { opt, arguments ->
+            handler.remove(arguments[0])
           }
         }
       }
 
-      command('workflow') {
+      command('workflow', 'Working with Anthill workflows') {
         def handler = new WorkflowCommands()
-        describe 'Working with Anthill workflows'
 
-        command('list') {
-          describe 'List Anthill workflows in a project'
+        command('list', 'List Anthill workflows in a project') {
           arguments exactly: 1, name: 'project'
           options {
             i longOpt: 'inactive', 'Include inactive workflows'
           }
-          execute { p -> handler.list(p.arguments()[0], p.inactive) }
-        }
-
-        command('show') {
-          describe 'Show details of an Anthill workflow'
-          arguments exactly: 2, name1: 'project', name2: 'workflow'
-          execute { p ->
-            handler.show(p.arguments()[0], p.arguments()[1])
+          execute { opt, arguments ->
+            handler.list(arguments[0], opt.inactive)
           }
         }
 
-        command('open') {
-          describe 'Open an Anthill workflow in the browser'
+        command('show', 'Show details of an Anthill workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          execute { opt, arguments ->
+            handler.show(arguments[0], arguments[1])
+          }
+        }
+
+        command('open', 'Open an Anthill workflow in the browser') {
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           options {
             a longOpt: 'admin', 'Open the administrative configuration page'
           }
-          execute { p ->
-            handler.open(p.arguments()[0], p.arguments()[1], p.a)
+          execute { opt, arguments ->
+            handler.open(arguments[0], arguments[1], opt.admin)
           }
         }
 
-        command('remove') {
-          describe 'Remove an Anthill workflow'
+        command('remove', 'Remove an Anthill workflow') {
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           options {
             n longOpt: 'noop', 'Remove Workflow without commiting changes'
             f longOpt: 'force', 'Remove Workflow at all costs'
           }
-          execute { p ->
-            handler.remove(p.arguments()[0], p.arguments()[1], p.force, p.noop)
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1], opt.force, opt.noop)
           }
         }
       }
 
-      command('folder') {
+      command('folder', 'Working with Anthill folders') {
         def handler = new FolderCommands()
-        describe 'Working with Anthill folders'
 
-        command('list') {
-          describe 'List Anthill folders'
+        command('list', 'List Anthill folders') {
           options {
             i longOpt: 'inactive', 'Include inactive folders'
           }
-          execute { p -> handler.list(p.inactive) }
+          execute { opt ->
+            handler.list(opt.inactive)
+          }
         }
         
-        command('show') {
-          describe 'Show details of an Anthill folder'
+        command('show', 'Show details of an Anthill folder') {
           arguments exactly: 1, name: 'folder'
-          execute { p -> handler.show(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.show(arguments[0])
+          }
         }        
       }
 
-      command('build') {
+      command('build', 'Working with Anthill builds') {
         def handler = new BuildCommands()
-        describe 'Working with Anthill builds'
 
-        command('new') {
-          describe 'Request a new Anthill buildlife'
+        command('new', 'Request a new Anthill buildlife') {
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
           }
-          execute { p ->
-            handler.start(p.arguments()[0], p.arguments()[1], p.open)
+          execute { opt, arguments ->
+            handler.start(arguments[0], arguments[1], opt.open)
           }
         }
 
-        command('run') {
-          describe 'Run a workflow against an Anthill buildlife'
+        command('run', 'Run a workflow against an Anthill buildlife') {
           arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
           }
-          execute { p ->
-            handler.run(p.arguments()[0], p.arguments()[1], p.arguments()[2], p.open)
+          execute { opt, arguments ->
+            handler.run(arguments[0], arguments[1], arguments[2], opt.open)
           }
         }
 
-        command('show') {
-          describe 'Show details of an Anthill buildlife'
+        command('show', 'Show details of an Anthill buildlife') {
           arguments exactly: 1, name: 'buildlife'
-          execute { p -> handler.show(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.show(arguments[0])
+          }
         }
 
-        command('open') {
-          describe 'Open an Anthill buildlife in the browser'
+        command('open', 'Open an Anthill buildlife in the browser') {
           arguments exactly: 1, name: 'buildlife'
-          execute { p -> handler.open(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.open(arguments[0])
+          }
         }
 
-        command('remove') {
-          describe 'Remove an Anthill buildlife'
+        command('remove', 'Remove an Anthill buildlife') {
           arguments exactly: 1, name: 'buildlife'
-          execute { p ->
-            handler.remove(p.arguments()[0])
+          execute { opt, arguments ->
+            handler.remove(arguments[0])
           }
         }
       }
 
-      command('request') {
+      command('request', 'Working with Anthill build requests') {
         def handler = new RequestCommands()
-        describe 'Working with Anthill build requests'
 
-        command('show') {
-          describe 'Show details of an Anthill build request'
+        command('show', 'Show details of an Anthill build request') {
           arguments exactly: 1, name: 'request'
-          execute { p -> handler.show(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.show(arguments[0])
+          }
         }
 
-        command('open') {
-          describe 'Open an Anthill build request in the browser'
+        command('open', 'Open an Anthill build request in the browser') {
           arguments exactly: 1, name: 'request'
-          execute { p -> handler.open(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.open(arguments[0])
+          }
         }
       }
 
-      command('environment') {
+      command('environment', 'Working with Anthill environments') {
         def handler = new EnvironmentCommands()
-        describe 'Working with Anthill environments'
 
-        command('list') {
-          describe 'List Anthill environments'
+        command('list', 'List Anthill environments') {
           options {
             f longOpt: 'group', args: 1, 'List Anthill environments in a specific environment group'
           }
-          execute { p -> handler.list(p.group) }
+          execute { opt ->
+            handler.list(opt.group)
+          }
         }
 
-        command('show') {
-          describe 'Show details of an Anthill environment'
+        command('show', 'Show details of an Anthill environment') {
           arguments exactly: 1, name: 'environment'
-          execute { p -> handler.show(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.show(arguments[0])
+          }
         }
 
-        command('open') {
-          describe 'Open an Anthill environment in the browser'
+        command('open', 'Open an Anthill environment in the browser') {
           arguments exactly: 1, name: 'environment'
-          execute { p -> handler.open(p.arguments()[0]) }
+          execute { opt, arguments ->
+            handler.open(arguments[0])
+          }
         }
       }
 
-      command('agent') {
+      command('agent', 'Working with Anthill agents') {
         def handler = new AgentCommands()
-        describe 'Working with Anthill agents'
 
-        command('list') {
-          describe 'List Anthill agents'
-          execute { p -> handler.list() }
-        }
-
-        command('show') {
-          describe 'Show details of an Anthill agent'
-          arguments exactly: 1, name: 'agent'
-          execute { p -> handler.show(p.arguments()[0]) }
-        }
-
-        command('open') {
-          describe 'Open an Anthill agent in the browser'
-          arguments exactly: 1, name: 'agent'
-          execute { p -> handler.open(p.arguments()[0]) }
-        }
-      }
-
-      command('lifecycle') {
-        def handler = new LifecycleCommands()
-        describe 'Working with Anthill lifecycles'
-
-        command('list') {
-          describe 'List Anthill lifecycles'
+        command('list', 'List Anthill agents') {
           execute { handler.list() }
         }
 
-        command('show') {
-          describe 'Show details of an Anthill lifecycle'
-          arguments exactly: 1, name: 'lifecycle'
-          execute { p -> handler.show(p.arguments()[0]) }
+        command('show', 'Show details of an Anthill agent') {
+          arguments exactly: 1, name: 'agent'
+          execute { opt, arguments ->
+            handler.show(arguments[0])
+          }
         }
 
-        command('open') {
-          describe 'Open an Anthill lifecycle in the browser'
-          arguments exactly: 1, name: 'lifecycle'
-          execute { p -> handler.open(p.arguments()[0]) }
+        command('open', 'Open an Anthill agent in the browser') {
+          arguments exactly: 1, name: 'agent'
+          execute { opt, arguments ->
+            handler.open(arguments[0])
+          }
         }
       }
 
-      command('colony') {
-        def handler = new ColonyCommands()
-        describe 'Working with Anthill colony files'
+      command('lifecycle', 'Working with Anthill lifecycles') {
+        def handler = new LifecycleCommands()
 
-        command('init') {
-          describe 'Create a new Colonyfile'
+        command('list', 'List Anthill lifecycles') {
+          execute { handler.list() }
+        }
+
+        command('show', 'Show details of an Anthill lifecycle') {
+          arguments exactly: 1, name: 'lifecycle'
+          execute { opt, arguments ->
+            handler.show(arguments[0])
+          }
+        }
+
+        command('open', 'Open an Anthill lifecycle in the browser') {
+          arguments exactly: 1, name: 'lifecycle'
+          execute { opt, arguments ->
+            handler.open(arguments[0])
+          }
+        }
+      }
+
+      command('colony', 'Working with Anthill colony files') {
+        def handler = new ColonyCommands()
+
+        command('init', 'Create a new Colonyfile') {
           execute { handler.init() }
         }
 
-        command('exec') {
-          describe 'Execute a Colonyfile'
+        command('exec', 'Execute a Colonyfile') {
           options {
             n longOpt: 'noop', 'Execute Colonyfile without commiting changes'
           }
-          execute { p -> handler.exec(p.noop) }
+          execute { opt -> handler.exec(opt.noop) }
         }
       }
 
