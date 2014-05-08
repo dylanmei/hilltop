@@ -13,6 +13,7 @@ class Project {
   String description
   String lifecycle
   String environment
+  String sourceType??
 }
 */
 

@@ -20,7 +20,7 @@ class ProjectBuilder {
   def lifecycles = new LifecycleFinder({
     error { m -> throw new BuilderException(m) }
   })
-  def environments = new EnvironmentFinder({
+  def environments = new EnvironmentGroupFinder({
     error { m -> throw new BuilderException(m) }
   })
 
@@ -42,7 +42,7 @@ class ProjectBuilder {
     project.description = values['description']
     project.folder = folders.one(values['folder'])
     project.lifeCycleModel = lifecycles.one(values['lifecycle'])
-    project.environmentGroup = environments.group(values['environment'])
+    project.environmentGroup = environments.one(values['environment'])
     project
   }
 }
