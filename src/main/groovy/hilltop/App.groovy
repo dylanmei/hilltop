@@ -131,13 +131,13 @@ class App {
             handler.list(opt.inactive)
           }
         }
-        
+
         command('show', 'Show details of an Anthill folder') {
           arguments exactly: 1, name: 'folder'
           execute { opt, arguments ->
             handler.show(arguments[0])
           }
-        }        
+        }
       }
 
       command('build', 'Working with Anthill builds') {
@@ -274,20 +274,20 @@ class App {
         }
       }
 
-      command('colony', 'Working with Anthill colony files') {
-        def handler = new ColonyCommands()
+      // command('colony', 'Working with Anthill colony files') {
+      //   def handler = new ColonyCommands()
 
-        command('init', 'Create a new Colonyfile') {
-          execute { handler.init() }
-        }
+      //   command('init', 'Create a new Colonyfile') {
+      //     execute { handler.init() }
+      //   }
 
-        command('exec', 'Execute a Colonyfile') {
-          options {
-            n longOpt: 'noop', 'Execute Colonyfile without commiting changes'
-          }
-          execute { opt -> handler.exec(opt.noop) }
-        }
-      }
+      //   command('exec', 'Execute a Colonyfile') {
+      //     options {
+      //       n longOpt: 'noop', 'Execute Colonyfile without commiting changes'
+      //     }
+      //     execute { opt -> handler.exec(opt.noop) }
+      //   }
+      // }
 
     }).run(args)
     out.flush()
