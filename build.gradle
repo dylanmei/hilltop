@@ -1,47 +1,25 @@
 apply plugin: 'groovy'
+apply plugin: 'application'
 
 repositories {
   mavenCentral()
+  flatDir(dirs: 'depends/anthill3-dev-kit/remoting/lib')
 }
-
-configurations {
-  anthill {
-    extendsFrom compile
-    transitive = false
-  }
-}
-
-sourceSets {
-  main { compileClasspath += configurations.anthill }
-  test {
-    runtimeClasspath += configurations.anthill
-    compileClasspath += configurations.anthill
-  }
-}
-
-task depends(type: Jar) {
-  archiveName = 'hilltop-dependencies.jar'
-  exclude 'hilltop/**/*'
-  from {
-    configurations.anthill.collect { it.isDirectory() ? it : zipTree(it) }
-  }
-  {
-      exclude 'META-INF/MANIFEST.MF'
-      exclude 'META-INF/*.SF'
-      exclude 'META-INF/*.DSA'
-      exclude 'META-INF/*.RSA'
-  }
-}
-
-//test.dependsOn depends
-assemble.dependsOn depends
 
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.1.5'
+  compile fileTree(dir: 'depends/anthill3-dev-kit/remoting/lib', include: '*.jar')
+
   runtime 'commons-cli:commons-cli:1.2'
-  anthill fileTree(dir: 'depends/anthill3-dev-kit/remoting/lib', include: '*.jar')
 
   testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
   testCompile 'cglib:cglib-nodep:2.2'
   testCompile 'org.objenesis:objenesis:1.2'
+}
+
+mainClassName = 'hilltop.App'
+run {
+  if (project.hasProperty('command')) {
+      args Eval.me(command)
+  }
 }

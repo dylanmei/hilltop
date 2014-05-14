@@ -12,14 +12,14 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 * Gradle 1.6+
 
     `brew/chocolatey install gradle`
-
+* Clone this repo `git clone https://github.com/dylanmei/hilltop && cd hilltop`
 * Unzip the [Anthill3 Dev Kit](http://docs.urbancode.com/anthill3-help-3.8/html/DevKit.html) into the *./depends* folder.
  * Verify the path *./depends/anthill3-dev-kit/remoting* exists.
-* Build the dependencies jar `gradle assemble`
-* Run the tests `gradle test`
+* Build the hilltop app `gradle installApp`
+* Create an alias to hilltop `alias ht=$(pwd)/build/install/hilltop/bin/hilltop`
 * Add configuration variables
-    * anthill server `./hilltop config set anthill.api_server=anthill.local`
-    * authorization token `./hilltop config set anthill.api_token=mytoken`
+    * anthill server `ht config set anthill.api_server=anthill.local`
+    * authorization token `ht config set anthill.api_token=mytoken`
 
 ## commands
 
@@ -82,6 +82,8 @@ Lifecycles
     ./hilltop lifecycle open <lifecycle>
 
 ## contributing
+
+Hilltop uses the Gradle project automation tool. Gradle tasks are discoverable with `gradle tasks`. The *./hilltop* shell-script is included as a shortcut for `gradle run` *+ args*.
 
 1. Fork it
 2. Create your feature branch `git checkout -b my-new-feature`

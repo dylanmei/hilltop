@@ -292,4 +292,8 @@ class App {
     }).run(args)
     out.flush()
   }
+
+  static void main(String... args) {
+    new App(args)
+  }
 }
