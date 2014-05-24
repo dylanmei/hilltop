@@ -32,17 +32,18 @@ Config
 Projects
 
     ./hilltop project list
-    ./hilltop project list --folder <folder>
-    ./hilltop project show <project or .>
-    ./hilltop project open <project or .>
-    ./hilltop project remove <project or .>
+    ./hilltop project list --like <project-name>
+    ./hilltop project list --folder <folder-name>
+    ./hilltop project show <project-name or .>
+    ./hilltop project open <project-name or .>
+    ./hilltop project remove <project-name or .>
 
 Workflows
 
-    ./hilltop workflow list <project or .>
-    ./hilltop workflow show <project or .> <workflow>
-    ./hilltop workflow open <project or .> <workflow>
-    ./hilltop workflow remove <project or .> <workflow>
+    ./hilltop workflow list <project-name or .>
+    ./hilltop workflow show <project-name or .> <workflow-name>
+    ./hilltop workflow open <project-name or .> <workflow-name>
+    ./hilltop workflow remove <project-name or .> <workflow-name>
 
 Folders
 
@@ -53,8 +54,8 @@ Builds
 
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
-    ./hilltop build new <project or .> <workflow>
-    ./hilltop build run <buildlife> <workflow> <environment>
+    ./hilltop build new <project-name or .> <workflow-name>
+    ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build remove <buildlife>
 
 Build requests
@@ -65,21 +66,21 @@ Build requests
 Environments
 
     ./hilltop environment list
-    ./hilltop environment list --group <group>
-    ./hilltop environment show <environment>
-    ./hilltop environment open <environment>
+    ./hilltop environment list --group <group-name>
+    ./hilltop environment show <environment-name>
+    ./hilltop environment open <environment-name>
 
 Agents
 
     ./hilltop agent list
-    ./hilltop agent show <agent>
-    ./hilltop agent open <agent>
+    ./hilltop agent show <agent-name>
+    ./hilltop agent open <agent-name>
 
 Lifecycles
 
     ./hilltop lifecycle list
-    ./hilltop lifecycle show <lifecycle>
-    ./hilltop lifecycle open <lifecycle>
+    ./hilltop lifecycle show <lifecycle-name>
+    ./hilltop lifecycle open <lifecycle-name>
 
 ## contributing
 

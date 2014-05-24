@@ -52,14 +52,23 @@ class ProjectCommands extends AnthillCommands {
     }
   }
 
-  def list(inactive, folderName) {
+  def list(inactive, folderName, nameFilter) {
     work {
       def projects
-      if (!folderName) projects = projectFinder.all(inactive)
+      if (!folderName) {
+        projects = projectFinder.all(inactive)
+      }
       else {
         def folder = folderFinder.one(folderName)
         projects = folder.projects
           .findAll { f -> f.isActive != inactive }
+      }
+
+      if (nameFilter) {
+        def pattern = ~"(?i).*${nameFilter.trim()}.*"
+        projects = projects.findAll {
+          pattern.matcher(it.name).matches()
+        }
       }
 
       projects.each { echo it.name }
@@ -76,6 +85,6 @@ class ProjectCommands extends AnthillCommands {
       catch (RuntimeException re) {
        quit "Unable to remove project <$project.name>: $re.message"
       }
-    }    
+    }
   }
 }

@@ -47,9 +47,10 @@ class App {
           options {
             f longOpt: 'folder', args: 1, 'List Anthill projects in a specific folder'
             i longOpt: 'inactive', 'Include inactive projects'
+            l longOpt: 'like', args: 1, 'Project name to match'
           }
           execute { opt ->
-            handler.list(opt.inactive, opt.folder)
+            handler.list(opt.inactive, opt.folder, opt.like)
           }
         }
 
