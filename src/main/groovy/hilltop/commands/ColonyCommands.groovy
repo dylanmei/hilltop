@@ -31,7 +31,7 @@ workflow "deploy"
       it.print newConfig
     }
 
-    echo "File created <$file.absolutePath>"
+    println "File created <$file.absolutePath>"
   }
 
   def exec(noop) {
@@ -55,12 +55,10 @@ workflow "deploy"
     work {
       def colony = builder.build()
       def project = colony.project
-      echo 'Project', project.name
-      echo 'Folder', project.folder.path
-      echo 'Lifecycle', project.lifeCycleModel.name
-      echo 'Environment', project.environmentGroup.name
-
-
+      println 'Project', project.name
+      println 'Folder', project.folder.path
+      println 'Lifecycle', project.lifeCycleModel.name
+      println 'Environment', project.environmentGroup.name
     }
 //    echo "Workflows", { line ->
 //      workflows.each {

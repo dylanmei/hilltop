@@ -24,31 +24,4 @@ class Out {
 
     writer.write(data)
   }
-
-  def echo(message) {
-    items << [message: message]
-  }
-
-  def echo(name, Long value) {
-    items << [name: value]
-  }
-
-  def echo(name, String value) {
-    items << [name: value]
-  }
-
-  def echo(name, Iterable<String> values) {
-    items << [name: values]
-  }
-
-  def echo(name, Iterator<String> iter) {
-    def values = []
-    while (iter.hasNext())
-      values << iter.next()
-    items << [name: values]
-  }
-
-  def echo(name, Closure closure) {
-    items << ["fixme": "closure!"]
-  }
 }

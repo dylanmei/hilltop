@@ -89,14 +89,14 @@ class BuildCommands extends AnthillCommands {
 
         if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
           buildlife = request.buildLife
-          echo "Buildlife ${buildlife.id} is available"
+          println "Buildlife ${buildlife.id} is available"
         }
       }
       if (request.status == BuildRequestStatusEnum.BUILD_LIFE_NOT_NEEDED) {
-        echo "Buildlife is not needed"; break
+        println "Buildlife is not needed"; break
       }
       if (request.status == BuildRequestStatusEnum.FAILED) {
-        echo "Buildlife creation failed"; break
+        println "Buildlife creation failed"; break
       }
     }
 
@@ -116,7 +116,7 @@ class BuildCommands extends AnthillCommands {
 
     work {
       WorkflowRunner.submit(request)
-      echo "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
+      println "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
     }
 
     if (openBrowser) open(id)
