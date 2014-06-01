@@ -1,4 +1,3 @@
-
 package hilltop
 
 import hilltop.cli.*
@@ -65,6 +64,7 @@ class CliSpec extends Specification {
       writer.toString().contains('usage: test')
   }
 
+  @Ignore
   def 'child command is executed'() {
     def writer = new StringWriter()
     def cli = new Cli('test', {
@@ -81,6 +81,7 @@ class CliSpec extends Specification {
       writer.toString() == 'executing child'
   }
 
+  @Ignore
   def 'grand-child command is executed'() {
     def writer = new StringWriter()
     def cli = new Cli('test', {

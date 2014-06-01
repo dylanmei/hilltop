@@ -7,50 +7,55 @@ import com.urbancode.anthill3.services.agent.*
 import com.urbancode.anthill3.domain.servergroup.*
 
 class EnvironmentCommands extends AnthillCommands {
-  def environmentfinder = Finder(EnvironmentFinder)
-  def groupFinder = Finder(EnvironmentGroupFinder)
+  def EnvironmentCommands(out) {
+    super(out)
+  }
 
   def show(name) {
-    work {
-      def environment = environmentfinder.one(name)
-      echo environment, uri: link_to(environment)
-
-      if (environment.description)
-        echo "Description", environment.description
-
+    send work {
+      def environment = finder(EnvironmentFinder).one(name)
+      def groups = finder(EnvironmentGroupFinder).fetch(environment)
       def agents = environment.agentArray
-
-      def groups = groupFinder.fetch(environment)
-      echo "Groups", { line ->
-        groups.each { g -> line.echo g.name }
-      }
-
       def manager = new AgentManagerClient()
-      echo "Agents", { line ->
-        agents.each { a -> line.echo "${manager.getAgentStatus(a).online ? ' ' : '!'} ${a.name}" }
-      }
+
+      return [
+        id: environment.id,
+        name: environment.name,
+        url: link_to(environment),
+        description: environment.description,
+        groups: groups.collect {[
+          id: it.id, name: it.name,
+        ]},
+        agents: agents.collect {[
+          id: it.id, name: it.name, mark: manager.getAgentStatus(it).online,
+        ]},
+      ]
     }
   }
 
   def open(name) {
     def environment = work {
-      environmentfinder.one(name)
+      finder(EnvironmentFinder).one(name)
     }
 
     browse link_to(environment)
   }
 
   def list(groupName) {
-    work {
+    send work {
       def environments
-      if (!groupName) environments = environmentfinder.all()
+      if (!groupName) environments = finder(EnvironmentFinder).all()
       else {
         def group = groupFinder.one(groupName)
         environments = group.serverGroupArray
       }
-      environments.each {
-        echo it.name, it.description ?: ''
-      }
+
+      return environments.collect {[
+        id: it.id,
+        name: it.name,
+        url: link_to(it),
+        description: it.description,
+      ]}
     }
   }
 }

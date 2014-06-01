@@ -6,8 +6,11 @@ import com.urbancode.anthill3.domain.project.*
 //import com.urbancode.anthill3.domain.plugin.PluginFactory
 
 class ColonyCommands extends AnthillCommands {
-  def init() {
+  def ColonyCommands(out) {
+    super(out)
+  }
 
+  def init() {
     def newConfig = '''
 project "Example", {
   folder "/Temp"
@@ -30,7 +33,7 @@ workflow "deploy"
       it.print newConfig
     }
 
-    echo "File created <$file.absolutePath>"
+    println "File created <$file.absolutePath>"
   }
 
   def exec(noop) {
@@ -57,11 +60,11 @@ workflow "deploy"
       // echo plugin.class.name
       // project.sourceConfigType = plugin.class
 
-      echo 'Project', project.name
-      echo 'Folder', project.folder.path
-      echo 'Lifecycle', project.lifeCycleModel.name
-      echo 'Environment', project.environmentGroup.name
-      // echo 'SourceType', project.sourceConfigType.name
+      println 'Project', project.name
+      println 'Folder', project.folder.path
+      println 'Lifecycle', project.lifeCycleModel.name
+      println 'Environment', project.environmentGroup.name
+      // println 'SourceType', project.sourceConfigType.name
 
       if (!noop)
         project.store()
