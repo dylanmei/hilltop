@@ -4,32 +4,41 @@ import hilltop.anthill.LifecycleFinder
 import com.urbancode.anthill3.domain.lifecycle.*
 
 class LifecycleCommands extends AnthillCommands {
-  def finder = Finder(LifecycleFinder)
+  def LifecycleCommands(out) {
+    super(out)
+  }
 
   def show(name) {
-    work {
-      def lifecycle = finder.one(name)
-      echo lifecycle, uri: link_to(lifecycle)
+    send work {
+      def lifecycle = finder(LifecycleFinder).one(name)
 
-      if (lifecycle.description)
-        echo "Description", lifecycle.description
+      [
+        id: lifecycle.id,
+        name: lifecycle.name,
+        url: link_to(lifecycle),
+        description: lifecycle.description,
+      ]
     }
   }
 
   def open(name) {
     def lifecycle = work {
-      finder.one(name)
+      finder(LifecycleFinder).one(name)
     }
 
     browse link_to(lifecycle)
   }
 
   def list() {
-    work {
-      def lifecycles = finder.all()
-      lifecycles.each {
-        echo it.name, it.description ?: ''
-      }
+    send work {
+      def lifecycles = finder(LifecycleFinder).all()
+
+      lifecycles.collect {[
+        id: it.id,
+        name: it.name,
+        url: link_to(it),
+        description: it.description,
+      ]}
     }
   }
 }

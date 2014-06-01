@@ -4,37 +4,38 @@ import hilltop.anthill.FolderFinder
 import com.urbancode.anthill3.domain.folder.*
 
 class FolderCommands extends AnthillCommands {
-  def finder = Finder(FolderFinder)
+  def FolderCommands(out) {
+    super(out)
+  }
 
   def list(inactive) {
-    work {
-      def folders = finder.all(inactive)
-      folders.each { echo it.path }
+    send work {
+      def folders = finder(FolderFinder).all(inactive)
+
+      return folders.collect {[
+        id: it.id,
+        name: it.path,
+        description: it.description,
+      ]}
     }
   }
 
   def show(name) {
-    work {
-      def folder = finder.one(name)
-      echo folder
+    send work {
+      def folder = finder(FolderFinder).one(name)
 
-      if (folder.description)
-        echo "Description", folder.description
-
-      if (folder.parent)
-        echo "Parent-Folder", folder.parent.path
-
-      if (folder.children.size()) {
-        echo "Sub-Folders", { line ->
-          folder.children.each { f -> line.echo f.name }
-        }
-      }
-
-      if (folder.projects.size()) {
-        echo "Projects", { line ->
-          folder.projects.each { p -> line.echo p.name }
-        }
-      }
-    }    
+      return [
+        id: folder.id,
+        name: folder.name,
+        description: folder.description,
+        parent_folder: folder.parent?.path,
+        sub_folders: folder.children.collect {[
+          id: it.id, name: it.name,
+        ]},
+        projects: folder.projects.collect {[
+          id: it.id, name: it.name,
+        ]},
+      ]
+    }
   }
 }

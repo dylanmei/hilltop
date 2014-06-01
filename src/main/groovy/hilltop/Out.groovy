@@ -1,74 +1,54 @@
 package hilltop
 
-import org.codehaus.groovy.runtime.FlushingStreamWriter
-
 class Out {
-  def writer = new PrintWriter(new FlushingStreamWriter(System.out))
+  def writer
+  def items = []
 
-  def echo(message) {
-    writer.println message
+  def Out(writer) {
+    this.writer = writer
   }
 
-  def echo(name, Long value) {
-    echo(name, value.toString())
+  def send(Map data) {
+    items << data
   }
 
-  def echo(name, String value) {
-    switch (name) {
-      case 'id': // never print
-        break
-
-      case 'label':
-      case 'version':
-      case 'uri':
-        // print without labels
-        writer.println value
-        break
-
-      default:
-        writer.println name.padRight(40) + value
-    }
-  }
-
-  def echo(name, Iterable<String> values) {
-    echo(name, values.iterator())
-  }
-
-  def echo(name, Iterator<String> values) {
-    def i = values.iterator();
-    def line = name.padRight(40)
-    if (i.hasNext()) {
-      line += i.next()
-    }
-    else {
-      line += 'None'
-    }
-    echo line
-    while (i.hasNext()) {
-      line = (' ' * 40) + i.next()
-      echo line
-    }
-  }
-
-  def echo(name, Closure closure) {
-    writer.print name.padRight(40)
-    def visitor = new EchoVisitor(writer: writer)
-    closure(visitor)
-    if (visitor.line == 0) echo('')
+  def send(Iterable<Map> data) {
+    data.each { send(it) }
   }
 
   def flush() {
-    writer.flush()
+    def data = items
+    if (data.size() == 1) {
+      data = data[0]
+    }
+
+    writer.write(data)
   }
 
-  class EchoVisitor {
-    def writer
-    def line = 0
+  def echo(message) {
+    items << [message: message]
+  }
 
-    def echo(String message) {
-      if (line++ > 0)
-        writer.print (' ' * 40)
-      writer.println message
-    }
+  def echo(name, Long value) {
+    items << [name: value]
+  }
+
+  def echo(name, String value) {
+    items << [name: value]
+  }
+
+  def echo(name, Iterable<String> values) {
+    items << [name: values]
+  }
+
+  def echo(name, Iterator<String> iter) {
+    def values = []
+    while (iter.hasNext())
+      values << iter.next()
+    items << [name: values]
+  }
+
+  def echo(name, Closure closure) {
+    items << ["fixme": "closure!"]
   }
 }

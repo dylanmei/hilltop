@@ -4,28 +4,36 @@ import hilltop.anthill.AgentFinder
 import com.urbancode.anthill3.domain.agent.*
 
 class AgentCommands extends AnthillCommands {
-  def finder = Finder(AgentFinder)
+  def AgentCommands(out) {
+    super(out)
+  }
 
   def list() {
-    work {
-      def agents = finder.all()
-      agents.each {
-        echo it.name
-      }
+    send work {
+      def agents = finder(AgentFinder).all()
+
+      agents.collect {[
+        id: it.id,
+        name: it.name,
+        url: link_to(it),
+      ]}
     }
   }
 
   def show(name) {
-    def agent = work {
-      finder.one(name)
+    send work {
+      def agent = finder(AgentFinder).one(name)
+      [
+        id: agent.id,
+        name: agent.name,
+        url: link_to(agent),
+      ]
     }
-
-    echo agent, uri: link_to(agent)
   }
 
   def open(name) {
     def agent = work {
-      finder.one(name)
+      finder(AgentFinder).one(name)
     }
 
     browse link_to(agent)

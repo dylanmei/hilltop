@@ -9,26 +9,30 @@ import com.urbancode.anthill3.domain.source.plugin.*
 import com.urbancode.anthill3.domain.buildlife.*
 
 class WorkflowCommands extends AnthillCommands {
-  def workflowFinder = Finder(WorkflowFinder)
-  def projectFinder = Finder(ProjectFinder)
-  def buildFinder = Finder(BuildFinder)
+  def WorkflowCommands(out) {
+    super(out)
+  }
 
   def show(projectName, workflowName) {
-    work {
-      def workflow = workflowFinder.one(projectName, workflowName)
+    send work {
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
       def project = workflow.project
-
-      echo workflow, label: "$project.name $workflow.name", uri: link_to(workflow)
-      echo "Originating", workflow.isOriginating() ? "Yes" : "No"
-
-      if (workflow.description)
-        echo "Description", workflow.description
-
       def definition = workflow.workflowDefinition
-      if (definition.lifeCycleModel)
-        echo "Lifecycle", definition.lifeCycleModel.name
 
-      if (workflow.isOriginating()) {
+      def result = [
+        id: workflow.id,
+        name: workflow.name,
+        url: link_to(workflow),
+        project: project.name,
+        description: workflow.description,
+        originating: workflow.isOriginating(),
+        lifecycle: definition.lifeCycleModel?.name,
+      ]
+
+      if (!workflow.isOriginating()) {
+        result['environments'] = workflow.serverGroupArray.collect { it.name }
+      }
+      else {
         def buildProfile = workflow.buildProfile
         def sourceConfig = buildProfile.sourceConfig
         def sourceConfigType = sourceConfig.sourceConfigType
@@ -37,55 +41,40 @@ class WorkflowCommands extends AnthillCommands {
           def pluginConfig = sourceConfig.asType(PluginSourceConfig)
           def repository = pluginConfig.repositoryArray.first()
           def plugin = repository.plugin
-          echo "Source Type", repository.typeName
+          result['source_type'] = repository.typeName
 
           if (plugin.pluginId.endsWith('.plugin.Git')) {
             def repoProps = repository.getPropertyValueGroupsWithType('repo').first().propertyMap
             def sourceProps = pluginConfig.sourcePropertyValueGroups.first().propertyMap
 
-            echo "Repository URL", repoProps['repoBaseUrl'].toString() + sourceProps['remoteUrl'].toString()
-            echo "Repository Branch", sourceProps['branch'].toString()
-
-//            repository.propertyValueGroups.each { pvg ->
-//              for (name in pvg.propertyNames) {
-//                echo "  ${name}:".padRight(20) + pvg.getDisplayedValue(name)
-//              }
-//            }
-
-//            pluginConfig.sourcePropertyValueGroups.each { pvg ->
-//              for (name in pvg.propertyNames) {
-//                echo "  ${name}:".padRight(20) + pvg.getPropertyValue(name)
-//              }
-//            }
+            result['repository_url'] = repoProps['repoBaseUrl'].toString() + sourceProps['remoteUrl'].toString()
+            result['repository_branch'] = sourceProps['branch'].toString()
           }
         }
         else {
           if (sourceConfigType.name.endsWith('.git.GitSourceConfig')) {
-            echo "Source Type", sourceConfig.repository.name
-            echo "Repository URL", sourceConfig.repositoryUrl
-            echo "Repository Branch", sourceConfig.revision
+            result['source_type'] = sourceConfig.repository.name
+            result['repository_url'] = sourceConfig.repositoryUrl
+            result['repository_branch'] = sourceConfig.revision
           }
           else {
-            echo "Source Type", sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
+            result['source_type'] = sourceConfigType.name - 'com.urbancode.anthill3.domain.source.'
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getRepositoryName'))
-              echo "Repository Name", sourceConfig.repositoryName
+              result['repository_name'] = sourceConfig.repositoryName
             if (sourceConfig.metaClass.respondsTo(sourceConfig, 'getWorkspaceName'))
-              echo "Workspace Name", sourceConfig.workspaceName
+              result['workspace_name'] = sourceConfig.workspaceName
           }
         }
       }
 
-      if (!workflow.isOriginating()) {
-        echo "Environments", { line ->
-          workflow.serverGroupArray.each { line.echo it.name }
-        }
-      }
+      println 'returning result!'
+      return result
     }
   }
 
   def open(projectName, workflowName, admin) {
     def workflow = work {
-      workflowFinder.one(projectName, workflowName)
+      finder(WorkflowFinder).one(projectName, workflowName)
     }
 
     browse link_to {
@@ -95,31 +84,38 @@ class WorkflowCommands extends AnthillCommands {
   }
 
   def list(projectName, inactive) {
-    work {
-      def project = projectFinder.one(projectName)
-      def workflows = workflowFinder.all(project, inactive).sort { a, b ->
+    send work {
+      def project = finder(ProjectFinder).one(projectName)
+      def workflows = finder(WorkflowFinder).all(project, inactive).sort { a, b ->
         if (a.isOriginating()) return b.isOriginating() ? 0 : -1
         if (b.isOriginating()) return a.isOriginating() ? 0 :  1
         a.getName() <=> b.getName()
       }
 
-      workflows.each { w -> echo "${w.isOriginating() ? '*' : ' '} ${w.name}" }
+      workflows.collect {[
+        id: it.id,
+        name: it.name,
+        url: link_to(it),
+        description: it.description,
+        originating: it.isOriginating(),
+        mark: it.isOriginating(),
+      ]}
     }
   }
 
   def remove(projectName, workflowName, force, noop) {
     def workflow, project
     work {
-      workflow = workflowFinder.one(projectName, workflowName)
+      workflow = finder(WorkflowFinder).one(projectName, workflowName)
       project = workflow.project
     }
 
     def destroyer = new WorkflowDestroyer(connect(), {
       error { m -> quit m }
-      alert { m -> echo m }
+      alert { m -> println m }
     })
 
     destroyer.go(workflow, force, noop)
-    echo "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
+    println "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
   }
 }

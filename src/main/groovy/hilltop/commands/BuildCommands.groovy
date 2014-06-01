@@ -8,66 +8,68 @@ import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 
 class BuildCommands extends AnthillCommands {
-  def buildFinder = Finder(BuildFinder)
-  def requestFinder = Finder(RequestFinder)
-  def workflowFinder = Finder(WorkflowFinder)
+  def BuildCommands(out) {
+    super(out)
+  }
 
   def open(id) {
     def buildlife = work {
-      buildFinder.one(id as long)
+      finder(BuildFinder).one(id as long)
     }
- 
+
     browse link_to(buildlife)
   }
 
   def show(id) {
-    work {
-      def buildlife = buildFinder.one(id as long)
+    send work {
+      def buildlife = finder(BuildFinder).one(id as long)
       def project = buildlife.project
       def workflow = buildlife.originatingWorkflow
 
-      echo buildlife, label: "Buildlife $id", uri: link_to(buildlife)
-      echo "Workflow", "$project.name $workflow.name"
+      def propertyNames = []
+      if (buildlife.propertyNames) {
+        propertyNames = buildlife.propertyNames
+      }
 
-      if (buildlife.isPreflight())
-        echo 'Preflight', 'yes'
-      if (buildlife.isInactive())
-        echo 'Inactive', 'yes'
-      if (buildlife.isArchived())
-        echo 'Archived', 'yes'
-      else {
-        def request = buildlife.originatingRequest
-        echo "Build Request", request.id
-
+      def request, statuses = []
+      if (!buildlife.isArchived()) {
+        request = buildlife.originatingRequest
         if (buildlife.statusArray) {
-          echo "Status", { line ->
-            buildlife.statusArray.each { s -> line.echo "$s.status [${s.dateAssigned.format('d MMM yyyy HH:mm:ss Z')}]" }
+          statuses = buildlife.statusArray.collect {
+            [key: it.status, value: it.dateAssigned.format('d MMM yyyy HH:mm:ss Z')]
           }
         }
       }
 
-      if (buildlife.latestStamp)
-        echo "Stamp", buildlife.latestStampValue
-
-
-      if (buildlife.propertyNames) {
-        echo "Properties", { line ->
-          buildlife.propertyNames.each { n -> line.echo "$n ${buildlife.getPropertyValue(n)}" }
-        }
-      }
+      [
+        id: buildlife.id,
+        name: "Buildlife $id",
+        url: link_to(buildlife),
+        project: project.name,
+        workflow: workflow.name,
+        preflight: buildlife.isPreflight(),
+        inactive: buildlife.isInactive(),
+        archived: buildlife.isArchived(),
+        stamp: buildlife.latestStampValue,
+        build_request: request?.id,
+        build_status: statuses,
+        properties: propertyNames.collect {
+          [key: it, value: buildlife.getPropertyValue(it)]
+        },
+      ]
     }
   }
 
   def remove(id) {
     work {
-      def buildlife = buildFinder.one(id as long)
+      def buildlife = finder(BuildFinder).one(id as long)
       buildlife.delete()
     }
   }
 
   def start(projectName, workflowName, openBrowser) {
     def request = work {
-      def workflow = workflowFinder.one(projectName, workflowName)
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
       if (!workflow.isOriginating())
         quit "${workflow.name} is not an originating workflow"
 
@@ -104,7 +106,7 @@ class BuildCommands extends AnthillCommands {
 
   def run(id, workflowName, environmentName, openBrowser) {
     def request = work {
-      def buildlife = buildFinder.one(id as long)
+      def buildlife = finder(BuildFinder).one(id as long)
       def runner = new WorkflowRunner(buildlife, {
         error { m -> quit m }
       })

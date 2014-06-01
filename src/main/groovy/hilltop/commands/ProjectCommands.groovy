@@ -6,19 +6,13 @@ import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.source.*
 
 class ProjectCommands extends AnthillCommands {
-  def projectFinder = Finder(ProjectFinder)
-  def folderFinder = Finder(FolderFinder)
+  def ProjectCommands(out) {
+    super(out)
+  }
 
   def show(projectName) {
-    work {
-      def project = projectFinder.one(projectName)
-      echo project, uri: link_to(project)
-
-      if (project.description)
-        echo "Description", project.description
-
-      echo "Status", project.isActive() ? "Active" : "Inactive"
-      echo "Folder", project.folder.path
+    send work {
+      def project = finder(ProjectFinder).one(projectName)
 
       def workflows = project.getWorkflowArray().sort { a, b ->
         if (a.isOriginating()) return b.isOriginating() ? 0 : -1
@@ -26,24 +20,29 @@ class ProjectCommands extends AnthillCommands {
         a.getName() <=> b.getName()
       }
 
-      echo "Workflows", { line ->
-        workflows.each { w -> line.echo "${w.isOriginating() ? '*' : ' '} ${w.name}" }
-      }
-
-      if (project.sourceConfigType)
-        echo "Source Config", project.sourceConfigType.name.tokenize('.').last()
-
-      if (project.lifeCycleModel)
-        echo "Lifecycle", project.lifeCycleModel.name
-
-      def environmentGroup = project.getEnvironmentGroup()
-      echo "Environment", environmentGroup.name
+      return [
+        id: project.id,
+        name: project.name,
+        url: link_to(project),
+        description: project.description,
+        active: project.isActive(),
+        folder: project.folder.path,
+        workflows: workflows.collect {[
+          id: it.id, name: it.name,
+          url: link_to(it),
+          originating: it.isOriginating(),
+          mark: it.isOriginating()
+        ]},
+        environment: project.environmentGroup?.name,
+        lifecycle: project.lifeCycleModel?.name,
+        source_config: project.sourceConfigType?.name.tokenize('.').last(),
+      ]
     }
   }
 
   def open(projectName, admin) {
     def project = work {
-      projectFinder.one(projectName)
+      finder(ProjectFinder).one(projectName)
     }
 
     browse link_to {
@@ -53,13 +52,13 @@ class ProjectCommands extends AnthillCommands {
   }
 
   def list(inactive, folderName, nameFilter) {
-    work {
+    send work {
       def projects
       if (!folderName) {
-        projects = projectFinder.all(inactive)
+        projects = finder(ProjectFinder).all(inactive)
       }
       else {
-        def folder = folderFinder.one(folderName)
+        def folder = finder(FolderFinder).one(folderName)
         projects = folder.projects
           .findAll { f -> f.isActive != inactive }
       }
@@ -71,16 +70,24 @@ class ProjectCommands extends AnthillCommands {
         }
       }
 
-      projects.each { echo it.name }
+      return projects.collect {[
+          id: it.id,
+          name: it.name,
+          url: link_to(it),
+          description: it.description,
+          active: it.isActive,
+          folder: it.folder.path,
+        ]
+      }
     }
   }
 
   def remove(name) {
     work {
-      def project = projectFinder.one(name)
+      def project = finder(ProjectFinder).one(name)
       try {
         project.delete()
-        echo "Project <$project.name> has been removed"
+        println "Project <$project.name> has been removed"
       }
       catch (RuntimeException re) {
        quit "Unable to remove project <$project.name>: $re.message"

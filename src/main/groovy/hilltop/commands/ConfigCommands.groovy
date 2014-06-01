@@ -2,13 +2,12 @@ package hilltop.commands
 
 import hilltop.Config
 
-@Mixin(ConsoleHelper)
 class ConfigCommands {
   def config = new Config()
   def get(name) {
     def value = name.tokenize('.')
       .inject(config) { c, key -> c.get(key) }
-    echo "$name=${value}"
+    println "$name=${value}"
   }
 
   def set(properties) {
@@ -19,7 +18,7 @@ class ConfigCommands {
         (property, value) = matcher[0].tail()
       if (property) {
         config.put(property, value)
-        echo "Configuration value <${property}> has been set"
+        println "Configuration value <${property}> has been set"
       }
     }
 
@@ -29,10 +28,10 @@ class ConfigCommands {
   def remove(properties) {
     properties.each {
       if (!exists(it))
-        echo "No such configuration value <${it}>"
+        println "No such configuration value <${it}>"
       else {
         config.remove(it)
-        echo "Configuration value <${it}> has been removed"
+        println "Configuration value <${it}> has been removed"
       }
     }
 
@@ -43,10 +42,10 @@ class ConfigCommands {
     def writer = new StringWriter()
     config.writeTo(writer)
     def content = writer.toString()
-    if (!content) echo "[Empty]"
+    if (!content) println "[Empty]"
     else {
-      echo "[${Config.FILE}]"
-      echo writer.toString()
+      println "[${Config.FILE}]"
+      println writer.toString()
     }
   }
 

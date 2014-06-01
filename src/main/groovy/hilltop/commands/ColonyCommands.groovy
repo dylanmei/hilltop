@@ -4,8 +4,11 @@ import groovy.lang.*
 import hilltop.colonies.*
 
 class ColonyCommands extends AnthillCommands {
-  def init() {
+  def ColonyCommands(out) {
+    super(out)
+  }
 
+  def init() {
     def newConfig = '''
 project "Example", {
   folder "/Temp"
