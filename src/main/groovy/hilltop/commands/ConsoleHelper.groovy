@@ -9,9 +9,9 @@ class ConsoleHelper {
 
   def quit(message, throwable = null) {
     if (message)
-      println message
+      System.err.println message
 
-    if (!throwable) exit()
+    if (!throwable) System.exit(1)
     throw throwable
   }
 }

@@ -5,7 +5,8 @@ import hilltop.commands.*
 
 class App {
   def App(String... args) {
-    def out = new Out(new ConsoleWriter())
+    def out = args.contains("--json") ?
+      new Out(new JsonWriter()) : new Out(new ConsoleWriter())
 
     new Cli('hilltop', {
       describe 'An Anthill command-line utility'
@@ -274,20 +275,20 @@ class App {
         }
       }
 
-      // command('colony', 'Working with Anthill colony files') {
-      //   def handler = new ColonyCommands()
+      command('colony', 'Working with Anthill colony files') {
+        def handler = new ColonyCommands()
 
-      //   command('init', 'Create a new Colonyfile') {
-      //     execute { handler.init() }
-      //   }
+        command('init', 'Create a new Colonyfile') {
+          execute { handler.init() }
+        }
 
-      //   command('exec', 'Execute a Colonyfile') {
-      //     options {
-      //       n longOpt: 'noop', 'Execute Colonyfile without commiting changes'
-      //     }
-      //     execute { opt -> handler.exec(opt.noop) }
-      //   }
-      // }
+        command('exec', 'Execute a Colonyfile') {
+          options {
+            n longOpt: 'noop', 'Execute Colonyfile without commiting changes'
+          }
+          execute { opt -> handler.exec(opt.noop) }
+        }
+      }
 
     }).run(args)
     out.flush()
