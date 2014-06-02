@@ -76,7 +76,7 @@ class ProjectCommands extends AnthillCommands {
           url: link_to(it),
           description: it.description,
           active: it.isActive,
-          folder: it.folder.path,
+          //folder: it.folder.path,
         ]
       }
     }
