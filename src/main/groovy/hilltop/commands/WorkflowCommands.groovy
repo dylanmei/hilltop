@@ -98,7 +98,6 @@ class WorkflowCommands extends AnthillCommands {
         url: link_to(it),
         description: it.description,
         originating: it.isOriginating(),
-        mark: it.isOriginating(),
       ]}
     }
   }

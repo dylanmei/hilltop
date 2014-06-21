@@ -27,7 +27,7 @@ class EnvironmentCommands extends AnthillCommands {
           id: it.id, name: it.name,
         ]},
         agents: agents.collect {[
-          id: it.id, name: it.name, mark: manager.getAgentStatus(it).online,
+          id: it.id, name: it.name, online: manager.getAgentStatus(it).online,
         ]},
       ]
     }

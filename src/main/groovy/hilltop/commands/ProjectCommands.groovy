@@ -31,7 +31,6 @@ class ProjectCommands extends AnthillCommands {
           id: it.id, name: it.name,
           url: link_to(it),
           originating: it.isOriginating(),
-          mark: it.isOriginating()
         ]},
         environment: project.environmentGroup?.name,
         lifecycle: project.lifeCycleModel?.name,
