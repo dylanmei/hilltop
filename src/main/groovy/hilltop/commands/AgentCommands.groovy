@@ -2,6 +2,7 @@ package hilltop.commands
 
 import hilltop.anthill.AgentFinder
 import com.urbancode.anthill3.domain.agent.*
+import com.urbancode.anthill3.services.agent.*
 
 class AgentCommands extends AnthillCommands {
   def AgentCommands(out) {
@@ -23,10 +24,19 @@ class AgentCommands extends AnthillCommands {
   def show(name) {
     send work {
       def agent = finder(AgentFinder).one(name)
+      def manager = new AgentManagerClient()
+      def environments = agent.serverGroups
       [
         id: agent.id,
         name: agent.name,
         url: link_to(agent),
+        online: manager.getAgentStatus(agent).online,
+        configured: agent.isConfigured,
+        description: agent.description ?: '',
+        hostname: agent.hostname,
+        environments: environments.collect {[
+          id: it.id, name: it.name,
+        ]},
       ]
     }
   }
