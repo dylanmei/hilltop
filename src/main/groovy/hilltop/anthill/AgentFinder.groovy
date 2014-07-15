@@ -14,7 +14,13 @@ class AgentFinder {
   }
 
   def one(name) {
-    def agent = AgentFactory.getInstance().restoreForName(name)
+    def factory = AgentFactory.getInstance()
+    def agent = factory.restoreForName(name)
+    if (!agent) {
+      agent = factory.restoreAll().find {
+        it.name.toLowerCase() == name.toLowerCase()
+      }
+    }
     if (!agent) error "No such agent <$name>"
     agent
   }

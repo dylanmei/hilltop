@@ -32,6 +32,7 @@ class AgentCommands extends AnthillCommands {
         url: link_to(agent),
         online: manager.getAgentStatus(agent).online,
         configured: agent.isConfigured,
+        ignored: agent.isIgnored,
         description: agent.description ?: '',
         hostname: agent.hostname,
         environments: environments.collect {[
