@@ -32,8 +32,8 @@ Config
 Projects
 
     ./hilltop project list
-    ./hilltop project list --like <project-name>
     ./hilltop project list --folder <folder-name>
+    ./hilltop project find <project-name>
     ./hilltop project show <project-name or .>
     ./hilltop project open <project-name or .>
     ./hilltop project remove <project-name or .>

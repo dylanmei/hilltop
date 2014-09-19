@@ -47,10 +47,19 @@ class App {
           options {
             f longOpt: 'folder', args: 1, 'List Anthill projects in a specific folder'
             i longOpt: 'inactive', 'Include inactive projects'
-            l longOpt: 'like', args: 1, 'Project name to match'
           }
           execute { opt ->
-            handler.list(opt.inactive, opt.folder, opt.like)
+            handler.list(opt.inactive, opt.folder)
+          }
+        }
+
+        command('find', 'Find Anthill projects') {
+          arguments exactly: 1, name: 'name'
+          options {
+            i longOpt: 'inactive', 'Include inactive projects'
+          }
+          execute { opt, arguments ->
+            handler.find(opt.inactive, arguments[0])
           }
         }
 

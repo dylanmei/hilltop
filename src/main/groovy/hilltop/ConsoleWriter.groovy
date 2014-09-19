@@ -12,7 +12,7 @@ class ConsoleWriter {
   }
 
   def write(Iterable<Map> data) {
-    def markable = data.any { it.mark }
+    def markable = markable_key(data)
     data.each {
       inner.println format_item(it, markable)
     }
@@ -56,7 +56,7 @@ class ConsoleWriter {
   private void write_key_value(key, Iterable<Map> values) {
     def iter = values.iterator();
     def head = format_label(key).padRight(padding)
-    def markable = values.any { it.mark }
+    def markable = markable_key(values)
 
     if (!iter.hasNext()) {
       inner.println head + 'None'
@@ -70,6 +70,15 @@ class ConsoleWriter {
       def item = iter.next()
       inner.println((' ' * padding) + format_item(item, markable))
     }
+  }
+
+  private String markable_key(Iterable<Map> values) {
+    if (values.empty) return ''
+    def item = values.first()
+    def keys = item.keySet().findAll {
+      item[it].getClass() == Boolean
+    }
+    return keys.empty ? '' : keys.first()
   }
 
   private String format_label(s) {
@@ -86,8 +95,9 @@ class ConsoleWriter {
     }
     else {
       def name = item.name ?: '???'
-      def mark = markable ? (item.mark ? '* ' : '  ') : ''
-      mark + name
+      if (markable != '')
+        return (item[markable] ? '* ' : '  ') + name
+      name
     }
   }
 }

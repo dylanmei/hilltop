@@ -31,7 +31,6 @@ class ProjectCommands extends AnthillCommands {
           id: it.id, name: it.name,
           url: link_to(it),
           originating: it.isOriginating(),
-          mark: it.isOriginating()
         ]},
         environment: project.environmentGroup?.name,
         lifecycle: project.lifeCycleModel?.name,
@@ -51,7 +50,7 @@ class ProjectCommands extends AnthillCommands {
     }
   }
 
-  def list(inactive, folderName, nameFilter) {
+  def list(inactive, folderName) {
     send work {
       def projects
       if (!folderName) {
@@ -63,11 +62,24 @@ class ProjectCommands extends AnthillCommands {
           .findAll { f -> f.isActive != inactive }
       }
 
-      if (nameFilter) {
-        def pattern = ~"(?i).*${nameFilter.trim()}.*"
-        projects = projects.findAll {
-          pattern.matcher(it.name).matches()
-        }
+      return projects.collect {[
+          id: it.id,
+          name: it.name,
+          url: link_to(it),
+          description: it.description,
+          active: it.isActive,
+          //folder: it.folder.path,
+        ]
+      }
+    }
+  }
+
+  def find(inactive, nameFilter) {
+    send work {
+      def projects = finder(ProjectFinder).all(inactive)
+      def pattern = ~"(?i).*${nameFilter.trim()}.*"
+      projects = projects.findAll {
+        pattern.matcher(it.name).matches()
       }
 
       return projects.collect {[
