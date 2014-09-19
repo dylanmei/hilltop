@@ -67,7 +67,6 @@ class WorkflowCommands extends AnthillCommands {
         }
       }
 
-      println 'returning result!'
       return result
     }
   }
