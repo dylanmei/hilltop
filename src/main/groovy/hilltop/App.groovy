@@ -130,6 +130,17 @@ class App {
         }
       }
 
+      command('workflow-dependencies', 'Working with Anthill workflow dependencies') {
+        def handler = new WorkflowCommands(out)
+
+        command('list', 'List dependencies for an Anthill workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          execute { opt, arguments ->
+            handler.list_dependencies(arguments[0], arguments[1])
+          }
+        }
+      }
+
       command('folder', 'Working with Anthill folders') {
         def handler = new FolderCommands(out)
 

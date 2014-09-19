@@ -101,6 +101,28 @@ class WorkflowCommands extends AnthillCommands {
     }
   }
 
+  def list_dependencies(projectName, workflowName) {
+    send work {
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
+      if (!workflow.isOriginating())
+         return []
+
+      def dependencies = workflow.buildProfile.dependencyArray
+
+      def result = dependencies.collect {[
+        workflow_id: it.dependency.buildProfile.workflow.id,
+        name: it.dependency.name,
+        criteria: it.status.name,
+        trigger: it.triggerType.description,
+        artifacts: it.artifactSets.collect {[
+          name: it.name
+        ]}
+      ]}
+
+      return result
+    }
+  }
+
   def remove(projectName, workflowName, force, noop) {
     def workflow, project
     work {

@@ -45,6 +45,10 @@ Workflows
     ./hilltop workflow open <project-name or .> <workflow-name>
     ./hilltop workflow remove <project-name or .> <workflow-name>
 
+Workflow Dependencies
+
+    ./hilltop workflow-dependencies list <project-name or .> <workflow-name>
+
 Folders
 
     ./hilltop folder list
