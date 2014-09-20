@@ -2,6 +2,8 @@
 package hilltop.commands
 
 import hilltop.anthill.*
+import com.urbancode.codestation2.domain.project.*
+import com.urbancode.anthill3.domain.profile.*
 import com.urbancode.anthill3.domain.project.*
 import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.domain.source.*
@@ -120,6 +122,35 @@ class WorkflowCommands extends AnthillCommands {
       ]}
 
       return result
+    }
+  }
+
+  def add_dependency(projectName, workflowName, dependencyWorkflowId, artifact, location) {
+    send work {
+      def dependentWorkflow = finder(WorkflowFinder).one(projectName, workflowName)
+      if (!dependentWorkflow.isOriginating()) {
+        println "Cannot add dependency to non-originating workflow <$dependentWorkflow.name>!"
+        return
+      }
+      
+      def artifactSet = finder(ArtifactFinder).one(artifact);
+      if (artifactSet == null) {
+        println "Cannot find artifact set <$artifact>"
+        return
+      }
+      def dependentProject = new AnthillProject(dependentWorkflow.buildProfile)
+
+      def dependencyWorkflow = finder(WorkflowFinder).one(dependencyWorkflowId)
+      def dependencyProject = new AnthillProject(dependencyWorkflow.buildProfile)
+
+      def dependency = new Dependency(dependentProject, dependencyProject)
+      dependency.setBuildConditionToDefault()
+      dependency.status = finder(StatusFinder).one(
+        "success", dependentWorkflow.workflowDefinition.lifeCycleModel)
+      def tranisitive = false;
+      dependency.addSet2Dir(artifactSet, location, tranisitive);
+
+      dependency.store()
     }
   }
 

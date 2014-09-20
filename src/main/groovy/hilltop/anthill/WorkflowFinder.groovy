@@ -27,6 +27,16 @@ class WorkflowFinder {
     workflow
   }
 
+  def one(workflowId) {
+      def workflow = WorkflowFactory.getInstance()
+        .restore(Integer.parseInt(workflowId))
+
+      if (!workflow)
+        error "No such workflow <$workflowId> found"
+
+      workflow
+  }
+
   def all(project, inactive) {
     def workflows = inactive ?
       WorkflowFactory.getInstance().restoreAllForProject(project) :
