@@ -2,13 +2,7 @@
 package hilltop.commands
 
 import hilltop.anthill.*
-import com.urbancode.codestation2.domain.project.*
-import com.urbancode.anthill3.domain.profile.*
-import com.urbancode.anthill3.domain.project.*
-import com.urbancode.anthill3.domain.workflow.*
-import com.urbancode.anthill3.domain.source.*
 import com.urbancode.anthill3.domain.source.plugin.*
-import com.urbancode.anthill3.domain.buildlife.*
 
 class WorkflowCommands extends AnthillCommands {
   def WorkflowCommands(out) {
@@ -100,57 +94,6 @@ class WorkflowCommands extends AnthillCommands {
         description: it.description,
         originating: it.isOriginating(),
       ]}
-    }
-  }
-
-  def list_dependencies(projectName, workflowName) {
-    send work {
-      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
-      if (!workflow.isOriginating())
-         return []
-
-      def dependencies = workflow.buildProfile.dependencyArray
-
-      def result = dependencies.collect {[
-        workflow_id: it.dependency.buildProfile.workflow.id,
-        name: it.dependency.name,
-        criteria: it.status.name,
-        trigger: it.triggerType.description,
-        artifacts: it.artifactSets.collect {[
-          name: it.name
-        ]}
-      ]}
-
-      return result
-    }
-  }
-
-  def add_dependency(projectName, workflowName, dependencyWorkflowId, artifact, location) {
-    send work {
-      def dependentWorkflow = finder(WorkflowFinder).one(projectName, workflowName)
-      if (!dependentWorkflow.isOriginating()) {
-        println "Cannot add dependency to non-originating workflow <$dependentWorkflow.name>!"
-        return
-      }
-      
-      def artifactSet = finder(ArtifactFinder).one(artifact);
-      if (artifactSet == null) {
-        println "Cannot find artifact set <$artifact>"
-        return
-      }
-      def dependentProject = new AnthillProject(dependentWorkflow.buildProfile)
-
-      def dependencyWorkflow = finder(WorkflowFinder).one(dependencyWorkflowId)
-      def dependencyProject = new AnthillProject(dependencyWorkflow.buildProfile)
-
-      def dependency = new Dependency(dependentProject, dependencyProject)
-      dependency.setBuildConditionToDefault()
-      dependency.status = finder(StatusFinder).one(
-        "success", dependentWorkflow.workflowDefinition.lifeCycleModel)
-      def tranisitive = false;
-      dependency.addSet2Dir(artifactSet, location, tranisitive);
-
-      dependency.store()
     }
   }
 

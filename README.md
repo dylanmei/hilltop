@@ -47,8 +47,8 @@ Workflows
 
 Workflow Dependencies
 
-    ./hilltop workflow-dependencies list <project-name or .> <workflow-name>
-    ./hilltop workflow-dependencies add <project-name or .> <workflow-name> <workflow-id> <artifact> <location>
+    ./hilltop workflow-depends list <project-name or .> <workflow-name>
+    ./hilltop workflow-depends add <project-name or .> <workflow-name> <workflow-id> <artifact> <location>
 
 Folders
 
