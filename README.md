@@ -34,22 +34,22 @@ Projects
     ./hilltop project list
     ./hilltop project list --folder <folder-name>
     ./hilltop project find <project-name>
-    ./hilltop project show <project-name or .>
-    ./hilltop project open <project-name or .>
-    ./hilltop project remove <project-name or .>
+    ./hilltop project show <project-name>
+    ./hilltop project open <project-name>
+    ./hilltop project remove <project-name>
 
 Workflows
 
-    ./hilltop workflow list <project-name or .>
-    ./hilltop workflow show <project-name or .> <workflow-name>
-    ./hilltop workflow open <project-name or .> <workflow-name>
-    ./hilltop workflow remove <project-name or .> <workflow-name>
+    ./hilltop workflow list <project-name>
+    ./hilltop workflow show <project-name> <workflow-name>
+    ./hilltop workflow open <project-name> <workflow-name>
+    ./hilltop workflow remove <project-name> <workflow-name>
 
 Workflow Dependencies
 
-    ./hilltop workflow-depends list <project-name or .> <workflow-name>
-    ./hilltop workflow-depends add <project-name or .> <workflow-name> <workflow-id> <artifact> <location>
-    ./hilltop workflow-depends remove <project-name or .> <workflow-name> <dependency-name>
+    ./hilltop workflow-depends list <project-name> <workflow-name>
+    ./hilltop workflow-depends add <project-name> <workflow-name> <workflow-id> <artifact> <location>
+    ./hilltop workflow-depends remove <project-name> <workflow-name> <dependency-name>
 
 Folders
 
@@ -60,7 +60,7 @@ Builds
 
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
-    ./hilltop build new <project-name or .> <workflow-name>
+    ./hilltop build new <project-name> <workflow-name>
     ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build remove <buildlife>
 
@@ -87,6 +87,12 @@ Lifecycles
     ./hilltop lifecycle list
     ./hilltop lifecycle show <lifecycle-name>
     ./hilltop lifecycle open <lifecycle-name>
+
+## notes
+
+'.' can be used in place of &lt;project-name&gt; to infer based on the current working directory, e.g.
+
+    ./hilltop workflow list .
 
 ## contributing
 
