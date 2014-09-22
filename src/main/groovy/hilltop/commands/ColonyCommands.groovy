@@ -60,11 +60,11 @@ workflow "deploy"
       // echo plugin.class.name
       // project.sourceConfigType = plugin.class
 
-      println 'Project', project.name
-      println 'Folder', project.folder.path
-      println 'Lifecycle', project.lifeCycleModel.name
-      println 'Environment', project.environmentGroup.name
-      // println 'SourceType', project.sourceConfigType.name
+      println "Project: $project.name"
+      println "Folder: $project.folder.path"
+      println "Lifecycle: $project.lifeCycleModel.name"
+      println "Environment: $project.environmentGroup.name"
+      // println "SourceType: $project.sourceConfigType.name"
 
       if (!noop)
         project.store()
