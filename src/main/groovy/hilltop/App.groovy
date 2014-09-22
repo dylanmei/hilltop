@@ -146,6 +146,13 @@ class App {
             handler.add(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4])
           }
         }
+
+        command('remove', 'Remove a dependency from an Anthill workflow') {
+          arguments exactly: 3, name1: 'project', name2: 'workflow', name3: 'dependency'
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1], arguments[2])
+          }
+        }
       }
 
       command('folder', 'Working with Anthill folders') {
