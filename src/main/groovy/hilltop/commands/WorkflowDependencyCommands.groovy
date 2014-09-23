@@ -45,7 +45,7 @@ class WorkflowDependencyCommands extends AnthillCommands {
       if (artifactSet == null) 
         quit "Cannot find artifact set <$artifact>"
       
-      def dependencyFactory = new DependencyFactory({
+      def dependencyFactory = new DependencyCreator({
          error { m -> quit m }
       })
 

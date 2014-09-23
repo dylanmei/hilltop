@@ -6,8 +6,9 @@ import com.urbancode.codestation2.domain.project.*
 import com.urbancode.anthill3.domain.profile.*
 
 @Mixin(FeedbackHelper)
-class DependencyFactory {
-  def DependencyFactory(Closure handlers) {
+// really want to call this DependencyFactory, but it collides with an urbancode type name imported elsewhere...
+class DependencyCreator {
+  def DependencyCreator(Closure handlers) {
     if (handlers) init_feedback(handlers)
   }
 

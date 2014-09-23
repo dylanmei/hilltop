@@ -143,7 +143,7 @@ class App {
         command('add', 'Add a dependency to an existing workflow') {
           arguments exactly: 6, 
             name1: 'dependent-project', name2: 'dependent-workflow', 
-            name3: 'dependency-project-name', name4: 'dependency-workflow-name', 
+            name3: 'dependency-project', name4: 'dependency-workflow', 
             name5: 'artifact', name6: 'location'
           execute { opt, arguments ->
             handler.add(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5])
@@ -151,7 +151,9 @@ class App {
         }
 
         command('remove', 'Remove a dependency from an Anthill workflow') {
-          arguments exactly: 3, name1: 'dependent-project', name2: 'dependent-workflow', name3: 'dependency-project-name', name4: 'dependency-workflow-name'
+          arguments exactly: 4, 
+            name1: 'dependent-project', name2: 'dependent-workflow', 
+            name3: 'dependency-project', name4: 'dependency-workflow'
           execute { opt, arguments ->
             handler.remove(arguments[0], arguments[1], arguments[2], arguments[3])
           }
