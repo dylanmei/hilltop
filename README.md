@@ -17,6 +17,8 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
  * Verify the path *./depends/anthill3-dev-kit/remoting* exists.
 * Build the hilltop app `gradle installApp`
 * Create an alias to hilltop `alias ht=$(pwd)/build/install/hilltop/bin/hilltop`
+    * *optional for bash users:* dot source auto-completion script, e.g.
+     '. /c/your-src-location-here/hilltop/src/shell-integrations/bash/tab-completion.sh'
 * Add configuration variables
     * anthill server `ht config set anthill.api_server=anthill.local`
     * authorization token `ht config set anthill.api_token=mytoken`
@@ -25,9 +27,10 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 
 Config
 
-    ./hilltop config show
-    ./hilltop config set <name=value>
     ./hilltop config get <name>
+    ./hilltop config set <name=value>
+    ./hilltop config remove <name>
+    ./hilltop config show
 
 Projects
 
@@ -58,16 +61,16 @@ Folders
 
 Builds
 
-    ./hilltop build show <buildlife>
-    ./hilltop build open <buildlife>
     ./hilltop build new <project-name> <workflow-name>
     ./hilltop build run <buildlife> <workflow-name> <environment-name>
+    ./hilltop build show <buildlife>
+    ./hilltop build open <buildlife>
     ./hilltop build remove <buildlife>
 
 Build requests
 
-    ./hilltop request open <request>
     ./hilltop request show <request>
+    ./hilltop request open <request>
 
 Environments
 

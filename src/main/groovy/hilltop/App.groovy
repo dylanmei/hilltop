@@ -190,16 +190,16 @@ class App {
             handler.start(arguments[0], arguments[1], opt.open)
           }
         }
-//
-//        command('run', 'Run a workflow against an Anthill buildlife') {
-//          arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
-//          options {
-//            o longOpt: 'open', 'Open the buildlife when ready'
-//          }
-//          execute { opt, arguments ->
-//            handler.run(arguments[0], arguments[1], arguments[2], opt.open)
-//          }
-//        }
+
+        command('run', 'Run a workflow against an Anthill buildlife') {
+          arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
+          options {
+            o longOpt: 'open', 'Open the buildlife when ready'
+          }
+          execute { opt, arguments ->
+            handler.run(arguments[0], arguments[1], arguments[2], opt.open)
+          }
+        }
 
         command('show', 'Show details of an Anthill buildlife') {
           arguments exactly: 1, name: 'buildlife'
@@ -215,12 +215,12 @@ class App {
           }
         }
 
-//        command('remove', 'Remove an Anthill buildlife') {
-//          arguments exactly: 1, name: 'buildlife'
-//          execute { opt, arguments ->
-//            handler.remove(arguments[0])
-//          }
-//        }
+        command('remove', 'Remove an Anthill buildlife') {
+          arguments exactly: 1, name: 'buildlife'
+          execute { opt, arguments ->
+            handler.remove(arguments[0])
+          }
+        }
       }
 
       command('request', 'Working with Anthill build requests') {
