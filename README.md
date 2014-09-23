@@ -18,7 +18,8 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 * Build the hilltop app `gradle installApp`
 * Create an alias to hilltop `alias ht=$(pwd)/build/install/hilltop/bin/hilltop`
     * *optional for bash users:* dot source auto-completion script, e.g.
-     '. /c/your-src-location-here/hilltop/src/shell-integrations/bash/tab-completion.sh'
+    
+     `. /c/your-src-location-here/hilltop/src/shell-integrations/bash/tab-completion.sh`
 * Add configuration variables
     * anthill server `ht config set anthill.api_server=anthill.local`
     * authorization token `ht config set anthill.api_token=mytoken`
