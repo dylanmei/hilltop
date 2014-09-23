@@ -47,9 +47,9 @@ Workflows
 
 Workflow Dependencies
 
-    ./hilltop workflow-depends list <project-name> <workflow-name>
-    ./hilltop workflow-depends add <project-name> <workflow-name> <workflow-id> <artifact> <location>
-    ./hilltop workflow-depends remove <project-name> <workflow-name> <dependency-name>
+    ./hilltop workflow-dependency list <project-name> <workflow-name>
+    ./hilltop workflow-dependency add <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name> <artifact> <location>
+    ./hilltop workflow-dependency remove <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name>
 
 Folders
 
@@ -90,7 +90,7 @@ Lifecycles
 
 ## notes
 
-'.' can be used in place of &lt;project-name&gt; to infer based on the current working directory, e.g.
+'.' can be used in place of &lt;*project-name&gt; to infer based on the current working directory, e.g.
 
     ./hilltop workflow list .
 
