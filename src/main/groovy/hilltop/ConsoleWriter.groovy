@@ -73,7 +73,7 @@ class ConsoleWriter {
   }
 
   private String markable_key(Iterable<Map> values) {
-    if (values.empty) return ''
+    if (values == null || values.empty) return ''
     def item = values.first()
     def keys = item.keySet().findAll {
       item[it].getClass() == Boolean
