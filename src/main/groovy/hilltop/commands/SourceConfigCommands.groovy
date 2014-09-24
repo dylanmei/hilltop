@@ -22,9 +22,7 @@ class WorkflowSourceCommands extends AnthillCommands {
     }
 
     work {
-      sourceConfigProperties.each {
-        def key = it[0]
-        def value = it[1]
+      sourceConfigProperties.each { key, value ->
         if (key.equalsIgnoreCase('branch'))
           gitSetBranch(projectName, workflowName, value)
         else if (key.equalsIgnoreCase('remote-url'))
