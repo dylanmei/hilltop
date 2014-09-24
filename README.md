@@ -56,6 +56,11 @@ Workflow Dependencies
     ./hilltop workflow-dependency add <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name> <artifact> <location>
     ./hilltop workflow-dependency remove <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name>
 
+Source Config
+
+    ./hilltop set-source-config git-branch <project-name> <workflow-name> <git-branch-name>
+    ./hilltop set-source-config git-remote-url <project-name> <workflow-name> <git-remote-url>
+
 Folders
 
     ./hilltop folder list

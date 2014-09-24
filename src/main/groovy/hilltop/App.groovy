@@ -167,6 +167,24 @@ class App {
         }
       }
 
+      command('set-source-config', 'Working with Anthill workflow source configuration') {
+        def handler = new WorkflowSourceCommands(out)
+
+        command('git-branch', 'Set repository branch for workflow (git plugin only)') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'branch'
+          execute { opt, arguments ->
+            handler.gitSetBranch(arguments[0], arguments[1], arguments[2])
+          }
+        }
+
+        command('git-remote-url', 'Set repository branch for workflow (git plugin only)') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'branch'
+          execute { opt, arguments ->
+            handler.gitSetRemoteUrl(arguments[0], arguments[1], arguments[2])
+          }
+        }
+      }
+
       command('folder', 'Working with Anthill folders') {
         def handler = new FolderCommands(out)
 
