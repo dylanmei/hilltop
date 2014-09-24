@@ -42,7 +42,7 @@ class WorkflowDependencyCommands extends AnthillCommands {
         quit "Cannot add dependency to non-originating workflow <$dependentWorkflow.name>"
      
       def artifactSet = finder(ArtifactFinder).one(artifact);
-      if (artifactSet == null) 
+      if (!artifactSet) 
         quit "Cannot find artifact set <$artifact>"
       
       def dependencyFactory = new DependencyCreator({
@@ -69,8 +69,8 @@ class WorkflowDependencyCommands extends AnthillCommands {
       def dependencyToRemove = dependentWorkflow.buildProfile.dependencyArray
          .find { it.dependency.buildProfile == dependencyWorkflow.buildProfile }
        
-       if (dependencyToRemove == null)
-          quit "Could not find dependency <$dependencyName> on workflow <$dependentWorkflow.name>"
+       if (!dependencyToRemove)
+          quit "<$dependentProjectName>-<$dependentWorkflowName> does not depend on <$dependencyProjectName>-<$dependencyWorkflowName>"
        
        dependencyToRemove.delete()
     }
