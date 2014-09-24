@@ -5,7 +5,7 @@ import hilltop.commands.*
 
 class App {
   def App(String... args) {
-    def out = args.contains("--json") ?
+    def out = args.contains("--json") || System.getenv()['FORMAT'] == "json" ?
       new Out(new JsonWriter()) : new Out(new ConsoleWriter())
 
     new Cli('hilltop', {
