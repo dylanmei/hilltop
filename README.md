@@ -95,9 +95,9 @@ Lifecycles
 
 ## notes
 
-'.' can be used in place of &lt;*project-name&gt; to infer based on the current working directory, e.g.
+* **.** can be used in place of &lt;*project-name&gt; to infer based on the current working directory, e.g. `workflow list .`
 
-    ./hilltop workflow list .
+* `--json` can be used on query commands to output to console as JSON rather than free-form text
 
 ## contributing
 
