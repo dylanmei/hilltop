@@ -48,6 +48,7 @@ Workflows
     ./hilltop workflow show <project-name> <workflow-name>
     ./hilltop workflow open <project-name> <workflow-name>
     ./hilltop workflow remove <project-name> <workflow-name>
+    ./hilltop workflow copy <project-name> <workflow-name> <new-name>
 
 Workflow Dependencies
 

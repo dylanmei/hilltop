@@ -19,7 +19,7 @@ _hilltop()
         return 0
         ;;
       workflow)
-        local workflow_options="list show open remove"
+        local workflow_options="list show open remove copy"
         COMPREPLY=($(compgen -W "${workflow_options}" ${cur}))
         return 0
         ;;
@@ -71,3 +71,4 @@ _hilltop()
 }
 
 complete -F _hilltop ht
+complete -F _hilltop ./hilltop

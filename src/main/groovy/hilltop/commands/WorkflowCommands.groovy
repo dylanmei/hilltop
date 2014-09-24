@@ -112,4 +112,16 @@ class WorkflowCommands extends AnthillCommands {
     destroyer.go(workflow, force, noop)
     println "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
   }
+
+ def copy(projectName, workflowName, newName) {
+    def workflow, project
+    work {
+      workflow = finder(WorkflowFinder).one(projectName, workflowName)
+      project = workflow.project
+
+      def newWorkflow = workflow.duplicateForCopy(project)
+      newWorkflow.name = newName
+      newWorkflow.store()
+    }
+  }
 }

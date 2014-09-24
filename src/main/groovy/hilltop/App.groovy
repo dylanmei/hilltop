@@ -128,6 +128,13 @@ class App {
             handler.remove(arguments[0], arguments[1], opt.force, opt.noop)
           }
         }
+        
+        command('copy', 'Copy an Anthill workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'new-name'
+          execute { opt, arguments ->
+            handler.copy(arguments[0], arguments[1], arguments[2])
+          }
+        }
       }
 
       command('workflow-dependency', 'Working with Anthill workflow dependencies') {
