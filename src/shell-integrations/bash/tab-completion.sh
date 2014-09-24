@@ -5,7 +5,7 @@ _hilltop()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    opts="config project workflow workflow-dependency set-source-config folder build request environment agent lifecycle" # colony disabled
+    opts="config project workflow workflow-dependency source-config folder build request environment agent lifecycle" # colony disabled
 
 
     case "${prev}" in
@@ -29,9 +29,9 @@ _hilltop()
         COMPREPLY=($(compgen -W "${workflow_dependency_options}" ${cur}))
         return 0
         ;;
-      set-source-config)
-        local set_source_config_options="git-branch git-remote-url"
-        COMPREPLY=($(compgen -W "${set_source_config_options}" ${cur}))
+      source-config)
+        local source_config_options="set"
+        COMPREPLY=($(compgen -W "${source_config_options}" ${cur}))
         return 0
         ;;
       folder)

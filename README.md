@@ -29,7 +29,7 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 Config
 
     ./hilltop config get <name>
-    ./hilltop config set <name=value>
+    ./hilltop config set <name=value> ...
     ./hilltop config remove <name>
     ./hilltop config show
 
@@ -58,8 +58,8 @@ Workflow Dependencies
 
 Source Config
 
-    ./hilltop set-source-config git-branch <project-name> <workflow-name> <git-branch-name>
-    ./hilltop set-source-config git-remote-url <project-name> <workflow-name> <git-remote-url>
+    ./hilltop source-config set <project-name> <workflow-name> <source-type> <name=value> ...
+    NOTE: Currently, only 'git' source type is supported with properties: [branch, remote-url]
 
 Folders
 

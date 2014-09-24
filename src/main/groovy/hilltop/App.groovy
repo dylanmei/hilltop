@@ -25,7 +25,7 @@ class App {
           execute { opt, arguments -> handler.get(arguments[0]) }
         }
 
-        command('set', 'Set configuration values; <property=value> ...') {
+        command('set', 'Set one or more configuration values; <property=value> ...') {
           arguments minimum: 1
           execute { opt, arguments -> handler.set(arguments) }
         }
@@ -167,20 +167,13 @@ class App {
         }
       }
 
-      command('set-source-config', 'Working with Anthill workflow source configuration') {
+      command('source-config', 'Working with Anthill workflow source configuration') {
         def handler = new WorkflowSourceCommands(out)
 
-        command('git-branch', 'Set repository branch for workflow (git plugin only)') {
-          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'branch'
+        command('set', 'Set one or more source configuration properties; <property=value> ...') {
+          arguments minimum: 4, name1: 'project', name2: 'workflow', name3: 'source-type'
           execute { opt, arguments ->
-            handler.gitSetBranch(arguments[0], arguments[1], arguments[2])
-          }
-        }
-
-        command('git-remote-url', 'Set repository branch for workflow (git plugin only)') {
-          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'branch'
-          execute { opt, arguments ->
-            handler.gitSetRemoteUrl(arguments[0], arguments[1], arguments[2])
+            handler.setSourceConfig(arguments[0], arguments[1], arguments[2], arguments[3..<arguments.size()])
           }
         }
       }
