@@ -7,155 +7,136 @@
 # echo 'autoload -U compinit' >> ~/.zshrc
 # echo 'compinit' >> ~/.zshrc
 
-_hilltop() {
-  local -a _1st_arguments
-  _1st_arguments=(
-    'version:Get this Hilltop version'
-    'agent:Working with Anthill agents'
-    'build:Working with Anthill builds'
-    'config:Manage configuration values'
-    'environment:Working with Anthill environments'
-    'folder:Working with Anthill folders'
-    'lifecycle:Working with Anthill lifecycles'
-    'project:Working with Anthill projects'
-    'request:Working with Anthill build requests'
-    'source-config:Working with Anthill workflow source configuration'
-    'workflow:Working with Anthill workflows'
-    'workflow-dependency:Working with Anthill workflow dependencies'
-  )
+local -a _1st_arguments
+_1st_arguments=(
+  'version:Get this Hilltop version'
+  'agent:Working with Anthill agents'
+  'build:Working with Anthill builds'
+  'config:Manage configuration values'
+  'environment:Working with Anthill environments'
+  'folder:Working with Anthill folders'
+  'lifecycle:Working with Anthill lifecycles'
+  'project:Working with Anthill projects'
+  'request:Working with Anthill build requests'
+  'source-config:Working with Anthill workflow source configuration'
+  'workflow:Working with Anthill workflows'
+  'workflow-dependency:Working with Anthill workflow dependencies'
+)
 
-  local -a _agent_commands
-  _agent_commands=(
-    'list:List Anthill agents'
-    'show:Show details of an Anthill agent'
-    'open:Open an Anthill agent in the browser'
-  )
-
-  local -a _build_commands
-  _build_commands=(
-    'new:Request a new Anthill buildlife'
-    'run:Run a workflow against an Anthill buildlife'
-    'show:Show details of an Anthill buildlife'
-    'open:Open an Anthill buildlife in the browser'
-    'remove:Remove an Anthill buildlife'
-  )
-
-  local -a _config_commands
-  _config_commands=(
-    'get:Get a configuration value'
-    'set:Set configuration values; <property=value> ...'
-    'remove:Remove configuration values'
-    'show:Show the current configuration values'
-  )
-
-  local -a _environment_commands
-  _environment_commands=(
-    'list:List Anthill environments'
-    'show:Show details of an Anthill environment'
-    'open:Open an Anthill environment in the browser'
-  )
-
-  local -a _folder_commands
-  _folder_commands=(
-    'list:List Anthill folders'
-    'show:Show details of an Anthill folder'
-  )
-
-  local -a _lifecycle_commands
-  _lifecycle_commands=(
-    'list:List Anthill lifecycles'
-    'show:Show details of an Anthill lifecycle'
-    'open:Open an Anthill lifecycle in the browser'
-  )
-
-  local -a _project_commands
-  _project_commands=(
-    'list:List Anthill projects'
-    'find:Find Anthill projects'
-    'show:Show details of an Anthill project'
-    'open:Open an Anthill project in the browser'
-    'remove:Remove an Anthill project'
-  )
-
-  local -a _request_commands
-  _request_commands=(
-    'show:Show details of an Anthill build request'
-    'open:Open an Anthill build request in the browser'
-  )
-
-  local -a _source_config_commands
-  _source_config_commands=(
-  'set:Set one or more source configuration properties; <property=value>...'
-  )
-
-  local -a _workflow_commands
-  _workflow_commands=(
-    'list:List Anthill workflows in a project'
-    'show:Show details of an Anthill workflow'
-    'open:Open an Anthill workflow in the browser'
-    'remove:Remove an Anthill workflow'
-    'copy:Copy an Anthill workflow'
-  )
-
-  local -a _workflow_dependency_commands
-  _workflow_dependency_commands=(
-    'list:List dependencies for an Anthill workflow'
-    'add:Add a dependency to an existing workflow'
-    'remove:Remove a dependency from an Anthill workflow'
-  )
-
-  local expl
-  local -A opt_args
-
-  _arguments -C \
-    ':command:->command' \
-    '*::options:->options'
-
-  case $state in
-    (command)
-      _describe -t commands "command" _1st_arguments
-    ;;
-
-    (options)
-      case $line[1] in
-        (agent)
-          _describe -t commands "subcommand" _agent_commands
-        ;;
-        (build)
-          _describe -t commands "subcommand" _build_commands
-        ;;
-        (config)
-          _describe -t commands "subcommand" _config_commands
-        ;;
-        (environment)
-          _describe -t commands "subcommand" _environment_commands
-        ;;
-        (folder)
-          _describe -t commands "subcommand" _folder_commands
-        ;;
-        (lifecycle)
-          _describe -t commands "subcommand" _lifecycle_commands
-        ;;
-        (project)
-          _describe -t commands "subcommand" _project_commands
-        ;;
-        (request)
-          _describe -t commands "subcommand" _request_commands
-        ;;
-        (source-config)
-          _describe -t commands "subcommand" _source_config_commands
-        ;;
-        (workflow)
-          _describe -t commands "subcommand" _workflow_commands
-        ;;
-        (workflow-dependency)
-          _describe -t commands "subcommand" _workflow_dependency_commands
-        ;;
-      esac
-    ;;
-  esac
-
-  return 0
+__agent_actions() {
+  declare -a actions
+  actions=(list show open)
+  _wanted actions expl 'agent' compadd $actions
 }
 
-_hilltop
+__build_actions() {
+  declare -a actions
+  actions=(new run show open remove)
+  _wanted actions expl 'build' compadd $actions
+}
+
+__config_actions() {
+  declare -a actions
+  actions=(get set remove show)
+  _wanted actions expl 'config' compadd $actions
+}
+
+__environment_actions() {
+  declare -a actions
+  actions=(list show open)
+  _wanted actions expl 'environment' compadd $actions
+}
+
+__folder_actions() {
+  declare -a actions
+  actions=(list show)
+  _wanted actions expl 'folder' compadd $actions
+}
+
+__lifecycle_actions() {
+  declare -a actions
+  actions=(list show open)
+  _wanted actions expl 'lifecycle' compadd $actions
+}
+
+__project_actions() {
+  declare -a actions
+  actions=(list find show open remove)
+  _wanted actions expl 'project' compadd $actions
+}
+
+__request_actions() {
+  declare -a actions
+  actions=(show open)
+  _wanted actions expl 'request' compadd $actions
+}
+
+__source_config_actions() {
+  declare -a actions
+  actions=(set)
+  _wanted actions expl 'source-config' compadd $actions
+}
+
+__workflow_actions() {
+  declare -a actions
+  actions=(list show open remove copy)
+  _wanted actions expl 'workflow' compadd $actions
+}
+
+__workflow_dependency_actions() {
+  declare -a actions
+  actions=(list add remove)
+  _wanted actions expl 'workflow-dependency' compadd $actions
+}
+
+local expl
+local -A opt_args
+
+_arguments -C \
+  ':command:->command' \
+  '*::options:->options'
+
+case $state in
+  (command)
+    _describe -t commands "command" _1st_arguments
+  ;;
+
+  (options)
+    case $line[1] in
+      (agent)
+        _arguments ':feature:__agent_actions'
+      ;;
+      (build)
+        _arguments ':feature:__build_actions'
+      ;;
+      (config)
+        _arguments ':feature:__config_actions'
+      ;;
+      (environment)
+        _arguments ':feature:__environment_actions'
+      ;;
+      (folder)
+        _arguments ':feature:__folder_actions'
+      ;;
+      (lifecycle)
+        _arguments ':feature:__lifecycle_actions'
+      ;;
+      (project)
+        _arguments ':feature:__project_actions'
+      ;;
+      (request)
+        _arguments ':feature:__request_actions'
+      ;;
+      (source-config)
+        _arguments ':feature:__source_config_actions'
+      ;;
+      (workflow)
+        _arguments ':feature:__workflow_actions'
+      ;;
+      (workflow-dependency)
+        _arguments ':feature:__workflow_dependency_actions'
+      ;;
+    esac
+  ;;
+esac
+
