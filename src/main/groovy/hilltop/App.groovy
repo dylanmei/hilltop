@@ -259,6 +259,13 @@ class App {
             handler.open(arguments[0])
           }
         }
+
+        command('recent', 'Show recent build requests') {
+          arguments exactly: 1, name: 'project'
+          execute { opt, arguments ->
+            handler.recent(arguments[0])
+          }
+        }
       }
 
       command('environment', 'Working with Anthill environments') {

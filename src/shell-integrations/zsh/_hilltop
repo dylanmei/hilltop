@@ -67,7 +67,7 @@ __project_actions() {
 
 __request_actions() {
   declare -a actions
-  actions=(show open)
+  actions=(show open recent)
   _wanted actions expl 'request' compadd $actions
 }
 

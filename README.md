@@ -78,6 +78,7 @@ Build requests
 
     ./hilltop request show <request>
     ./hilltop request open <request>
+    ./hilltop request recent <project-name>
 
 Environments
 

@@ -45,7 +45,7 @@ _hilltop()
         return 0
         ;;
       request)
-        local request_options="show open"
+        local request_options="show open recent"
         COMPREPLY=($(compgen -W "${request_options}" ${cur}))
         return 0
         ;;
