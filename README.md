@@ -50,6 +50,13 @@ Workflows
     ./hilltop workflow remove <project-name> <workflow-name>
     ./hilltop workflow copy <project-name> <workflow-name> <new-name>
 
+Workflow Properties
+
+    ./hilltop workflow-property list <project-name> <workflow-name>
+    ./hilltop workflow-property add <project-name> <workflow-name> <propertyName> <propertyValue>
+    ./hilltop workflow-property remove <project-name> <workflow-name> <propertyName>
+
+
 Workflow Dependencies
 
     ./hilltop workflow-dependency list <project-name> <workflow-name>

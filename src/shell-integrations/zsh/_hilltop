@@ -20,6 +20,7 @@ _1st_arguments=(
   'request:Working with Anthill build requests'
   'source-config:Working with Anthill workflow source configuration'
   'workflow:Working with Anthill workflows'
+  'workflow-property:Working with Anthill workflows properties'
   'workflow-dependency:Working with Anthill workflow dependencies'
 )
 
@@ -83,6 +84,12 @@ __workflow_actions() {
   _wanted actions expl 'workflow' compadd $actions
 }
 
+__workflow_property_actions() {
+  declare -a actions
+  actions=(list add remove)
+  _wanted actions expl 'workflow-property' compadd $actions
+}
+
 __workflow_dependency_actions() {
   declare -a actions
   actions=(list add remove)
@@ -132,6 +139,9 @@ case $state in
       ;;
       (workflow)
         _arguments ':feature:__workflow_actions'
+      ;;
+      (workflow-property)
+        _arguments ':feature:__workflow_property_actions'
       ;;
       (workflow-dependency)
         _arguments ':feature:__workflow_dependency_actions'

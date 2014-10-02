@@ -137,6 +137,33 @@ class App {
         }
       }
 
+      command('workflow-property', 'Working with Anthill workflow properties') {
+        def handler = new WorkflowPropertyCommands(out)
+
+        command('list', 'List properties for an Anthill workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          execute { opt, arguments ->
+            handler.list(arguments[0], arguments[1])
+          }
+        }
+        
+        command('add', 'Add a property to an existing workflow') {
+          arguments exactly: 4, 
+            name1: 'project', name2: 'workflow', name3: 'propertyKey', name4: 'propertyValue' 
+          execute { opt, arguments ->
+            handler.add(arguments[0], arguments[1], arguments[2], arguments[3])
+          }
+        }
+
+        command('remove', 'Remove a property from an Anthill workflow') {
+          arguments exactly: 3, 
+            name1: 'project', name2: 'workflow', name3: 'propertyName'
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1], arguments[2])
+          }
+        }
+      }
+
       command('workflow-dependency', 'Working with Anthill workflow dependencies') {
         def handler = new WorkflowDependencyCommands(out)
 
