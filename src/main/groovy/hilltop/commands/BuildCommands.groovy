@@ -85,7 +85,7 @@ class BuildCommands extends AnthillCommands {
       sleep 250; print '.'
 
       work {
-        request = requestFinder.one(request.id)
+        request = finder(RequestFinder).one(request.id)
 
         if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
           buildlife = request.buildLife

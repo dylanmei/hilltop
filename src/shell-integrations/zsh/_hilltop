@@ -1,0 +1,152 @@
+#compdef hilltop 
+
+# ZSH completions for hilltop
+#
+# install:
+# echo 'fpath=($HILLTOP_DIR/src/shell-integrations/zsh $fpath)' >> ~/.zshrc
+# echo 'autoload -U compinit' >> ~/.zshrc
+# echo 'compinit' >> ~/.zshrc
+
+local -a _1st_arguments
+_1st_arguments=(
+  'version:Get this Hilltop version'
+  'agent:Working with Anthill agents'
+  'build:Working with Anthill builds'
+  'config:Manage configuration values'
+  'environment:Working with Anthill environments'
+  'folder:Working with Anthill folders'
+  'lifecycle:Working with Anthill lifecycles'
+  'project:Working with Anthill projects'
+  'request:Working with Anthill build requests'
+  'source-config:Working with Anthill workflow source configuration'
+  'workflow:Working with Anthill workflows'
+  'workflow-property:Working with Anthill workflows properties'
+  'workflow-dependency:Working with Anthill workflow dependencies'
+)
+
+__agent_actions() {
+  declare -a actions
+  actions=(list show open)
+  _wanted actions expl 'agent' compadd $actions
+}
+
+__build_actions() {
+  declare -a actions
+  actions=(new run show open remove)
+  _wanted actions expl 'build' compadd $actions
+}
+
+__config_actions() {
+  declare -a actions
+  actions=(get set remove show)
+  _wanted actions expl 'config' compadd $actions
+}
+
+__environment_actions() {
+  declare -a actions
+  actions=(list show open)
+  _wanted actions expl 'environment' compadd $actions
+}
+
+__folder_actions() {
+  declare -a actions
+  actions=(list show)
+  _wanted actions expl 'folder' compadd $actions
+}
+
+__lifecycle_actions() {
+  declare -a actions
+  actions=(list show open)
+  _wanted actions expl 'lifecycle' compadd $actions
+}
+
+__project_actions() {
+  declare -a actions
+  actions=(list find show open remove)
+  _wanted actions expl 'project' compadd $actions
+}
+
+__request_actions() {
+  declare -a actions
+  actions=(show open recent)
+  _wanted actions expl 'request' compadd $actions
+}
+
+__source_config_actions() {
+  declare -a actions
+  actions=(set)
+  _wanted actions expl 'source-config' compadd $actions
+}
+
+__workflow_actions() {
+  declare -a actions
+  actions=(list show open remove copy)
+  _wanted actions expl 'workflow' compadd $actions
+}
+
+__workflow_property_actions() {
+  declare -a actions
+  actions=(list add remove)
+  _wanted actions expl 'workflow-property' compadd $actions
+}
+
+__workflow_dependency_actions() {
+  declare -a actions
+  actions=(list add remove)
+  _wanted actions expl 'workflow-dependency' compadd $actions
+}
+
+local expl
+local -A opt_args
+
+_arguments -C \
+  ':command:->command' \
+  '*::options:->options'
+
+case $state in
+  (command)
+    _describe -t commands "command" _1st_arguments
+  ;;
+
+  (options)
+    case $line[1] in
+      (agent)
+        _arguments ':feature:__agent_actions'
+      ;;
+      (build)
+        _arguments ':feature:__build_actions'
+      ;;
+      (config)
+        _arguments ':feature:__config_actions'
+      ;;
+      (environment)
+        _arguments ':feature:__environment_actions'
+      ;;
+      (folder)
+        _arguments ':feature:__folder_actions'
+      ;;
+      (lifecycle)
+        _arguments ':feature:__lifecycle_actions'
+      ;;
+      (project)
+        _arguments ':feature:__project_actions'
+      ;;
+      (request)
+        _arguments ':feature:__request_actions'
+      ;;
+      (source-config)
+        _arguments ':feature:__source_config_actions'
+      ;;
+      (workflow)
+        _arguments ':feature:__workflow_actions'
+      ;;
+      (workflow-property)
+        _arguments ':feature:__workflow_property_actions'
+      ;;
+      (workflow-dependency)
+        _arguments ':feature:__workflow_dependency_actions'
+      ;;
+    esac
+  ;;
+esac
+

@@ -17,6 +17,9 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
  * Verify the path *./depends/anthill3-dev-kit/remoting* exists.
 * Build the hilltop app `gradle installApp`
 * Create an alias to hilltop `alias ht=$(pwd)/build/install/hilltop/bin/hilltop`
+    * *optional for bash users:* dot source auto-completion script, e.g.
+    
+     `. /c/your-src-location-here/hilltop/src/shell-integrations/bash/tab-completion.sh`
 * Add configuration variables
     * anthill server `ht config set anthill.api_server=anthill.local`
     * authorization token `ht config set anthill.api_token=mytoken`
@@ -25,30 +28,45 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
 
 Config
 
-    ./hilltop config show
-    ./hilltop config set <name=value>
     ./hilltop config get <name>
+    ./hilltop config set <name=value> ...
+    ./hilltop config remove <name>
+    ./hilltop config show
 
 Projects
 
     ./hilltop project list
     ./hilltop project list --folder <folder-name>
     ./hilltop project find <project-name>
-    ./hilltop project show <project-name or .>
-    ./hilltop project open <project-name or .>
-    ./hilltop project remove <project-name or .>
+    ./hilltop project show <project-name>
+    ./hilltop project open <project-name>
+    ./hilltop project remove <project-name>
 
 Workflows
 
-    ./hilltop workflow list <project-name or .>
-    ./hilltop workflow show <project-name or .> <workflow-name>
-    ./hilltop workflow open <project-name or .> <workflow-name>
-    ./hilltop workflow remove <project-name or .> <workflow-name>
+    ./hilltop workflow list <project-name>
+    ./hilltop workflow show <project-name> <workflow-name>
+    ./hilltop workflow open <project-name> <workflow-name>
+    ./hilltop workflow remove <project-name> <workflow-name>
+    ./hilltop workflow copy <project-name> <workflow-name> <new-name>
+
+Workflow Properties
+
+    ./hilltop workflow-property list <project-name> <workflow-name>
+    ./hilltop workflow-property add <project-name> <workflow-name> <propertyName> <propertyValue>
+    ./hilltop workflow-property remove <project-name> <workflow-name> <propertyName>
+
 
 Workflow Dependencies
 
-    ./hilltop workflow-dependencies list <project-name or .> <workflow-name>
-    ./hilltop workflow-dependencies add <project-name or .> <workflow-name> <workflow-id> <artifact> <location>
+    ./hilltop workflow-dependency list <project-name> <workflow-name>
+    ./hilltop workflow-dependency add <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name> <artifact> <location>
+    ./hilltop workflow-dependency remove <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name>
+
+Source Config
+
+    ./hilltop source-config set <project-name> <workflow-name> <source-type> <name=value> ...
+    NOTE: Currently, only 'git' source type is supported with properties: [branch, remote-url]
 
 Folders
 
@@ -57,16 +75,17 @@ Folders
 
 Builds
 
+    ./hilltop build new <project-name> <workflow-name>
+    ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
-    ./hilltop build new <project-name or .> <workflow-name>
-    ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build remove <buildlife>
 
 Build requests
 
-    ./hilltop request open <request>
     ./hilltop request show <request>
+    ./hilltop request open <request>
+    ./hilltop request recent <project-name>
 
 Environments
 
@@ -86,6 +105,12 @@ Lifecycles
     ./hilltop lifecycle list
     ./hilltop lifecycle show <lifecycle-name>
     ./hilltop lifecycle open <lifecycle-name>
+
+## notes
+
+* **.** can be used in place of &lt;*project-name&gt; to infer based on the current working directory, e.g. `workflow list .`
+
+* `--json` can be used on query commands to output to console as JSON rather than free-form text
 
 ## contributing
 

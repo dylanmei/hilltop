@@ -25,7 +25,7 @@ class App {
           execute { opt, arguments -> handler.get(arguments[0]) }
         }
 
-        command('set', 'Set configuration values; <property=value> ...') {
+        command('set', 'Set one or more configuration values; <property=value> ...') {
           arguments minimum: 1
           execute { opt, arguments -> handler.set(arguments) }
         }
@@ -128,22 +128,79 @@ class App {
             handler.remove(arguments[0], arguments[1], opt.force, opt.noop)
           }
         }
+        
+        command('copy', 'Copy an Anthill workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'new-name'
+          execute { opt, arguments ->
+            handler.copy(arguments[0], arguments[1], arguments[2])
+          }
+        }
       }
 
-      command('workflow-dependencies', 'Working with Anthill workflow dependencies') {
-        def handler = new WorkflowCommands(out)
+      command('workflow-property', 'Working with Anthill workflow properties') {
+        def handler = new WorkflowPropertyCommands(out)
+
+        command('list', 'List properties for an Anthill workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          execute { opt, arguments ->
+            handler.list(arguments[0], arguments[1])
+          }
+        }
+        
+        command('add', 'Add a property to an existing workflow') {
+          arguments exactly: 4, 
+            name1: 'project', name2: 'workflow', name3: 'propertyKey', name4: 'propertyValue' 
+          execute { opt, arguments ->
+            handler.add(arguments[0], arguments[1], arguments[2], arguments[3])
+          }
+        }
+
+        command('remove', 'Remove a property from an Anthill workflow') {
+          arguments exactly: 3, 
+            name1: 'project', name2: 'workflow', name3: 'propertyName'
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1], arguments[2])
+          }
+        }
+      }
+
+      command('workflow-dependency', 'Working with Anthill workflow dependencies') {
+        def handler = new WorkflowDependencyCommands(out)
 
         command('list', 'List dependencies for an Anthill workflow') {
           arguments exactly: 2, name1: 'project', name2: 'workflow'
           execute { opt, arguments ->
-            handler.list_dependencies(arguments[0], arguments[1])
+            handler.list(arguments[0], arguments[1])
           }
         }
         
         command('add', 'Add a dependency to an existing workflow') {
-          arguments exactly: 5, name1: 'project', name2: 'workflow', name3: 'workflow-id', name4: 'artifact', name5: 'location'
+          arguments exactly: 6, 
+            name1: 'dependent-project', name2: 'dependent-workflow', 
+            name3: 'dependency-project', name4: 'dependency-workflow', 
+            name5: 'artifact', name6: 'location'
           execute { opt, arguments ->
-            handler.add_dependency(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4])
+            handler.add(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5])
+          }
+        }
+
+        command('remove', 'Remove a dependency from an Anthill workflow') {
+          arguments exactly: 4, 
+            name1: 'dependent-project', name2: 'dependent-workflow', 
+            name3: 'dependency-project', name4: 'dependency-workflow'
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1], arguments[2], arguments[3])
+          }
+        }
+      }
+
+      command('source-config', 'Working with Anthill workflow source configuration') {
+        def handler = new WorkflowSourceCommands(out)
+
+        command('set', 'Set one or more source configuration properties; <property=value> ...') {
+          arguments minimum: 4, name1: 'project', name2: 'workflow', name3: 'source-type'
+          execute { opt, arguments ->
+            handler.setSourceConfig(arguments[0], arguments[1], arguments[2], arguments[3..<arguments.size()])
           }
         }
       }
@@ -171,25 +228,25 @@ class App {
       command('build', 'Working with Anthill builds') {
         def handler = new BuildCommands(out)
 
-//        command('new', 'Request a new Anthill buildlife') {
-//          arguments exactly: 2, name1: 'project', name2: 'workflow'
-//          options {
-//            o longOpt: 'open', 'Open the buildlife when ready'
-//          }
-//          execute { opt, arguments ->
-//            handler.start(arguments[0], arguments[1], opt.open)
-//          }
-//        }
-//
-//        command('run', 'Run a workflow against an Anthill buildlife') {
-//          arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
-//          options {
-//            o longOpt: 'open', 'Open the buildlife when ready'
-//          }
-//          execute { opt, arguments ->
-//            handler.run(arguments[0], arguments[1], arguments[2], opt.open)
-//          }
-//        }
+        command('new', 'Request a new Anthill buildlife') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          options {
+            o longOpt: 'open', 'Open the buildlife when ready'
+          }
+          execute { opt, arguments ->
+            handler.start(arguments[0], arguments[1], opt.open)
+          }
+        }
+
+        command('run', 'Run a workflow against an Anthill buildlife') {
+          arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
+          options {
+            o longOpt: 'open', 'Open the buildlife when ready'
+          }
+          execute { opt, arguments ->
+            handler.run(arguments[0], arguments[1], arguments[2], opt.open)
+          }
+        }
 
         command('show', 'Show details of an Anthill buildlife') {
           arguments exactly: 1, name: 'buildlife'
@@ -205,12 +262,12 @@ class App {
           }
         }
 
-//        command('remove', 'Remove an Anthill buildlife') {
-//          arguments exactly: 1, name: 'buildlife'
-//          execute { opt, arguments ->
-//            handler.remove(arguments[0])
-//          }
-//        }
+        command('remove', 'Remove an Anthill buildlife') {
+          arguments exactly: 1, name: 'buildlife'
+          execute { opt, arguments ->
+            handler.remove(arguments[0])
+          }
+        }
       }
 
       command('request', 'Working with Anthill build requests') {
@@ -227,6 +284,13 @@ class App {
           arguments exactly: 1, name: 'request'
           execute { opt, arguments ->
             handler.open(arguments[0])
+          }
+        }
+
+        command('recent', 'Show recent build requests') {
+          arguments exactly: 1, name: 'project'
+          execute { opt, arguments ->
+            handler.recent(arguments[0])
           }
         }
       }

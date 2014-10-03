@@ -9,10 +9,10 @@ class StatusFinder {
     if (handlers) init_feedback(handlers)
   }
 
-  def one(name, lifeCycleModel) {
+  def one(workflow, statusName) {
      def groups = StatusGroupFactory.getInstance().restoreAll()
-     def group = groups.find { it.lifeCycleModel == lifeCycleModel }
+     def group = groups.find { it.lifeCycleModel == workflow.workflowDefinition.lifeCycleModel }
 
-     return group.getStatus(name)
+     group.getStatus(statusName)
   }
 }

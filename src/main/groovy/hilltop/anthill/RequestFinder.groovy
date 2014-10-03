@@ -14,4 +14,11 @@ class RequestFinder {
     if (!req) error "No such build request <$id>"
     req
   }
+
+  def recent(project) {
+  	def requests = BuildRequestFactory.getInstance()
+  	  .restoreRecentBuildLifeRequests(project.id)
+
+  	requests
+  }
 }
