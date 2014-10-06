@@ -192,6 +192,14 @@ class App {
             handler.remove(arguments[0], arguments[1], arguments[2], arguments[3])
           }
         }
+
+        command('conflict-strategy', 'Set dependency conflict strategy for Anthill workflow') {
+          arguments exactly: 3, 
+            name1: 'project', name2: 'workflow', name3: 'conflict-strategy'
+          execute { opt, arguments ->
+            handler.setConflictStrategy(arguments[0], arguments[1], arguments[2])
+          }
+        }
       }
 
       command('source-config', 'Working with Anthill workflow source configuration') {

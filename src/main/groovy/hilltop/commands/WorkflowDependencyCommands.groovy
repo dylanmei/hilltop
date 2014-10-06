@@ -2,6 +2,8 @@
 package hilltop.commands
 
 import hilltop.anthill.*
+import com.urbancode.anthill3.domain.profile.*
+import org.apache.commons.lang3.*
 
 class WorkflowDependencyCommands extends AnthillCommands {
   def WorkflowDependencyCommands(out) {
@@ -74,5 +76,37 @@ class WorkflowDependencyCommands extends AnthillCommands {
        
        dependencyToRemove.delete()
     }
+  }
+
+  def setConflictStrategy(projectName, workflowName, conflictStrategyName) {
+    work {
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
+
+      if (!workflow.isOriginating()) 
+        quit "Cannot set conflict strategy from non-originating workflow <$workflow.name>"
+ 
+      def conflictStrategy = conflictEnumFromString(conflictStrategyName)
+      if (!conflictStrategy)
+        quit "No such conflict strategy <$conflictStrategyName>"
+
+      workflow.buildProfile.dependencyConflictStrategy = conflictStrategy
+      println "Set conflict strategy to <$conflictStrategy.name>"
+    }
+  }
+
+  def conflictEnumFromString(text) {
+    if (text != null) {
+      text = noSpaces(text)
+      for (BuildProfile.ConflictStratEnum e : BuildProfile.ConflictStratEnum.enumTypes) {
+        def contains = StringUtils.containsIgnoreCase(noSpaces(e.name), text)
+        if (contains)
+          return e
+      }
+    }
+    null;
+  }
+
+  def noSpaces(text) {
+    text.replaceAll("\\s", "")
   }
 }

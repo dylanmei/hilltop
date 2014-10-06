@@ -62,6 +62,7 @@ Workflow Dependencies
     ./hilltop workflow-dependency list <project-name> <workflow-name>
     ./hilltop workflow-dependency add <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name> <artifact> <location>
     ./hilltop workflow-dependency remove <dependent-project-name> <dependent-workflow-name> <dependency-project-name> <dependency-workflow-name>
+    ./hilltop workflow-dependency conflict-strategy <project-name> <workflow-name> <conflict-strategy> (fail/old/new)
 
 Source Config
 
