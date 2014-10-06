@@ -6,6 +6,11 @@ import com.urbancode.anthill3.domain.workflow.*
 import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
+import com.urbancode.anthill3.runtime.scripting.helpers.*
+import com.urbancode.devilfish.server.*
+import com.urbancode.devilfish.services.*
+import com.urbancode.devilfish.services.command.*
+import java.io.*
 
 class BuildCommands extends AnthillCommands {
   def BuildCommands(out) {
@@ -35,8 +40,10 @@ class BuildCommands extends AnthillCommands {
       if (!buildlife.isArchived()) {
         request = buildlife.originatingRequest
         if (buildlife.statusArray) {
-          statuses = buildlife.statusArray.collect {
-            [key: it.status, value: it.dateAssigned.format('d MMM yyyy HH:mm:ss Z')]
+          statuses = buildlife.statusArray.collect {[
+            time: it.dateAssigned.format('d MMM yyyy HH:mm:ss Z'),
+            status: it.status,
+            origin: getOriginHash(it.origin)]
           }
         }
       }
@@ -120,5 +127,41 @@ class BuildCommands extends AnthillCommands {
     }
 
     if (openBrowser) open(id)
+  }
+
+  def getOriginHash(origin)
+  {
+    if (origin instanceof BuildLifeStatusOriginJobTrace) {
+      def trace = origin.jobTrace
+      return [
+         trace: "$trace.name",
+         status: "$trace.status",
+         steps: trace.stepTraceArray.collect 
+         {[
+          name: it.name,
+          commands: it.commandTraceArray.collect 
+          {[
+            name: it.name
+      //      status: it.status
+          ]}
+        ]}
+      ]
+    }
+
+/* this was ported from scripting API, but it doesn't work because the serviceFactory is NULL
+      def agentEndpoint = trace.getAgent().getEndpoint()
+      println "Getting log file from <$agentEndpoint>"
+
+      trace.stepTraceArray.each {
+        it.commandTraceArray.each {
+
+          def serviceRegistry = ServiceRegistry.getInstance()
+          def serviceFactory = serviceRegistry.getService(CommandServiceClientFactory.SERVICE_NAME)
+          def client = serviceFactory.newCommandServiceClient(agentEndpoint)
+          
+          def receipt = new CommandReceipt(it.commandHandle())
+          Long.valueOf(client.getILogFileLineCount(receipt, File.createTempFile("temp", Long.toString(System.nanoTime()))))
+        }    
+      }*/
   }
 }
