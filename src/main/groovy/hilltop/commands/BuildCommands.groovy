@@ -67,13 +67,16 @@ class BuildCommands extends AnthillCommands {
     }
   }
 
-  def start(projectName, workflowName, openBrowser) {
+  // NOTE: usually there's a 1-1 mapping with the command name, but since 'new' is a language keyword, this method is 'start'
+  def start(projectName, workflowName, openBrowser, properties) {
     def request = work {
       def workflow = finder(WorkflowFinder).one(projectName, workflowName)
       if (!workflow.isOriginating())
         quit "${workflow.name} is not an originating workflow"
 
-      AnthillEngine.create_build_request(workflow)
+      def propertyMap = PropertyHelper.toMap(properties)
+
+      AnthillEngine.create_build_request(workflow, propertyMap)
     }
 
     work {
