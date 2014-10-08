@@ -11,15 +11,11 @@ class ConfigCommands {
   }
 
   def set(properties) {
-    properties.each {
-      def property, value = ''
-      def matcher = (it =~ /([^\s=]+)=(.*)/)
-      if (matcher.matches())
-        (property, value) = matcher[0].tail()
-      if (property) {
-        config.put(property, value)
-        println "Configuration value <${property}> has been set"
-      }
+    def propertyMap = PropertyHelper.toMap(properties)
+   
+    propertyMap.each { key, value -> 
+      config.put(key, value)
+      println "Configuration value <${key}> has been set to <${value}>"
     }
 
     config.save()

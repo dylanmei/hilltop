@@ -10,13 +10,13 @@ import com.urbancode.anthill3.main.client.AnthillClient;
 import com.urbancode.anthill3.persistence.UnitOfWork;
 
 class AnthillEngine {
-  public static BuildRequest create_build_request(Workflow workflow, properties = null) {
+  public static BuildRequest create_build_request(Workflow workflow, propertyMap = null) {
     def uow = workflow.unitOfWork
     def request = BuildRequest.createOriginatingRequest(
       workflow.buildProfile, uow.user, RequestSourceEnum.MANUAL, uow.user)
 
-    if(properties != null) {
-      properties.each { key, value ->
+    if(propertyMap != null) {
+      propertyMap.each { key, value ->
         request.setPropertyValue(key, value, false)
       }
     }
