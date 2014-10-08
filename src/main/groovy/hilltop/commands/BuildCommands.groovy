@@ -67,13 +67,22 @@ class BuildCommands extends AnthillCommands {
     }
   }
 
-  def start(projectName, workflowName, openBrowser) {
+  def start(projectName, workflowName, openBrowser, properties) {
+    print properties
     def request = work {
       def workflow = finder(WorkflowFinder).one(projectName, workflowName)
       if (!workflow.isOriginating())
         quit "${workflow.name} is not an originating workflow"
 
-      AnthillEngine.create_build_request(workflow)
+      def propertiesMap = properties.collect {
+        def property, value = ''
+        def matcher = (it =~ /([^\s=]+)=(.*)/)
+        if (!matcher.matches())
+          quit "<$it> is invalid, config values should be in format of 'x=y'"
+        matcher[0].tail()
+      }
+
+      AnthillEngine.create_build_request(workflow, propertiesMap)
     }
 
     work {
