@@ -237,7 +237,7 @@ class App {
         def handler = new BuildCommands(out)
 
         command('new', 'Request a new Anthill buildlife') {
-          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          arguments minimum: 2, name1: 'project', name2: 'workflow'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
           }
