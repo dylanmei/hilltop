@@ -242,7 +242,7 @@ class App {
             o longOpt: 'open', 'Open the buildlife when ready'
           }
           execute { opt, arguments ->
-            handler.start(arguments[0], arguments[1], opt.open)
+            handler.start(arguments[0], arguments[1], opt.open, arguments[2..<arguments.size()])
           }
         }
 
