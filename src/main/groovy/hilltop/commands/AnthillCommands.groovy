@@ -25,6 +25,24 @@ class AnthillCommands {
     out.send data
   }
 
+  def status(text) {
+    if (out.isInteractive()) {
+      print text
+    }
+  }
+
+  def statusln(text) {
+    if (out.isInteractive()) {
+      println text
+    }
+  }
+
+  def statusTick() {
+    if (out.isInteractive()) {
+      print '.'
+    }    
+  }
+
   def browse(url) {
     Class<?> d = Class.forName("java.awt.Desktop");
     d.getDeclaredMethod("browse", [java.net.URI.class] as Class[]).invoke(

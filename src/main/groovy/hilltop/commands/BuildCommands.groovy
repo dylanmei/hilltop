@@ -78,18 +78,19 @@ class BuildCommands extends AnthillCommands {
 
     work {
       AnthillEngine.submit_build_request(request)
-      print "Created build request ${request.id} for $workflowName; Waiting for Buildlife..."
+      statusln("Created build request ${request.id} for $workflowName")
+      status("Waiting for Buildlife...")
     }
 
     def buildlife = null; while (!buildlife) {
-      sleep 250; print '.'
+      sleep 250; statusTick()
 
       work {
         request = finder(RequestFinder).one(request.id)
 
         if (request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED) {
           buildlife = request.buildLife
-          println "Buildlife ${buildlife.id} is available"
+          statusln("\nBuildlife ${buildlife.id} is available")
         }
       }
       if (request.status == BuildRequestStatusEnum.BUILD_LIFE_NOT_NEEDED) {
@@ -100,8 +101,15 @@ class BuildCommands extends AnthillCommands {
       }
     }
 
-    if (buildlife && openBrowser)
-      open(buildlife.id)
+    if (buildlife) {
+      if (openBrowser)
+        open(buildlife.id)
+      else
+        out.send(
+        [
+          id: buildlife.id
+        ])
+    }
   }
 
   def run(id, workflowName, environmentName, openBrowser) {

@@ -8,6 +8,10 @@ class Out {
     this.writer = writer
   }
 
+  def isInteractive() {
+    this.writer instanceof ConsoleWriter
+  }
+
   def send(Map data) {
     items << data
   }
