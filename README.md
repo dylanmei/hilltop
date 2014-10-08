@@ -76,7 +76,7 @@ Folders
 
 Builds
 
-    ./hilltop build new <project-name> <workflow-name>
+    ./hilltop build new <project-name> <workflow-name> <property-name=property-value> ...
     ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>

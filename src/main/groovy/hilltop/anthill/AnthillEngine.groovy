@@ -10,10 +10,17 @@ import com.urbancode.anthill3.main.client.AnthillClient;
 import com.urbancode.anthill3.persistence.UnitOfWork;
 
 class AnthillEngine {
-  public static BuildRequest create_build_request(Workflow workflow) {
+  public static BuildRequest create_build_request(Workflow workflow, properties = null) {
     def uow = workflow.unitOfWork
     def request = BuildRequest.createOriginatingRequest(
       workflow.buildProfile, uow.user, RequestSourceEnum.MANUAL, uow.user)
+
+    if(properties != null) {
+      properties.each { key, value ->
+        request.setPropertyValue(key, value, false)
+      }
+    }
+
     request.forcedFlag = true
     request.unitOfWork = uow
     request.store()
