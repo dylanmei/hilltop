@@ -81,6 +81,7 @@ Builds
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
     ./hilltop build remove <buildlife>
+    ./hilltop build add-link <buildlife> <url> <name>
 
 Build requests
 
