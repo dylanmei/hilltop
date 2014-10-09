@@ -276,6 +276,13 @@ class App {
             handler.remove(arguments[0])
           }
         }
+
+        command('add-link', 'Add a link to an Anthill buildlife') {
+          arguments exactly: 3, name1: 'buildlife', name2: 'url', name3: 'name'
+          execute { opt, arguments ->
+            handler.addLink(arguments[0], arguments[1], arguments[2])
+          }
+        }
       }
 
       command('request', 'Working with Anthill build requests') {

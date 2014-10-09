@@ -132,4 +132,13 @@ class BuildCommands extends AnthillCommands {
 
     if (openBrowser) open(id)
   }
+
+  def addLink(id, url, name) {
+    def request = work {
+      def buildlife = finder(BuildFinder).one(id as long)
+      buildlife.addLink(name, url)
+      buildlife.store()
+      statusln("Added a link to " + url)
+    }
+  }
 }
