@@ -29,13 +29,6 @@ class BuildLinkCommands extends AnthillCommands {
     }
   }
 
-  def remove(id, linkName) {
-    work {
-      def buildlife = finder(BuildFinder).one(id as long)
-    }
-    quit "Not implemented"
-  }
-
   def open(id, linkName) {
     def buildlife = work {
       finder(BuildFinder).one(id as long)

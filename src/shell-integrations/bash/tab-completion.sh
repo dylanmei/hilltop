@@ -50,7 +50,7 @@ _hilltop()
         return 0
         ;;
       build-link)
-        local build_link_options="list add remove open"
+        local build_link_options="list add open"
         COMPREPLY=($(compgen -W "${build_link_options}" ${cur}))
         return 0
         ;;

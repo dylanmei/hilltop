@@ -295,13 +295,6 @@ class App {
           }
         }
 
-        command('remove', 'Remove a link from an Anthill buildlife') {
-          arguments exactly: 2, name1: 'buildlife', name2: 'link-name'
-          execute { opt, arguments ->
-            handler.remove(arguments[0], arguments[1])
-          }
-        }
-
         command('open', 'Open a build link in the browser') {
           arguments exactly: 2, name1: 'buildlife', name2: 'link-name'
           execute { opt, arguments ->

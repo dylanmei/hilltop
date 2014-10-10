@@ -39,7 +39,7 @@ __build_actions() {
 
 __build_link_actions() {
   declare -a actions
-  actions=(list add remove open)
+  actions=(list add open)
   _wanted actions expl 'build-link' compadd $actions
 }
 
