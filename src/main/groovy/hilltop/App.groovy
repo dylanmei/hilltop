@@ -5,8 +5,16 @@ import hilltop.commands.*
 
 class App {
   def App(String... args) {
-    def out = args.contains("--json") ?
-      new Out(new JsonWriter()) : new Out(new ConsoleWriter())
+    def out
+    if (args.contains("--json")) {
+      out = new Out(new JsonWriter())
+      args = args.findAll { it != "--json" }
+    }
+    else {
+      out = new Out(new ConsoleWriter())
+    }
+
+    //args.each { println "$it" }
 
     new Cli('hilltop', {
       describe 'An Anthill command-line utility'
