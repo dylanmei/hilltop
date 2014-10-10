@@ -7,8 +7,8 @@ import com.urbancode.anthill3.services.build.*
 import com.urbancode.anthill3.domain.buildrequest.*
 import com.urbancode.anthill3.domain.buildlife.*
 
-class RequestCommands extends AnthillCommands {
-  def RequestCommands(out) {
+class BuildRequestCommands extends AnthillCommands {
+  def BuildRequestCommands(out) {
     super(out)
   }
 

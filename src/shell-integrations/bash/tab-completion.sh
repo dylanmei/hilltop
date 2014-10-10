@@ -5,7 +5,7 @@ _hilltop()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    opts="config project workflow workflow-property workflow-dependency source-config folder build request environment agent lifecycle" # colony disabled
+    opts="config project workflow workflow-property workflow-dependency source-config folder build build-link build-request environment agent lifecycle" # colony disabled
 
 
     case "${prev}" in
@@ -49,9 +49,14 @@ _hilltop()
         COMPREPLY=($(compgen -W "${build_options}" ${cur}))
         return 0
         ;;
-      request)
-        local request_options="show open recent"
-        COMPREPLY=($(compgen -W "${request_options}" ${cur}))
+      build-link)
+        local build_link_options="list add remove open"
+        COMPREPLY=($(compgen -W "${build_link_options}" ${cur}))
+        return 0
+        ;;
+      build-request)
+        local build_request_options="show open recent"
+        COMPREPLY=($(compgen -W "${build_request_options}" ${cur}))
         return 0
         ;;
       environment)

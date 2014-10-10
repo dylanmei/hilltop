@@ -276,17 +276,42 @@ class App {
             handler.remove(arguments[0])
           }
         }
+      }
 
-        command('add-link', 'Add a link to an Anthill buildlife') {
+      command('build-link', 'Working with Anthill build links') {
+        def handler = new BuildLinkCommands(out)
+
+        command('list', 'List build links for an Anthill build life') {
+          arguments exactly: 1, name: 'buildlife'
+          execute { opt, arguments ->
+            handler.list(arguments[0])
+          }
+        }
+
+        command('add', 'Add a link to an Anthill buildlife') {
           arguments exactly: 3, name1: 'buildlife', name2: 'url', name3: 'name'
           execute { opt, arguments ->
-            handler.addLink(arguments[0], arguments[1], arguments[2])
+            handler.add(arguments[0], arguments[1], arguments[2])
+          }
+        }
+
+        command('remove', 'Remove a link from an Anthill buildlife') {
+          arguments exactly: 2, name1: 'buildlife', name2: 'link-name'
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1])
+          }
+        }
+
+        command('open', 'Open a build link in the browser') {
+          arguments exactly: 2, name1: 'buildlife', name2: 'link-name'
+          execute { opt, arguments ->
+            handler.open(arguments[0], arguments[1])
           }
         }
       }
 
-      command('request', 'Working with Anthill build requests') {
-        def handler = new RequestCommands(out)
+      command('build-request', 'Working with Anthill build requests') {
+        def handler = new BuildRequestCommands(out)
 
         command('show', 'Show details of an Anthill build request') {
           arguments exactly: 1, name: 'request'
