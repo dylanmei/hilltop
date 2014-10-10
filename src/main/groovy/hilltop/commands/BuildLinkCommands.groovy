@@ -2,10 +2,6 @@
 package hilltop.commands
 
 import hilltop.anthill.*
-import com.urbancode.anthill3.domain.workflow.*
-import com.urbancode.anthill3.services.build.*
-import com.urbancode.anthill3.domain.buildrequest.*
-import com.urbancode.anthill3.domain.buildlife.*
 
 class BuildLinkCommands extends AnthillCommands {
   def BuildLinkCommands(out) {
@@ -15,13 +11,16 @@ class BuildLinkCommands extends AnthillCommands {
   def list(id) {
     send work {
       def buildlife = finder(BuildFinder).one(id as long)
-
-    quit "Not implemented"
+      buildlife.links.collect {[
+        name: it.name,
+        description: it.description,
+        url: it.url
+      ]}
     }
   }
 
   def add(id, linkName, linkUrl) {
-    def request = work {
+    work {
       def buildlife = finder(BuildFinder).one(id as long)
       buildlife.addLink(linkName, linkUrl)
       buildlife.store()
@@ -30,9 +29,12 @@ class BuildLinkCommands extends AnthillCommands {
   }
 
   def open(id, linkName) {
-    def buildlife = work {
-      finder(BuildFinder).one(id as long)
+    work {
+      def buildlife = finder(BuildFinder).one(id as long)
+      buildlife.links.each {
+        if (it.name == linkName)
+          browse(it.url) 
+      }
     }
-    quit "Not implemented"
   }
 }
