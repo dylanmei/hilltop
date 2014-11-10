@@ -135,7 +135,7 @@ class WorkflowDependencyCommands extends AnthillCommands {
       text = noSpaces(text)
       if (StringUtils.containsIgnoreCase(text, 'push'))
         return 3
-      if (StringUtils.containsIgnoreCase(text, 'existing'))
+      if (StringUtils.containsIgnoreCase(text, 'existing') || StringUtils.containsIgnoreCase(text, 'none'))
         return 1
     }
     null 
