@@ -99,7 +99,7 @@ __workflow_property_actions() {
 
 __workflow_dependency_actions() {
   declare -a actions
-  actions=(list add remove conflict-strategy)
+  actions=(list add remove conflict-strategy trigger)
   _wanted actions expl 'workflow-dependency' compadd $actions
 }
 

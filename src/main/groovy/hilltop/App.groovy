@@ -208,6 +208,16 @@ class App {
             handler.setConflictStrategy(arguments[0], arguments[1], arguments[2])
           }
         }
+
+        command('trigger', 'Set dependency trigger for Anthill workflow') {
+          arguments exactly: 5, 
+            name1: 'project', name2: 'workflow',
+            name3: 'dependency-project', name4: 'dependency-workflow'
+            name5: 'trigger'
+          execute { opt, arguments ->
+            handler.setTrigger(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4])
+          }
+        }
       }
 
       command('source-config', 'Working with Anthill workflow source configuration') {
