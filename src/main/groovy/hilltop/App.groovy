@@ -201,7 +201,7 @@ class App {
           }
         }
 
-        command('conflict-strategy', 'Set dependency conflict strategy for Anthill workflow') {
+        command('set-conflict-strategy', 'Set dependency conflict strategy for Anthill workflow') {
           arguments exactly: 3, 
             name1: 'project', name2: 'workflow', name3: 'conflict-strategy'
           execute { opt, arguments ->
@@ -209,9 +209,9 @@ class App {
           }
         }
 
-        command('trigger', 'Set dependency trigger for Anthill workflow') {
+        command('set-trigger', 'Set dependency trigger for Anthill workflow') {
           arguments exactly: 5, 
-            name1: 'project', name2: 'workflow',
+            name1: 'dependent-project', name2: 'dependent-workflow', 
             name3: 'dependency-project', name4: 'dependency-workflow'
             name5: 'trigger'
           execute { opt, arguments ->

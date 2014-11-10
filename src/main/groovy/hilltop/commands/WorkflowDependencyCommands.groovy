@@ -94,12 +94,14 @@ class WorkflowDependencyCommands extends AnthillCommands {
     }
   }
 
-  def setTrigger(projectName, workflowName, dependencyProjectName, dependencyWorkflowName, triggerName) {
+  def setTrigger(
+    dependentProjectName, dependentWorkflowName, 
+    dependencyProjectName, dependencyWorkflowName, triggerName) {
     work {
-      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
+      def dependentWorkflow = finder(WorkflowFinder).one(dependentProjectName, dependentWorkflowName)
 
-      if (!workflow.isOriginating()) 
-        quit "Cannot set dependency trigger from non-originating workflow <$workflow.name>"
+      if (!dependentWorkflow.isOriginating()) 
+        quit "Cannot set dependency trigger from non-originating workflow <$dependentWorkflow.name>"
  
       def trigger = toTrigger(triggerName)
       if (!trigger)
@@ -107,7 +109,7 @@ class WorkflowDependencyCommands extends AnthillCommands {
 
       def dependencyWorkflow = finder(WorkflowFinder).one(dependencyProjectName, dependencyWorkflowName)
 
-      def dependency = workflow.buildProfile.dependencyArray
+      def dependency = dependentWorkflow.buildProfile.dependencyArray
          .find { it.dependency.buildProfile == dependencyWorkflow.buildProfile }
        
        if (!dependency)

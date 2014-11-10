@@ -30,7 +30,7 @@ _hilltop()
         return 0
         ;;
       workflow-dependency)
-        local workflow_dependency_options="list add remove conflict-strategy trigger"
+        local workflow_dependency_options="list add remove set-conflict-strategy set-trigger"
         COMPREPLY=($(compgen -W "${workflow_dependency_options}" ${cur}))
         return 0
         ;;
