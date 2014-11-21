@@ -5,8 +5,16 @@ import hilltop.commands.*
 
 class App {
   def App(String... args) {
-    def out = args.contains("--json") ?
-      new Out(new JsonWriter()) : new Out(new ConsoleWriter())
+    def out
+    if (args.contains("--json")) {
+      out = new Out(new JsonWriter())
+      args = args.findAll { it != "--json" }
+    }
+    else {
+      out = new Out(new ConsoleWriter())
+    }
+
+    //args.each { println "$it" }
 
     new Cli('hilltop', {
       describe 'An Anthill command-line utility'
@@ -200,11 +208,21 @@ class App {
           }
         }
 
-        command('conflict-strategy', 'Set dependency conflict strategy for Anthill workflow') {
+        command('set-conflict-strategy', 'Set dependency conflict strategy for Anthill workflow') {
           arguments exactly: 3, 
             name1: 'project', name2: 'workflow', name3: 'conflict-strategy'
           execute { opt, arguments ->
             handler.setConflictStrategy(arguments[0], arguments[1], arguments[2])
+          }
+        }
+
+        command('set-trigger', 'Set dependency trigger for Anthill workflow') {
+          arguments exactly: 5, 
+            name1: 'dependent-project', name2: 'dependent-workflow', 
+            name3: 'dependency-project', name4: 'dependency-workflow'
+            name5: 'trigger'
+          execute { opt, arguments ->
+            handler.setTrigger(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4])
           }
         }
       }
@@ -244,12 +262,12 @@ class App {
         def handler = new BuildCommands(out)
 
         command('new', 'Request a new Anthill buildlife') {
-          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          arguments minimum: 2, name1: 'project', name2: 'workflow'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
           }
           execute { opt, arguments ->
-            handler.start(arguments[0], arguments[1], opt.open)
+            handler.start(arguments[0], arguments[1], opt.open, arguments[2..<arguments.size()])
           }
         }
 
@@ -285,8 +303,33 @@ class App {
         }
       }
 
-      command('request', 'Working with Anthill build requests') {
-        def handler = new RequestCommands(out)
+      command('build-link', 'Working with Anthill build links') {
+        def handler = new BuildLinkCommands(out)
+
+        command('list', 'List build links for an Anthill build life') {
+          arguments exactly: 1, name: 'buildlife'
+          execute { opt, arguments ->
+            handler.list(arguments[0])
+          }
+        }
+
+        command('add', 'Add a link to an Anthill buildlife') {
+          arguments exactly: 3, name1: 'buildlife', name2: 'url', name3: 'name'
+          execute { opt, arguments ->
+            handler.add(arguments[0], arguments[1], arguments[2])
+          }
+        }
+
+        command('open', 'Open a build link in the browser') {
+          arguments exactly: 2, name1: 'buildlife', name2: 'link-name'
+          execute { opt, arguments ->
+            handler.open(arguments[0], arguments[1])
+          }
+        }
+      }
+
+      command('build-request', 'Working with Anthill build requests') {
+        def handler = new BuildRequestCommands(out)
 
         command('show', 'Show details of an Anthill build request') {
           arguments exactly: 1, name: 'request'

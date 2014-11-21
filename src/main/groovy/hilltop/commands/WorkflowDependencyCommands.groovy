@@ -94,6 +94,32 @@ class WorkflowDependencyCommands extends AnthillCommands {
     }
   }
 
+  def setTrigger(
+    dependentProjectName, dependentWorkflowName, 
+    dependencyProjectName, dependencyWorkflowName, triggerName) {
+    work {
+      def dependentWorkflow = finder(WorkflowFinder).one(dependentProjectName, dependentWorkflowName)
+
+      if (!dependentWorkflow.isOriginating()) 
+        quit "Cannot set dependency trigger from non-originating workflow <$dependentWorkflow.name>"
+ 
+      def trigger = toTrigger(triggerName)
+      if (!trigger)
+        quit "Unsupported dependency trigger <$triggerName>"
+
+      def dependencyWorkflow = finder(WorkflowFinder).one(dependencyProjectName, dependencyWorkflowName)
+
+      def dependency = dependentWorkflow.buildProfile.dependencyArray
+         .find { it.dependency.buildProfile == dependencyWorkflow.buildProfile }
+       
+       if (!dependency)
+          quit "<$workflow.project.name ($workflow.name)> does not depend on <$dependencyProjectName ($dependencyWorkflowName)>"
+
+      dependency.buildCondition = trigger
+      println "Set dependency trigger to <$triggerName>"
+    }
+  }
+
   def conflictEnumFromString(text) {
     if (text != null) {
       text = noSpaces(text)
@@ -103,7 +129,18 @@ class WorkflowDependencyCommands extends AnthillCommands {
           return e
       }
     }
-    null;
+    null
+  }
+
+  def toTrigger(text) {
+    if (text != null) {
+      text = noSpaces(text)
+      if (StringUtils.containsIgnoreCase(text, 'push'))
+        return 3
+      if (StringUtils.containsIgnoreCase(text, 'existing') || StringUtils.containsIgnoreCase(text, 'none'))
+        return 1
+    }
+    null 
   }
 
   def noSpaces(text) {

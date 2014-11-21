@@ -77,17 +77,24 @@ Folders
 
 Builds
 
-    ./hilltop build new <project-name> <workflow-name>
+    ./hilltop build new <project-name> <workflow-name> <property-name=property-value> ...
     ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build show <buildlife>
     ./hilltop build open <buildlife>
     ./hilltop build remove <buildlife>
 
-Build requests
+Build Links
+    ./hilltop build-link list <buildlife>
+    ./hilltop build-link add <buildlife> <link-name> <link-url>
+    ./hilltop build-link remove <buildlife> <link-name>
+    ./hilltop build-link open <buildlife> <link-name>
 
-    ./hilltop request show <request>
-    ./hilltop request open <request>
-    ./hilltop request recent <project-name>
+
+Build Requests
+
+    ./hilltop build-request show <request>
+    ./hilltop build-request open <request>
+    ./hilltop build-request recent <project-name>
 
 Environments
 

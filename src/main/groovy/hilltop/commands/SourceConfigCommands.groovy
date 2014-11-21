@@ -9,20 +9,14 @@ class WorkflowSourceCommands extends AnthillCommands {
     super(out)
   }
 
-  def setSourceConfig(projectName, workflowName, sourceType, keyValuePairs) {
+  def setSourceConfig(projectName, workflowName, sourceType, properties) {
     if (!sourceType.equalsIgnoreCase('git'))
       quit "Unsupported source type <$sourceType>"
     
-    def sourceConfigProperties = keyValuePairs.collect {
-      def property, value = ''
-      def matcher = (it =~ /([^\s=]+)=(.*)/)
-      if (!matcher.matches())
-        quit "<$it> is invalid, config values should be in format of 'x=y'"
-      matcher[0].tail()
-    }
+    def propertyMap = PropertyHelper.toMap(properties)
 
     work {
-      sourceConfigProperties.each { key, value ->
+      propertyMap.each { key, value ->
         if (key.equalsIgnoreCase('branch'))
           gitSetBranch(projectName, workflowName, value)
         else if (key.equalsIgnoreCase('remote-url'))

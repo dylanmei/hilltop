@@ -12,12 +12,13 @@ _1st_arguments=(
   'version:Get this Hilltop version'
   'agent:Working with Anthill agents'
   'build:Working with Anthill builds'
+  'build-link:Working with Anthill build links'
+  'build-request:Working with Anthill build requests'
   'config:Manage configuration values'
   'environment:Working with Anthill environments'
   'folder:Working with Anthill folders'
   'lifecycle:Working with Anthill lifecycles'
   'project:Working with Anthill projects'
-  'request:Working with Anthill build requests'
   'source-config:Working with Anthill workflow source configuration'
   'workflow:Working with Anthill workflows'
   'workflow-property:Working with Anthill workflows properties'
@@ -34,6 +35,18 @@ __build_actions() {
   declare -a actions
   actions=(new run show open remove)
   _wanted actions expl 'build' compadd $actions
+}
+
+__build_link_actions() {
+  declare -a actions
+  actions=(list add open)
+  _wanted actions expl 'build-link' compadd $actions
+}
+
+__build_request_actions() {
+  declare -a actions
+  actions=(show open recent)
+  _wanted actions expl 'build-request' compadd $actions
 }
 
 __config_actions() {
@@ -66,12 +79,6 @@ __project_actions() {
   _wanted actions expl 'project' compadd $actions
 }
 
-__request_actions() {
-  declare -a actions
-  actions=(show open recent)
-  _wanted actions expl 'request' compadd $actions
-}
-
 __source_config_actions() {
   declare -a actions
   actions=(set)
@@ -92,7 +99,7 @@ __workflow_property_actions() {
 
 __workflow_dependency_actions() {
   declare -a actions
-  actions=(list add remove conflict-strategy)
+  actions=(list add remove set-conflict-strategy set-trigger)
   _wanted actions expl 'workflow-dependency' compadd $actions
 }
 
