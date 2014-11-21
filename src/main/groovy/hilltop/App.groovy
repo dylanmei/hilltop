@@ -86,6 +86,13 @@ class App {
             handler.remove(arguments[0])
           }
         }
+
+        command('copy', 'Copy an Anthill project') {
+          arguments exactly: 2, name1: 'project', name2: 'new-name'
+          execute { opt, arguments ->
+            handler.copy(arguments[0], arguments[1])
+          }
+        }
       }
 
       command('workflow', 'Working with Anthill workflows') {
@@ -130,7 +137,7 @@ class App {
         }
         
         command('copy', 'Copy an Anthill workflow') {
-          arguments exactly: 2, name1: 'project', name2: 'workflow', name3: 'new-name'
+          arguments exactly: 3, name1: 'project', name2: 'workflow', name3: 'new-name'
           execute { opt, arguments ->
             handler.copy(arguments[0], arguments[1], arguments[2])
           }

@@ -106,4 +106,14 @@ class ProjectCommands extends AnthillCommands {
       }
     }
   }
+
+  def copy(projectName, newName) {
+    work {
+      def project = finder(ProjectFinder).one(projectName)
+
+      def newProject = project.duplicate()
+      newProject.name = newName
+      newProject.store()
+    }
+  }
 }
