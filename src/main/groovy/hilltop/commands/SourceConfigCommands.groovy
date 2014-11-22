@@ -12,8 +12,8 @@ class WorkflowSourceCommands extends AnthillCommands {
   def setSourceConfig(projectName, workflowName, sourceType, properties) {
     if (!sourceType.equalsIgnoreCase('git'))
       quit "Unsupported source type <$sourceType>"
-    
-    def propertyMap = PropertyHelper.toMap(properties)
+
+    def propertyMap = PropertyHelper.fromArguments(properties)
 
     work {
       propertyMap.each { key, value ->

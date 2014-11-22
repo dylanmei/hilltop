@@ -15,7 +15,7 @@ class AnthillEngine {
     def request = BuildRequest.createOriginatingRequest(
       workflow.buildProfile, uow.user, RequestSourceEnum.MANUAL, uow.user)
 
-    if(propertyMap != null) {
+    if (propertyMap != null) {
       propertyMap.each { key, value ->
         request.setPropertyValue(key, value, false)
       }

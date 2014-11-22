@@ -14,8 +14,6 @@ class App {
       out = new Out(new ConsoleWriter())
     }
 
-    //args.each { println "$it" }
-
     new Cli('hilltop', {
       describe 'An Anthill command-line utility'
 
@@ -265,9 +263,11 @@ class App {
           arguments minimum: 2, name1: 'project', name2: 'workflow'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
+            f longOpt: 'properties-file', args: 1, 'Provide build properties from a file'
           }
           execute { opt, arguments ->
-            handler.start(arguments[0], arguments[1], opt.open, arguments[2..<arguments.size()])
+            handler.start(arguments[0], arguments[1],
+              opt.open, opt['properties-file'], arguments[2..<arguments.size()])
           }
         }
 

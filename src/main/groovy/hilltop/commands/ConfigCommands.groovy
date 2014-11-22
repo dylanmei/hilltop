@@ -11,8 +11,8 @@ class ConfigCommands {
   }
 
   def set(properties) {
-    def propertyMap = PropertyHelper.toMap(properties)
-   
+    def propertyMap = PropertyHelper.fromArguments(properties)
+
     propertyMap.each { key, value -> 
       config.put(key, value)
       println "Configuration value <${key}> has been set to <${value}>"
