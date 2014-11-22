@@ -1,4 +1,5 @@
 package hilltop.commands
+import static hilltop.Global.quit
 
 class PropertyHelper {
 

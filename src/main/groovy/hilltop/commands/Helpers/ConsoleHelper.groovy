@@ -1,17 +1,12 @@
 
 package hilltop.commands
 
-import hilltop.App
-import com.urbancode.anthill3.domain.persistent.Persistent;
+import static hilltop.Global.quit
 
 class ConsoleHelper {
-  def exit = { System.exit(0) }
 
   def quit(message, throwable = null) {
-    if (message)
-      System.err.println message
-
-    if (!throwable) System.exit(1)
+    if (!throwable) quit(message)
     throw throwable
   }
 }
