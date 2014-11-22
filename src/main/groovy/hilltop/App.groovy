@@ -263,7 +263,7 @@ class App {
           arguments minimum: 2, name1: 'project', name2: 'workflow'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
-            f longOpt: 'properties-file', args: 1, 'Provide build properties from a file'
+            _ longOpt: 'properties-file', args: 1, 'Provide build properties from a file'
           }
           execute { opt, arguments ->
             handler.start(arguments[0], arguments[1],

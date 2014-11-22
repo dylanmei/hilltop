@@ -77,7 +77,7 @@ class BuildCommands extends AnthillCommands {
         quit "${workflow.name} is not an originating workflow"
 
       def propertyMap = PropertyHelper.fromArguments(properties)
-      if (propertiesPath != "") {
+      if (propertiesPath) {
         propertyMap += PropertyHelper.fromFile(propertiesPath)
       }
 
