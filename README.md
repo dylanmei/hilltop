@@ -21,8 +21,9 @@ Command-line utility for AnthillPro, a deploy, test, and release automation fram
     
      `. /c/your-src-location-here/hilltop/src/shell-integrations/bash/tab-completion.sh`
 * Add configuration variables
-    * anthill server `ht config set anthill.api_server=anthill.local`
-    * authorization token `ht config set anthill.api_token=mytoken`
+    * Anthill server: `ht config set anthill.api_server=anthill.local`
+    * Authorization token: `ht config set anthill.api_token=mytoken`
+    * Your configuration is saved to the file `~/.hilltop`
 
 ## commands
 
