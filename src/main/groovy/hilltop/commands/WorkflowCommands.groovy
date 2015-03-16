@@ -113,7 +113,7 @@ class WorkflowCommands extends AnthillCommands {
     println "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
   }
 
- def copy(projectName, workflowName, newName) {
+  def copy(projectName, workflowName, newName) {
     def workflow, project
     work {
       workflow = finder(WorkflowFinder).one(projectName, workflowName)
@@ -122,6 +122,23 @@ class WorkflowCommands extends AnthillCommands {
       def newWorkflow = workflow.duplicateForCopy(project)
       newWorkflow.name = newName
       newWorkflow.store()
+    }
+  }
+
+  def execOperationalWorkflow(workflowName, environmentName) {
+    def request = work {
+      
+      def runner = new WorkflowRunner(-1, {
+        error { m -> quit m }
+      })
+
+      def workflow = finder(WorkflowFinder).findByName(workflowName)
+      runner.requestForOperationalWorkflow(workflow, environmentName, [:])
+    }
+
+    work {
+      WorkflowRunner.submit(request)
+      println "Created workflow request $request.id for $workflowName in $environmentName"
     }
   }
 }

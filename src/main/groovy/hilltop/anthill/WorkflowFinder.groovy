@@ -37,6 +37,17 @@ class WorkflowFinder {
       workflow
   }
 
+  def findByName(workflowName) {
+      def workflow = WorkflowFactory.getInstance()
+        .restoreAllActive()
+        .find { w -> w.name == workflowName}
+
+      if (!workflow)
+        error "No such workflow <$workflowName> found"
+
+      workflow
+  }
+
   def all(project, inactive) {
     def workflows = inactive ?
       WorkflowFactory.getInstance().restoreAllForProject(project) :

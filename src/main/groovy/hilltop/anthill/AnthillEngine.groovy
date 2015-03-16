@@ -37,6 +37,16 @@ class AnthillEngine {
     request    
   }
 
+  public static BuildRequest create_operational_request(workflow, server_group) {
+    def uow = workflow.unitOfWork
+    def request = BuildRequest.createOperationalRequest(
+      workflow, server_group, uow.user, RequestSourceEnum.MANUAL, uow.user)
+    request.forcedFlag = true
+    request.unitOfWork = uow
+    request.store()
+    request    
+  }
+
   public static Object submit_work(AnthillClient client, Closure task) {
     def result
     def uow = client.createUnitOfWork()

@@ -51,6 +51,7 @@ Workflows
     ./hilltop workflow open <project-name> <workflow-name>
     ./hilltop workflow remove <project-name> <workflow-name>
     ./hilltop workflow copy <project-name> <workflow-name> <new-name>
+    ./hilltop workflow exec <operational-workflow-name> <environment-name>
 
 Workflow Properties
 

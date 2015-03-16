@@ -87,7 +87,7 @@ __source_config_actions() {
 
 __workflow_actions() {
   declare -a actions
-  actions=(list show open remove copy)
+  actions=(list show open remove copy exec)
   _wanted actions expl 'workflow' compadd $actions
 }
 

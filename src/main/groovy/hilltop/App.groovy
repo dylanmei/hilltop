@@ -148,6 +148,13 @@ class App {
             handler.copy(arguments[0], arguments[1], arguments[2])
           }
         }
+
+        command('exec', 'Execute an operational workflow') {
+          arguments exactly: 2, name1: 'workflow', name2: 'environment'
+          execute { opt, arguments ->
+            handler.execOperationalWorkflow(arguments[0], arguments[1])
+          }
+        }
       }
 
       command('workflow-property', 'Working with Anthill workflow properties') {
