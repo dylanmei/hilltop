@@ -53,7 +53,7 @@ class WorkflowRunner {
     def server_groups = find_environments_to_run_in(environment, [workflow])
 
     if (server_groups.size() == 0)
-      error "Cannot find environment <$environment> assigned to workflow <$workflowName>"
+      error "Cannot find environment <$environment> assigned to workflow <$workflow.name>"
 
     if (server_groups.size() == 1)
       server_group = server_groups.first()
@@ -61,7 +61,7 @@ class WorkflowRunner {
     if (server_groups.size() > 1)
       error "Multiple environment matches not supported"
 
-    AnthillEngine.create_operational_request(workflow, server_group)
+    AnthillEngine.create_operational_request(workflow, server_group, properties)
   }
 
   def find_workflows_to_run(name, workflows) {

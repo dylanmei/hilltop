@@ -125,15 +125,16 @@ class WorkflowCommands extends AnthillCommands {
     }
   }
 
-  def execOperationalWorkflow(workflowName, environmentName) {
+  def execOperationalWorkflow(workflowName, environmentName, properties) {
+    def propertyMap = PropertyHelper.fromArguments(properties)
+     
     def request = work {
-      
       def runner = new WorkflowRunner(-1, {
         error { m -> quit m }
       })
 
       def workflow = finder(WorkflowFinder).findByName(workflowName)
-      runner.requestForOperationalWorkflow(workflow, environmentName, [:])
+      runner.requestForOperationalWorkflow(workflow, environmentName, propertyMap)
     }
 
     work {
