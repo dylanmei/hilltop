@@ -35,6 +35,10 @@ class ProjectCommands extends AnthillCommands {
         environment: project.environmentGroup?.name,
         lifecycle: project.lifeCycleModel?.name,
         source_config: project.sourceConfigType?.name.tokenize('.').last(),
+        properties: project.propertyArray.collect {[
+          key: it.name,
+          value: it.value
+        ]},
       ]
     }
   }
