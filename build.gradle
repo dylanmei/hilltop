@@ -1,9 +1,9 @@
 apply plugin: 'groovy'
 apply plugin: 'application'
 
-startScripts {
-    applicationName = 'hilltop'
-}
+startScripts.applicationName = 'hilltop'
+distZip.baseName = 'hilltop'
+
 repositories {
   mavenCentral()
   flatDir(dirs: 'depends/anthill3-dev-kit/remoting/lib')
