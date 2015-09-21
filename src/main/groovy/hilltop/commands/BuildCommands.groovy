@@ -97,14 +97,16 @@ class BuildCommands extends AnthillCommands {
     }
   }
 
-  def run(id, workflowName, environmentName, openBrowser) {
+  def run(id, workflowName, environmentName, openBrowser, properties) {
     def request = work {
       def buildlife = finder(BuildFinder).one(id as long)
       def runner = new WorkflowRunner(buildlife, {
         error { m -> quit m }
       })
 
-      runner.request(workflowName, environmentName, [:])
+      def propertyMap = PropertyHelper.fromArguments(properties)
+
+      runner.request(workflowName, environmentName, propertyMap)
     }
 
     work {

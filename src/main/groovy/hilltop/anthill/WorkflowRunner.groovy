@@ -43,7 +43,7 @@ class WorkflowRunner {
       error "Multiple workflow matches not supported"
 
     def workflow = workflows.first()
-    AnthillEngine.create_workflow_request(buildlife, workflow, server_group)
+    AnthillEngine.create_workflow_request(buildlife, workflow, server_group, properties)
   }
 
   public BuildRequest requestForOperationalWorkflow(workflow, environment, properties) {

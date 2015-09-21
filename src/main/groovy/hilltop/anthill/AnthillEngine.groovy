@@ -14,23 +14,18 @@ class AnthillEngine {
     def uow = workflow.unitOfWork
     def request = BuildRequest.createOriginatingRequest(
       workflow.buildProfile, uow.user, RequestSourceEnum.MANUAL, uow.user)
-
-    if (propertyMap != null) {
-      propertyMap.each { key, value ->
-        request.setPropertyValue(key, value, false)
-      }
-    }
-
+    applyProperties(request, propertyMap)
     request.forcedFlag = true
     request.unitOfWork = uow
     request.store()
     request
   }
 
-  public static BuildRequest create_workflow_request(buildlife, workflow, server_group) {
+  public static BuildRequest create_workflow_request(buildlife, workflow, server_group, propertyMap = null) {
     def uow = buildlife.unitOfWork
     def request = BuildRequest.createNonOriginatingRequest(
       buildlife, workflow, server_group, uow.user, RequestSourceEnum.MANUAL, uow.user)
+    applyProperties(request, propertyMap)
     request.forcedFlag = true
     request.unitOfWork = uow
     request.store()
@@ -41,13 +36,7 @@ class AnthillEngine {
     def uow = workflow.unitOfWork
     def request = BuildRequest.createOperationalRequest(
       workflow, server_group, uow.user, RequestSourceEnum.MANUAL, uow.user)
-
-    if (propertyMap != null) {
-      propertyMap.each { key, value ->
-        request.setPropertyValue(key, value, false)
-      }
-    }
-    
+    applyProperties(request, propertyMap)    
     request.forcedFlag = true
     request.unitOfWork = uow
     request.store()
@@ -88,6 +77,14 @@ class AnthillEngine {
     }
     finally {
       service.shutdown()
+    }
+  }
+
+  static void applyProperties(BuildRequest request, java.util.LinkedHashMap propertyMap = null) {
+    if (propertyMap) {
+      propertyMap.each { 
+        key, value -> request.setPropertyValue(key, value, false)
+      }
     }
   }
 }

@@ -81,7 +81,7 @@ Builds
 
     ./hilltop build new <project-name> <workflow-name> <property-name=property-value> ...
     ./hilltop build new --properties-file <file-path> <project-name> <workflow-name>
-    ./hilltop build run <buildlife> <workflow-name> <environment-name>
+    ./hilltop build run <buildlife> <workflow-name> <environment-name> <property-name=property-value> ...
     ./hilltop build show <buildlife>
     ./hilltop build latest <project-name> <workflow-name>
     ./hilltop build latest <project-name> <workflow-name> <status-name>
