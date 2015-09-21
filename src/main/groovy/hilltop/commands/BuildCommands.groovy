@@ -27,13 +27,12 @@ class BuildCommands extends AnthillCommands {
     }
   }
 
-  def latest(statusName, projectName, workflowName) {
+  def latest(projectName, workflowName, statusName) {
     send work {
       def workflow = finder(WorkflowFinder).one(projectName, workflowName)
       def project = workflow.project
-      def status = finder(StatusFinder).one(workflow, statusName)
-      if (!status) quit "$statusName is not a valid status"
-      def buildlife = finder(BuildFinder).latest(status, workflow)
+      def status = statusName ? finder(StatusFinder).one(workflow, statusName) : null
+      def buildlife = finder(BuildFinder).latest(workflow, status)
       map(buildlife)
     }
   }

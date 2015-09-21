@@ -15,7 +15,7 @@ class BuildFinder {
     build
   }
 
-  def latest(status, workflow) {
+  def latest(workflow, status) {
     def build = BuildLifeFactory.getInstance()
        .restoreAllRecentForProfileAndStatus(
           workflow.buildProfile, 

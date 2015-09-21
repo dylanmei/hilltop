@@ -295,9 +295,9 @@ class App {
           }
         }
 
-        command('latest', 'Get the latest build life for a given status') {
-          arguments exactly: 3, 
-            name1: 'status', name2: 'project', name3: 'workflow' 
+        command('latest', 'Get the latest build life for a project') {
+          arguments minimum: 2, 
+            name1: 'project', name2: 'workflow', name3: 'status'
           execute { opt, arguments ->
             handler.latest(arguments[0], arguments[1], arguments[2])
           }
