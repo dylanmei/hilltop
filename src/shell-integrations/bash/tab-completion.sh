@@ -45,7 +45,7 @@ _hilltop()
         return 0
         ;;
       build)
-        local build_options="new run show open remove"
+        local build_options="new run show latest open remove"
         COMPREPLY=($(compgen -W "${build_options}" ${cur}))
         return 0
         ;;

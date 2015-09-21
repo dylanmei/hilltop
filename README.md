@@ -83,6 +83,7 @@ Builds
     ./hilltop build new --properties-file <file-path> <project-name> <workflow-name>
     ./hilltop build run <buildlife> <workflow-name> <environment-name>
     ./hilltop build show <buildlife>
+    ./hilltop build latest <status-name> <project-name> <workflow-name>
     ./hilltop build open <buildlife>
     ./hilltop build remove <buildlife>
 

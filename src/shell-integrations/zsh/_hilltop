@@ -33,7 +33,7 @@ __agent_actions() {
 
 __build_actions() {
   declare -a actions
-  actions=(new run show open remove)
+  actions=(new run show latest open remove)
   _wanted actions expl 'build' compadd $actions
 }
 

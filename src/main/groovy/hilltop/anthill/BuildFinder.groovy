@@ -14,4 +14,14 @@ class BuildFinder {
     if (!build) error "No such buildlife <$id>"
     build
   }
+
+  def latest(status, workflow) {
+    def build = BuildLifeFactory.getInstance()
+       .restoreAllRecentForProfileAndStatus(
+          workflow.buildProfile, 
+          status,
+          1)[0]
+    if (!build) error 'No such buildlife found'
+    build
+  }
 }

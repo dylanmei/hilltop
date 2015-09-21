@@ -23,40 +23,18 @@ class BuildCommands extends AnthillCommands {
   def show(id) {
     send work {
       def buildlife = finder(BuildFinder).one(id as long)
-      def project = buildlife.project
-      def workflow = buildlife.originatingWorkflow
+      map(buildlife)
+    }
+  }
 
-      def propertyNames = []
-      if (buildlife.propertyNames) {
-        propertyNames = buildlife.propertyNames
-      }
-
-      def request, statuses = []
-      if (!buildlife.isArchived()) {
-        request = buildlife.originatingRequest
-        if (buildlife.statusArray) {
-          statuses = buildlife.statusArray.collect {
-            [key: it.status, value: it.dateAssigned.format('d MMM yyyy HH:mm:ss Z')]
-          }
-        }
-      }
-
-      [
-        id: buildlife.id,
-        name: "Buildlife $id",
-        url: link_to(buildlife),
-        project: project.name,
-        workflow: workflow.name,
-        preflight: buildlife.isPreflight(),
-        inactive: buildlife.isInactive(),
-        archived: buildlife.isArchived(),
-        stamp: buildlife.latestStampValue,
-        build_request: request?.id,
-        build_status: statuses,
-        properties: propertyNames.collect {
-          [key: it, value: buildlife.getPropertyValue(it)]
-        },
-      ]
+  def latest(statusName, projectName, workflowName) {
+    send work {
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
+      def project = workflow.project
+      def status = finder(StatusFinder).one(workflow, statusName)
+      if (!status) quit "$statusName is not a valid status"
+      def buildlife = finder(BuildFinder).latest(status, workflow)
+      map(buildlife)
     }
   }
 
@@ -136,5 +114,41 @@ class BuildCommands extends AnthillCommands {
     }
 
     if (openBrowser) open(id)
+  }
+
+  def map(buildlife) {
+    def project = buildlife.project
+    def workflow = buildlife.originatingWorkflow
+
+    def propertyNames = []
+    if (buildlife.propertyNames) {
+      propertyNames = buildlife.propertyNames
+    }
+
+    def request, statuses = []
+    if (!buildlife.isArchived()) {
+      request = buildlife.originatingRequest
+      if (buildlife.statusArray) {
+        statuses = buildlife.statusArray.collect {
+          [key: it.status, value: it.dateAssigned.format('d MMM yyyy HH:mm:ss Z')]
+        }
+      }
+    }
+    [
+      id: buildlife.id,
+      name: "Buildlife $buildlife.id",
+      url: link_to(buildlife),
+      project: project.name,
+      workflow: workflow.name,
+      preflight: buildlife.isPreflight(),
+      inactive: buildlife.isInactive(),
+      archived: buildlife.isArchived(),
+      stamp: buildlife.latestStampValue,
+      build_request: request?.id,
+      build_status: statuses,
+      properties: propertyNames.collect {
+        [key: it, value: buildlife.getPropertyValue(it)]
+      },
+    ]
   }
 }
