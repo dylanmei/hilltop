@@ -115,22 +115,25 @@ class BuildCommands extends AnthillCommands {
     }
 
     if (waitForCompletion) {
-      status("Waiting for workflow to finish ")
+      status("Waiting ")
 
-      def finished = false
-      while (!finished) {
+      def result = null
+      while (!result) {
         sleep 5000
         statusTick()
         work {
           request = finder(RequestFinder).one(request.id)
 
-          finished = 
-             request.status == BuildRequestStatusEnum.STARTED_WORKFLOW && 
-             request.workflowCase.status.isDone()
+          if (request.status == BuildRequestStatusEnum.STARTED_WORKFLOW) {
+            def workflowCaseStatus = request.workflowCase.status
+            if (workflowCaseStatus.isDone()) {
+              result = workflowCaseStatus
+            }
+          }
         }
       }
 
-      status(" done!\n")
+      statusln(" $result!")
     }
 
     if (openBrowser) open(id)
