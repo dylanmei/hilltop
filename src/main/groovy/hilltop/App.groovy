@@ -282,9 +282,10 @@ class App {
           arguments exactly: 3, name1: 'buldlife', name2: 'workflow', name3: 'environment'
           options {
             o longOpt: 'open', 'Open the buildlife when ready'
+            w longOpt: 'wait', 'Wait for the workflow to finish running'
           }
           execute { opt, arguments ->
-            handler.run(arguments[0], arguments[1], arguments[2], opt.open, arguments[3..<arguments.size()])
+            handler.run(arguments[0], arguments[1], arguments[2], opt.open, opt.wait, arguments[3..<arguments.size()])
           }
         }
 

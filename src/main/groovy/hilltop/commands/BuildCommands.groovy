@@ -97,7 +97,7 @@ class BuildCommands extends AnthillCommands {
     }
   }
 
-  def run(id, workflowName, environmentName, openBrowser, properties) {
+  def run(id, workflowName, environmentName, openBrowser, waitForCompletion, properties) {
     def request = work {
       def buildlife = finder(BuildFinder).one(id as long)
       def runner = new WorkflowRunner(buildlife, {
@@ -112,6 +112,25 @@ class BuildCommands extends AnthillCommands {
     work {
       WorkflowRunner.submit(request)
       println "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
+    }
+
+    if (waitForCompletion) {
+      status("Waiting for workflow to finish ")
+
+      def finished = false
+      while (!finished) {
+        sleep 5000
+        statusTick()
+        work {
+          request = finder(RequestFinder).one(request.id)
+
+          finished = 
+             request.status == BuildRequestStatusEnum.STARTED_WORKFLOW && 
+             request.workflowCase.status.isDone()
+        }
+      }
+
+      status(" done!\n")
     }
 
     if (openBrowser) open(id)
