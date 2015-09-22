@@ -42,6 +42,8 @@ class BuildRequestCommands extends AnthillCommands {
     if (request.propertyNames) {
       propertyNames = request.propertyNames
     }
+    def buildLife = request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED ? request.buildLife : null
+    def workflowCase = request.status == BuildRequestStatusEnum.STARTED_WORKFLOW ? request.workflowCase : null
     [
         id: request.id,
         name: "Build Request $request.id",
@@ -50,10 +52,9 @@ class BuildRequestCommands extends AnthillCommands {
         workflow: request.workflow.name,
         requester: "$request.requesterName ($request.requestSource.name)",
         status: request.status.toString(),
-        buildlife: request.status == BuildRequestStatusEnum.BUILD_LIFE_CREATED ?
-          request.buildLife.id.toString() : '',
-        workflow_case: request.status == BuildRequestStatusEnum.STARTED_WORKFLOW ?
-          request.workflowCase.id.toString() : '',
+        buildlife: buildLife ? buildLife.id.toString() : '',
+        workflow_case: workflowCase ? workflowCase.id.toString() : '',
+        workflow_case_status: workflowCase ? workflowCase.status.toString() : '',
         properties: propertyNames.collect {
           [key: it, value: request.getPropertyValue(it)]
         },
