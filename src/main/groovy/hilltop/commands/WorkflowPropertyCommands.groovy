@@ -38,4 +38,12 @@ class WorkflowPropertyCommands extends AnthillCommands {
       workflow.removeProperty(spec)
     }
   }
+
+  def set(projectName, workflowName, propertyName, propertyValue) {
+    work {
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
+
+      workflow.setPropertyValue(propertyName, propertyValue, false) // no encryption
+    }
+  }
 }

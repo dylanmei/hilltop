@@ -182,6 +182,14 @@ class App {
             handler.remove(arguments[0], arguments[1], arguments[2])
           }
         }
+
+        command('set', 'Set an existing property on an existing workflow') {
+          arguments exactly: 4, 
+            name1: 'project', name2: 'workflow', name3: 'propertyKey', name4: 'propertyValue' 
+          execute { opt, arguments ->
+            handler.set(arguments[0], arguments[1], arguments[2], arguments[3])
+          }
+        }
       }
 
       command('workflow-dependency', 'Working with Anthill workflow dependencies') {

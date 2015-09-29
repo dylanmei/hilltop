@@ -93,7 +93,7 @@ __workflow_actions() {
 
 __workflow_property_actions() {
   declare -a actions
-  actions=(list add remove)
+  actions=(list add remove set)
   _wanted actions expl 'workflow-property' compadd $actions
 }
 

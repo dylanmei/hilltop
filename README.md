@@ -58,7 +58,7 @@ Workflow Properties
     ./hilltop workflow-property list <project-name> <workflow-name>
     ./hilltop workflow-property add <project-name> <workflow-name> <propertyName> <propertyValue>
     ./hilltop workflow-property remove <project-name> <workflow-name> <propertyName>
-
+    ./hilltop workflow-property set <project-name> <workflow-name> <propertyName> <propertyValue>
 
 Workflow Dependencies
 

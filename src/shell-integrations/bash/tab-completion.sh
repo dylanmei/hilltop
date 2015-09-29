@@ -25,7 +25,7 @@ _hilltop()
         return 0
         ;;
       workflow-property)
-        local workflow_property_options="list add remove"
+        local workflow_property_options="list add remove set"
         COMPREPLY=($(compgen -W "${workflow_property_options}" ${cur}))
         return 0
         ;;
