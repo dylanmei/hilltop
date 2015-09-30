@@ -102,7 +102,7 @@ class BuildCommands extends AnthillCommands {
               buildlife = finder(BuildFinder).one(buildlife.id)
 
               if (buildlife.statusArray && buildlife.statusArray.length > 0) {
-                result = buildlife.statusArray[0].name
+                result = buildlife.statusArray[0].status.name
               }
             }
           }
