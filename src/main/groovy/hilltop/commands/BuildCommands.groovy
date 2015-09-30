@@ -46,7 +46,7 @@ class BuildCommands extends AnthillCommands {
 
   // NOTE: usually there's a 1-1 mapping with the command name,
   // but since 'new' is a language keyword, this method is 'start'
-  def start(projectName, workflowName, openBrowser, propertiesPath, properties) {
+  def start(projectName, workflowName, openBrowser, waitForCompletion, propertiesPath, properties) {
 
     def request = work {
       def workflow = finder(WorkflowFinder).one(projectName, workflowName)
@@ -90,6 +90,26 @@ class BuildCommands extends AnthillCommands {
       if (openBrowser)
         open(buildlife.id)
       else
+        if (waitForCompletion)
+        {
+          status("Waiting for build to complete ")
+
+          def result = null
+          while (!result) {
+            sleep 5000
+            statusTick()
+            work {
+              buildlife = finder(BuildFinder).one(buildlife.id)
+
+              if (buildlife.statusArray && buildlife.statusArray.length > 0) {
+                result = buildlife.statusArray[0].name
+              }
+            }
+          }
+
+          statusln(" $result!")
+        }
+
         out.send(
         [
           id: buildlife.id
