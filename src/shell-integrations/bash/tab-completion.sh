@@ -20,7 +20,7 @@ _hilltop()
         return 0
         ;;
       workflow)
-        local workflow_options="list show open remove copy exec"
+        local workflow_options="list show open remove rename copy exec"
         COMPREPLY=($(compgen -W "${workflow_options}" ${cur}))
         return 0
         ;;

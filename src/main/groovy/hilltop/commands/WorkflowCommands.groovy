@@ -113,6 +113,16 @@ class WorkflowCommands extends AnthillCommands {
     println "Workflow <$workflow.name> has been removed from Project <$workflow.project.name>"
   }
 
+  def rename(projectName, workflowName, newName) {
+    def workflow, project
+    work {
+      workflow = finder(WorkflowFinder).one(projectName, workflowName)
+      project = workflow.project
+
+      workflow.name = newName
+    }
+  }
+
   def copy(projectName, workflowName, newName) {
     def workflow, project
     work {

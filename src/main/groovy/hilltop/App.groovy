@@ -141,6 +141,13 @@ class App {
             handler.remove(arguments[0], arguments[1], opt.force, opt.noop)
           }
         }
+
+        command('rename', 'Rename an Anthill workflow') {
+          arguments exactly: 3, name1: 'project', name2: 'workflow', name3: 'new-name'
+          execute { opt, arguments ->
+            handler.rename(arguments[0], arguments[1], arguments[2])
+          }
+        }
         
         command('copy', 'Copy an Anthill workflow') {
           arguments exactly: 3, name1: 'project', name2: 'workflow', name3: 'new-name'

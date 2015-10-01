@@ -42,6 +42,7 @@ Projects
     ./hilltop project show <project-name>
     ./hilltop project open <project-name>
     ./hilltop project remove <project-name>
+    ./hilltop project rename <project-name> <new-name>
     ./hilltop project copy <project-name> <new-name>
 
 Workflows
