@@ -75,7 +75,7 @@ __lifecycle_actions() {
 
 __project_actions() {
   declare -a actions
-  actions=(list find show open remove copy)
+  actions=(list find show open remove rename copy)
   _wanted actions expl 'project' compadd $actions
 }
 

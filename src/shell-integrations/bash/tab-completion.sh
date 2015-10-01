@@ -15,7 +15,7 @@ _hilltop()
         return 0
         ;;
       project)
-        local project_options="list find show open remove copy"
+        local project_options="list find show open remove rename copy"
         COMPREPLY=($(compgen -W "${project_options}" ${cur}))
         return 0
         ;;

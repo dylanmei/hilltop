@@ -93,6 +93,13 @@ class App {
           }
         }
 
+        command('rename', 'Rename an Anthill project') {
+          arguments exactly: 2, name1: 'project', name2: 'new-name'
+          execute { opt, arguments ->
+            handler.rename(arguments[0], arguments[1])
+          }
+        }
+
         command('copy', 'Copy an Anthill project') {
           arguments exactly: 2, name1: 'project', name2: 'new-name'
           execute { opt, arguments ->

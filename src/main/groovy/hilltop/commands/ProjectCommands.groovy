@@ -111,6 +111,14 @@ class ProjectCommands extends AnthillCommands {
     }
   }
 
+  def rename(projectName, newName) {
+    work {
+      def project = finder(ProjectFinder).one(projectName)
+
+      project.name = newName
+    }
+  }
+
   def copy(projectName, newName) {
     work {
       def project = finder(ProjectFinder).one(projectName)
