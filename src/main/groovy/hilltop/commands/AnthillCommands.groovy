@@ -1,6 +1,6 @@
 package hilltop.commands
 
-import hilltop.Config
+import hilltop.Settings
 import hilltop.anthill.*
 import com.urbancode.anthill3.main.client.AnthillClient;
 import com.urbancode.anthill3.persistence.UnitOfWork;
@@ -8,7 +8,7 @@ import com.urbancode.anthill3.domain.persistent.Persistent;
 
 @Mixin(ConsoleHelper)
 class AnthillCommands {
-  def out, config = new Config()
+  def out, settings = new Settings()
 
   def AnthillCommands(out) {
     this.out = out
@@ -50,11 +50,12 @@ class AnthillCommands {
   }
 
   def connect() {
-    def settings = config.get('anthill')
-    if (settings == null || settings.api_token.isEmpty() || settings.api_server.isEmpty()) {
+    def remoteSettings = settings.anthill
+    if (remoteSettings.api_token.isEmpty() || remoteSettings.api_server.isEmpty()) {
       quit 'Your Anthill configuration requires anthill.api_server and anthill.api_token values.'
     }
-    AnthillClient.connect(settings.api_server, 4567, settings.api_token)
+
+    AnthillClient.connect(remoteSettings.api_server, 4567, remoteSettings.api_token)
   }
 
   def work(Closure task) {
@@ -65,8 +66,7 @@ class AnthillCommands {
   }
 
   def link_to(Closure link) {
-    def settings = config.get('anthill')
-    def result = new AnthillLink(settings)
+    def result = new AnthillLink(settings.anthill)
     link.delegate = result; link()
     result.url()
   }
