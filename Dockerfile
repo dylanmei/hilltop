@@ -44,4 +44,6 @@ RUN mkdir -p /src/depends \
     && ln -s $DEVKIT_LIB /src/depends/anthill3-dev-kit \
     && gradle installDist
 
+ENV HILLTOP_ANTHILL_API_SERVER ""
+ENV HILLTOP_ANTHILL_API_TOKEN ""
 ENTRYPOINT ["build/install/src/bin/hilltop"]
