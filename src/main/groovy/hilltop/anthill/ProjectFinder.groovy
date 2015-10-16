@@ -20,6 +20,14 @@ class ProjectFinder {
   }
 
   def one(name) {
+
+    if (name.isLong())
+    {
+      def project = ProjectFactory.getInstance().restore(name as long)
+      if (!project) { error "No such project <$name>" }
+      return project
+    }
+    
     if (name == '.')
       name = guessProjectName()
 
