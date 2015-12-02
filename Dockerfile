@@ -34,7 +34,7 @@ ADD . /src
 WORKDIR /src
 
 RUN mkdir -p /src/depends \
- && curl -sL "https://s3-us-west-2.amazonaws.com/dylanmei/hilltop/anthill3-dev-kit.zip" \
+ && curl -sL "https://s3-us-west-2.amazonaws.com/dylanmei/hilltop/anthill3-dev-kit-5.0.0.0.zip" \
      -o /tmp/anthill3-dev-kit.zip \
  && unzip /tmp/anthill3-dev-kit.zip -d /src/depends/ \
  && gradle installDist \
