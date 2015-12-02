@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.1.5'
-  compile fileTree(dir: 'depends/anthill3-dev-kit/remoting/lib', include: '*.jar')
+  compile fileTree(dir: 'depends/anthill3-dev-kit/remoting/lib', include: '*.jar', exclude: 'groovy-all-*.jar')
 
   runtime 'commons-cli:commons-cli:1.2'
 
