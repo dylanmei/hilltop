@@ -20,11 +20,37 @@ class ProjectFinder {
   }
 
   def one(name) {
+
+    if (name.isLong())
+    {
+      def project = ProjectFactory.getInstance().restore(name as long)
+      if (!project) { error "No such project <$name>" }
+      return project
+    }
+    
     if (name == '.')
       name = guessProjectName()
 
+    def hints = name.split('/')
+    if (hints.size() > 1) {
+      name = hints[-1]
+      hints = hints[0..<hints.size()-1].collect { it.toLowerCase() }
+    }
+    else {
+      hints = null
+    }
+
     def projects = ProjectFactory.getInstance()
       .restoreAllForName(name)
+
+    if (hints?.size() > 0) {
+      projects = projects.findAll { p ->
+        def paths = p.folder.path.split('/')
+          .findAll { it != '' }
+          .collect { it.toLowerCase() }
+        paths.intersect(hints).size() == hints.size()
+      }
+    }
 
     if (!projects) {
       error "No such project <$name>"
@@ -33,8 +59,11 @@ class ProjectFinder {
       projects[0]
     }
     else  {
-      alert "There are ${projects.size()} projects named <$name>; taking the first one"
-      projects.sort { it.isActive() ? -1 : 1 }.first()
+      alert "There are ${projects.size()} projects named <$name>"
+      projects.findAll { p -> p.isActive() }.each {
+        alert " * ${it.id}: ${it.folder.path}"
+      }
+      error 'Use the project id or include part of the path to disambiguate'
     }
   }
 
