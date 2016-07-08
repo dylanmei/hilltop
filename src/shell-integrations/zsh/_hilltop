@@ -1,4 +1,5 @@
 #compdef hilltop 
+#compdef ht 
 
 # ZSH completions for hilltop
 #
@@ -19,6 +20,7 @@ _1st_arguments=(
   'folder:Working with Anthill folders'
   'lifecycle:Working with Anthill lifecycles'
   'project:Working with Anthill projects'
+  'project-property:Working with Anthill project properties'
   'source-config:Working with Anthill workflow source configuration'
   'workflow:Working with Anthill workflows'
   'workflow-property:Working with Anthill workflows properties'
@@ -77,6 +79,12 @@ __project_actions() {
   declare -a actions
   actions=(list find show open remove rename copy)
   _wanted actions expl 'project' compadd $actions
+}
+
+__project_property_actions() {
+  declare -a actions
+  actions=(list add remove set)
+  _wanted actions expl 'project-property' compadd $actions
 }
 
 __source_config_actions() {

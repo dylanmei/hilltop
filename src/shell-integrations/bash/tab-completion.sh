@@ -5,7 +5,7 @@ _hilltop()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    opts="config project workflow workflow-property workflow-dependency source-config folder build build-link build-request environment agent lifecycle" # colony disabled
+    opts="config project project-property workflow workflow-property workflow-dependency source-config folder build build-link build-request environment agent lifecycle" # colony disabled
 
 
     case "${prev}" in
@@ -17,6 +17,11 @@ _hilltop()
       project)
         local project_options="list find show open remove rename copy"
         COMPREPLY=($(compgen -W "${project_options}" ${cur}))
+        return 0
+        ;;
+      project-property)
+        local project_property_options="list add remove set"
+        COMPREPLY=($(compgen -W "${project_property_options}" ${cur}))
         return 0
         ;;
       workflow)
