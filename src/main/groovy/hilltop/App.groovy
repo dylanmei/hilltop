@@ -108,6 +108,41 @@ class App {
         }
       }
 
+     command('project-property', 'Working with Anthill project properties') {
+        def handler = new ProjectPropertyCommands(out)
+
+        command('list', 'List properties for an Anthill project') {
+          arguments exactly: 1, name1: 'project'
+          execute { opt, arguments ->
+            handler.list(arguments[0])
+          }
+        }
+        
+        command('add', 'Add a property to an existing project') {
+          arguments exactly: 3, 
+            name1: 'project', name2: 'propertyKey', name3: 'propertyValue' 
+          execute { opt, arguments ->
+            handler.add(arguments[0], arguments[1], arguments[2])
+          }
+        }
+
+        command('remove', 'Remove a property from an Anthill project') {
+          arguments exactly: 2, 
+            name1: 'project', name2: 'propertyName'
+          execute { opt, arguments ->
+            handler.remove(arguments[0], arguments[1])
+          }
+        }
+
+        command('set', 'Set an existing property on an existing project') {
+          arguments exactly: 3, 
+            name1: 'project', name2: 'propertyKey', name3: 'propertyValue' 
+          execute { opt, arguments ->
+            handler.set(arguments[0], arguments[1], arguments[2])
+          }
+        }
+      }
+
       command('workflow', 'Working with Anthill workflows') {
         def handler = new WorkflowCommands(out)
 

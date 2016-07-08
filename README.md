@@ -45,6 +45,13 @@ Projects
     ./hilltop project rename <project-name> <new-name>
     ./hilltop project copy <project-name> <new-name>
 
+Project Properties
+
+    ./hilltop project-property list <project-name>
+    ./hilltop project-property add <project-name> <propertyName> <propertyValue>
+    ./hilltop project-property remove <project-name> <propertyName>
+    ./hilltop project-property set <project-name> <propertyName> <propertyValue>
+
 Workflows
 
     ./hilltop workflow list <project-name>
