@@ -152,4 +152,11 @@ class WorkflowCommands extends AnthillCommands {
       println "Created workflow request $request.id for $workflowName in $environmentName"
     }
   }
+
+  def setActive(projectName, workflowName, active) {
+    work {
+      def workflow = finder(WorkflowFinder).one(projectName, workflowName)
+      workflow.active = active
+    }
+  }
 }

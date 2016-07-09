@@ -204,6 +204,20 @@ class App {
             handler.execOperationalWorkflow(arguments[0], arguments[1], arguments[2..<arguments.size()])
           }
         }
+
+        command('activate', 'Activate a disabled workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          execute { opt, arguments ->
+            handler.setActive(arguments[0], arguments[1], true)
+          }
+        }
+
+        command('deactivate', 'Deactivate a workflow') {
+          arguments exactly: 2, name1: 'project', name2: 'workflow'
+          execute { opt, arguments ->
+            handler.setActive(arguments[0], arguments[1], false)
+          }
+        }
       }
 
       command('workflow-property', 'Working with Anthill workflow properties') {

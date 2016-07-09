@@ -61,6 +61,7 @@ Workflows
     ./hilltop workflow rename <project-name> <workflow-name> <new-name>
     ./hilltop workflow copy <project-name> <workflow-name> <new-name>
     ./hilltop workflow exec <operational-workflow-name> <environment-name> <property-name=property-value> ...
+    ./hilltop workflow activate|deactivate <project-name> <workflow-name>
 
 Workflow Properties
 
