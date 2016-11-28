@@ -1,6 +1,7 @@
 package hilltop.commands
 
 import hilltop.anthill.AgentFinder
+import hilltop.anthill.EnvironmentFinder
 import com.urbancode.anthill3.domain.agent.*
 import com.urbancode.anthill3.services.agent.*
 
@@ -48,5 +49,23 @@ class AgentCommands extends AnthillCommands {
     }
 
     browse link_to(agent)
+  }
+
+  def addEnvironment(name, environmentName) {
+    work {
+      def agent = finder(AgentFinder).one(name)
+      def environment = finder(EnvironmentFinder).one(environmentName)
+      environment.addServer(agent)
+      statusln("$name added to $environmentName")
+    }
+  }
+
+  def removeEnvironment(name, environmentName) {
+    work {
+      def agent = finder(AgentFinder).one(name)
+      def environment = finder(EnvironmentFinder).one(environmentName)
+      environment.removeServer(agent)
+      statusln("$name removed from $environmentName")
+    }
   }
 }

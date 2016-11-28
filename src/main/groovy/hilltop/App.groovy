@@ -488,6 +488,20 @@ class App {
             handler.open(arguments[0])
           }
         }
+
+        command('add-environment', 'Add an Anthill agent to an environment (aka server group)') {
+          arguments exactly: 2, name1: 'agent', name2: 'environment'
+          execute { opt, arguments ->
+            handler.addEnvironment(arguments[0], arguments[1])
+          }
+        }
+
+        command('remove-environment', 'Remove an Anthill agent to an environment (aka server group)') {
+          arguments exactly: 2, name1: 'agent', name2: 'environment'
+          execute { opt, arguments ->
+            handler.removeEnvironment(arguments[0], arguments[1])
+          }
+        }
       }
 
       command('lifecycle', 'Working with Anthill lifecycles') {

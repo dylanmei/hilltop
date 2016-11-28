@@ -124,6 +124,8 @@ Agents
     ./hilltop agent list
     ./hilltop agent show <agent-name>
     ./hilltop agent open <agent-name>
+    ./hilltop agent add-environment <agent-name> <environment-name>
+    ./hilltop agent remove-environment <agent-name> <environment-name>
 
 Lifecycles
 

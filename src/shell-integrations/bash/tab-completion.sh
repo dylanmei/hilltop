@@ -70,7 +70,7 @@ _hilltop()
         return 0
         ;;
       agent)
-        local agent_options="list show open"
+        local agent_options="list show open add-environment remove-environment"
         COMPREPLY=($(compgen -W "${agent_options}" ${cur}))
         return 0
         ;;

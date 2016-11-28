@@ -29,7 +29,7 @@ _1st_arguments=(
 
 __agent_actions() {
   declare -a actions
-  actions=(list show open)
+  actions=(list show open add-environment remove-environment)
   _wanted actions expl 'agent' compadd $actions
 }
 
