@@ -86,6 +86,7 @@ class BuildCommands extends AnthillCommands {
       }
     }
 
+    def error = false
     if (buildlife) {
       if (openBrowser)
         open(buildlife.id)
@@ -107,6 +108,9 @@ class BuildCommands extends AnthillCommands {
             }
           }
 
+          if (result != "Complete") {
+            error = true
+          }
           statusln(" $result!")
         }
 
@@ -115,6 +119,7 @@ class BuildCommands extends AnthillCommands {
           id: buildlife.id
         ])
     }
+    if (error) System.exit(1)
   }
 
   def run(id, workflowName, environmentName, openBrowser, waitForCompletion, properties) {
@@ -134,6 +139,7 @@ class BuildCommands extends AnthillCommands {
       println "Created workflow request $request.id for $request.workflow.name in $request.serverGroup.name"
     }
 
+    def error = false
     if (waitForCompletion) {
       status("Waiting ")
 
@@ -153,10 +159,14 @@ class BuildCommands extends AnthillCommands {
         }
       }
 
+      if(result != "Complete") {
+        error = true
+      }
       statusln(" $result!")
     }
 
     if (openBrowser) open(id)
+    if (error) System.exit(1)
   }
 
   def map(buildlife) {
