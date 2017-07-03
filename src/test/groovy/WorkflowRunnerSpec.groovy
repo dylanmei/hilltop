@@ -30,19 +30,6 @@ class WorkflowRunnerSpec extends Specification {
     GroovyMock(AnthillEngine, global: true)
   }
 
-  def 'run a workflow against an environment'() {
-    setup:
-    def environment = create_environment(name: 'beta')
-    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
-
-    when:
-    new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('deploy candidate', 'beta', [:])
-
-    then:
-    1 * AnthillEngine.create_workflow_request(_, workflow, environment)
-  }
-
   def 'run an originating workflow'() {
     setup:
     def workflow = create_workflow(name: 'master', originating: true)
@@ -79,46 +66,6 @@ class WorkflowRunnerSpec extends Specification {
 
     then: 'an error is raised'
     thrown(GroovyRuntimeException)
-  }
-
-  def 'run a workflow with a partial workflow name match'() {
-    setup:
-    def environment = create_environment(name: 'beta')
-    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
-
-    when:
-    new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('deploy', 'beta', [:])
-
-    then:
-    1 * AnthillEngine.create_workflow_request(_, workflow, environment)
-  }
-
-  def 'run a workflow with a partial environment name match'() {
-    setup:
-    def environment = create_environment(name: 'test integration')
-    def workflow = create_workflow(name: 'deploy candidate', environment: environment)
-
-    when:
-    new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('deploy', 'test', [:])
-
-    then:
-    1 * AnthillEngine.create_workflow_request(_, workflow, environment)
-  }
-
-  def 'run a workflow with the best partial environment name match'() {
-    setup:
-    def environment1 = create_environment(name: 'test')
-    def environment2 = create_environment(name: 'test integration')
-    def workflow = create_workflow(name: 'deploy candidate', environments: [environment1, environment2])
-
-    when:
-    new WorkflowRunner(create_buildlife(workflow: workflow))
-      .request('deploy', 'test', [:])
-
-    then:
-    1 * AnthillEngine.create_workflow_request(_, workflow, environment1)
   }
 
   def 'run a workflow by name with two matches that share an environment'() {
