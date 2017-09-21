@@ -108,7 +108,7 @@ class BuildCommands extends AnthillCommands {
             }
           }
 
-          if (result != "Complete") {
+          if (!result.isSuccess()) {
             error = true
           }
           statusln(" $result!")
@@ -119,7 +119,8 @@ class BuildCommands extends AnthillCommands {
           id: buildlife.id
         ])
     }
-    if (error) System.exit(1)
+    if (error)
+      quit "Build ${buildLife.id} failed"
   }
 
   def run(id, workflowName, environmentName, openBrowser, waitForCompletion, properties) {
@@ -159,14 +160,16 @@ class BuildCommands extends AnthillCommands {
         }
       }
 
-      if(result != "Complete") {
+      if(!result.isSuccess()) {
         error = true
       }
       statusln(" $result!")
     }
 
     if (openBrowser) open(id)
-    if (error) System.exit(1)
+    if (error) {
+       quit "Workflow request $request.id failed"
+    }
   }
 
   def map(buildlife) {
